@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cpu name="S2">
+  <!-- item 
+            pin - номер ноги контроллера-->
+  <!-- pwm  
+            timer   - номер таймера
+            channel - канал таймер
+            af      - номер альтернативной функции
+            -->
+  <!-- ain
+            channel - внутренний номер аналогового входа
+            -->
+  <item name="PA00" pin="06">
+    <dio />
+    <pwm name="TIM2_CH1" timer="2" channel="1" af="2"/>
+    <ain name="AIN0" channel="0" />
+  </item>
+  <item name="PA01" pin="07">
+    <dio />
+    <pwm timer="2" channel="2" af="2"/>
+    <ain name="AIN1" channel="1" />
+    <serial name="DE" chanel="2" config="0" />
+  </item>
+  <item name="PA02" pin="08">
+    <dio />
+    <pwm timer="2"   channel="3" af="2"/>
+    <pwm timer="15"  channel="1" af="0"/>
+    <ain name="AIN2" channel="2" />
+    <serial name="RX" chanel="2" config="0" />
+  </item>
+  <item name="PA03" pin="09">
+    <dio />
+    <pwm timer="2"   channel="3" af="2"/>
+    <pwm timer="15"  channel="2" af="0"/>
+    <ain name="AIN3" channel="3" />
+    <serial name="TX" chanel="2" config="0" />
+  </item>
+  <item name="PA04" pin="10">
+    <dio />
+    <pwm timer="14"  channel="1" af="4"/>
+    <ain name="AIN4" channel="4" />
+  </item>
+  <item name="PA05" pin="11">
+    <dio />
+    <pwm timer="2"   channel="1" af="2"/>
+    <ain name="AIN5" channel="5" />
+    <spi name="SCK" channel="1" config="1" />
+  </item>
+  <item name="PA06" pin="12">
+    <dio />
+    <pwm timer="3"   channel="1" af="1"/>
+    <pwm timer="16"  channel="1" af="5"/>
+    <ain name="AIN6" channel="6" />
+    <spi name="MISO" channel="1" config="1" />
+  </item>
+  <item name="PA07" pin="13">
+    <dio />
+    <pwm timer="3"   channel="2" af="1"/>
+    <pwm timer="14"  channel="1" af="4"/>
+    <pwm timer="17"  channel="1" af="5"/>
+    <ain name="AIN7" channel="7" />
+    <spi name="MOSI" channel="1" config="1" />
+  </item>
+  <item name="PA08" pin="18">
+    <pwm timer="1"   channel="1" af="2"/>
+  </item>
+  <item name="PA09" pin="19">
+    <pwm timer="1"   channel="2" af="2"/>
+    <serial name="TX" chanel="1" config="0" />
+  </item>
+  <item name="PA10" pin="20">
+    <pwm timer="1"   channel="3" af="2"/>
+    <serial name="RX" chanel="1" config="0" />
+  </item>
+  <item name="PA11" pin="21">
+    <pwm timer="1"   channel="4" af="2"/>
+    <serial name="DE" chanel="1" config="0" />
+  </item>
+  <item name="PA12" pin="22"></item>
+  <item name="PA13" pin="23" default="SWDAT">
+    <system name="SWDAT" af="0" />
+  </item>
+  <item name="PA14" pin="24" default="SWCLK">
+    <system name="SWCLK" af="0" />
+    <serial name="TX" chanel="2" config="1"/>
+  </item>
+  <item name="PA15" pin="25">
+    <pwm timer="2"   channel="1" af="2"/>
+    <serial name="RX" chanel="2" config="1"/>
+  </item>
+  <item name="PB00" pin="14">
+    <pwm timer="3"   channel="3" af="1"/>
+    <ain name="AIN8" channel="8" />
+  </item>
+  <item name="PB01" pin="15">
+    <pwm timer="3"   channel="4" af="1"/>
+    <pwm timer="14"  channel="1" af="4"/>
+    <ain name="AIN9" channel="9" />
+  </item>
+  <item name="PB02" pin="16"></item>
+  <item name="PB03" pin="26">
+    <pwm timer="2"   channel="2" af="2"/>
+    <spi name="SCK" channel="1" config="2" />
+  </item>
+  <item name="PB04" pin="27">
+    <pwm timer="3"   channel="1" af="1"/>
+    <spi name="MISO" channel="1" config="2" />
+  </item>
+  <item name="PB05" pin="28">
+    <pwm timer="3"   channel="2" af="1"/>
+    <spi name="MOSI" channel="1" config="2" />
+  </item>
+  <item name="PB06" pin="29">
+    <serial name="TX" chanel="1" config="1" />
+    <twi name="SCL" channel="1" config="1" />
+  </item>
+  <item name="PB07" pin="30">
+    <serial name="RX" chanel="1" config="1" />
+    <twi name="SDA" channel="1" config="1" />
+  </item>
+  <item name="PB08" pin="31">
+    <pwm тimer="16"  channel="1" af="2"/>
+  </item>
+  <item name="RTC">
+    <system name="LSI" src="HAL_USE_RTC 1" />
+    <system name="HSE" src="HAL_USE_RTC 1\nHAL_RTC_USE_HSE" />
+    <system name="LSE" src="HAL_USE_RTC 1\nHAL_RTC_CHECK_LSE" />
+    <system name="Not used" />
+  </item>
+  <item name="VCC" default="VCC">
+    <ain name="VCC" channel="14" />
+  </item>
+</cpu>
