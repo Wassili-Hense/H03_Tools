@@ -1,0 +1,40 @@
+﻿<Window x:Class="X13.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:util="clr-namespace:Wpf.Util"
+        TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
+        Title="Node Configurator">
+    <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+    <ToolBar Grid.Column="0" Grid.Row="0">
+      <Button Content="New" Click="buNew_Click" Width="60" />
+      <Button Content="Open" Width="60" />
+      <Button Content="Save" Width="60" />
+    </ToolBar>
+    <ListView Grid.Row="2" Name="lvPins" BorderThickness="0" KeyboardNavigation.TabNavigation="Continue" Focusable="False" util:GridViewSort.AutoSort="True" SelectionMode="Single">
+      <ListView.View>
+        <GridView AllowsColumnReorder="False">
+          <GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
+          <GridViewColumn Header="Pin" Width="90" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
+          <GridViewColumn Header="System" Width="90" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding systemVis}" MinWidth="80" ItemsSource="{Binding systemLst}" SelectedItem="{Binding systemCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="Serial" Width="140" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding serialVis}" MinWidth="80" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+        </GridView>
+      </ListView.View>
+    </ListView>
+  </Grid>
+</Window>

@@ -14,9 +14,14 @@ namespace X13 {
       try {
         XDocument doc = XDocument.Load(System.IO.Path.GetFullPath( @".\cpu\"+p._cpuPath+".xml"));
         p._cpuSignature = doc.Root.Attribute("name").Value;
-        p.pins = doc.Root.Elements("item").Select(z => new Pin(z)).ToArray();
+        List<Pin> pins = new List<Pin>();
+        pins.AddRange(doc.Root.Elements("port").SelectMany(z => Port.CreatePort(p, z)));
+        pins.AddRange(doc.Root.Elements("pin").Select(z => new Pin(p, z, null)));
+
+        p.pins = pins.ToArray();
+        p.SetSysEntrys();
       }
-      catch(Exception) {
+      catch(Exception ex) {
         return null;
       }
       return p;
@@ -44,6 +49,45 @@ namespace X13 {
       }
       set {
         _prjPath = value;
+      }
+    }
+
+    private void SetSysEntrys() {
+      foreach(var p in pins) {
+        foreach(var e in p.entrys.Where(z=>z.type==EntryType.system)) {
+          if(this.EntryIsEnabled(e)) {
+            e.selected = true;
+          }
+        }
+      }
+    }
+
+    public bool EntryIsEnabled(enBase en) {
+      Dictionary<string, RcUse> resources = new Dictionary<string, RcUse>();
+      bool enabled = true;
+      RcUse cr;
+      foreach(var p in pins) {
+        foreach(var e in p.entrys.Where(z => z.selected && z != en)) {
+          foreach(var r in e.resouces) {
+            if(!resources.TryGetValue(r.Key, out cr)
+              || ((r.Value == RcUse.Exclusive && cr != RcUse.Exclusive) || (r.Value == RcUse.Baned && cr == RcUse.Shared))) {
+              resources[r.Key] = r.Value;
+            }
+          }
+        }
+      }
+      foreach(var r in en.resouces) {
+        if(resources.TryGetValue(r.Key, out cr)
+          && ((r.Value == RcUse.Exclusive && cr == RcUse.Exclusive) || (r.Value == RcUse.Shared && cr != RcUse.Shared) || ((ushort)r.Value >= 0x100 && r.Value != cr))) {
+          enabled = false;
+          break;
+        }
+      }
+      return enabled;
+    }
+    public void RefreshView() {
+      foreach(var p in pins) {
+        p.ViewChanged();
       }
     }
   }
