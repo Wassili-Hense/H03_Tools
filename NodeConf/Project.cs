@@ -12,7 +12,7 @@ namespace X13 {
       var p = new Project();
       p._cpuPath = path;
       try {
-        XDocument doc = XDocument.Load(System.IO.Path.GetFullPath( @".\cpu\"+p._cpuPath+".xml"));
+        XDocument doc = XDocument.Load(System.IO.Path.GetFullPath(@".\cpu\" + p._cpuPath + ".xml"));
         p._cpuSignature = doc.Root.Attribute("name").Value;
         List<Pin> pins = new List<Pin>();
         pins.AddRange(doc.Root.Elements("port").SelectMany(z => Port.CreatePort(p, z)));
@@ -22,6 +22,7 @@ namespace X13 {
         p.SetSysEntrys();
       }
       catch(Exception ex) {
+        Console.WriteLine(ex.ToString());
         return null;
       }
       return p;
@@ -30,13 +31,17 @@ namespace X13 {
     private string _prjPath;
     private string _cpuPath;
     private string _cpuSignature;
-    public Pin[] pins { get; private set; }
+    private phyBase _phy1;
+    private phyBase _phy2;
 
+    public Pin[] pins { get; private set; }
+    public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
+    public phyBase phy2 { get { return _phy2; } set { _phy2 = value; _prjPath = null; } }
 
     public string Path {
       get {
         if(_prjPath == null) {
-          string p = _cpuSignature + "nn";
+          string p = _cpuSignature + (_phy1 == null ? "n" : _phy1.signature) + (_phy2 == null ? "n" : _phy2.signature);
           int i;
           for(i = 10; i < 99; i++) {
             _prjPath = @"projects\" + p + i.ToString("00") + ".xml";
@@ -54,10 +59,9 @@ namespace X13 {
 
     private void SetSysEntrys() {
       foreach(var p in pins) {
-        foreach(var e in p.entrys.Where(z=>z.type==EntryType.system)) {
-          if(this.EntryIsEnabled(e)) {
-            e.selected = true;
-          }
+        foreach(var e in p.entrys.Where(z => z.type == EntryType.system && this.EntryIsEnabled(z))) {
+          p.systemCur=e;
+          break;
         }
       }
     }

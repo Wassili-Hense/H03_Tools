@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:util="clr-namespace:Wpf.Util"
         TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
-        Title="Node Configurator">
+        Title="Node Configurator" Width="1200">
     <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="30"/>
@@ -18,7 +18,7 @@
       <ListView.View>
         <GridView AllowsColumnReorder="False">
           <GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
-          <GridViewColumn Header="Pin" Width="90" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
+          <GridViewColumn Header="Pin" Width="40" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
           <GridViewColumn Header="System" Width="90" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
@@ -26,10 +26,59 @@
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
+          <GridViewColumn Header="PHY1" Width="140" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding phy1Vis}" MinWidth="120" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="PHY2" Width="140" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding phy2Vis}" MinWidth="120" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="DIO" Width="120" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding dioVis}" MinWidth="40"  ItemsSource="{Binding dioLst}" SelectedItem="{Binding dioCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="Analog" Width="80" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding ainVis}" MinWidth="70" ItemsSource="{Binding ainLst}" SelectedItem="{Binding ainCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="PWM" Width="80" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding pwmVis}" MinWidth="70" ItemsSource="{Binding pwmLst}" SelectedItem="{Binding pwmCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
           <GridViewColumn Header="Serial" Width="140" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding serialVis}" MinWidth="80" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
+                <ComboBox Visibility="{Binding serialVis}" MinWidth="120" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <!--GridViewColumn Header="SPI" Width="140" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding spiVis}" MinWidth="125" ItemsSource="{Binding spiLst}" SelectedItem="{Binding spiCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn-->
+          <GridViewColumn Header="TWI" Width="140" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox Visibility="{Binding twiVis}" MinWidth="125" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>

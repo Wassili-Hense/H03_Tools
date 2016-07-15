@@ -16,8 +16,6 @@ namespace X13 {
       return info.Elements("pin").Select(z => new Pin(owner, z, p));
 
     }
-    // name="GPIO_B" offset="16" nr="1"
-
     public string name { get; private set; }
     public int offset { get; private set; }
     public int nr { get; private set; }

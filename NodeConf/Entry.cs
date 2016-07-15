@@ -7,13 +7,19 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace X13 {
-  internal abstract class enBase : INotifyPropertyChanged {
-    public static readonly enNone none = new enNone();
+  internal class enBase {
+    public static readonly enBase none = new enBase();
 
     public readonly EntryType type;
     public string name { get; protected set; }
     public bool selected { get; set; }
     public Dictionary<string, RcUse> resouces { get; protected set; }
+
+    private enBase() {
+      this.type = EntryType.none;
+      this.resouces = new Dictionary<string, RcUse>();
+      this.name = "none";
+    }
 
     protected enBase(XElement info, Pin parent, EntryType type) {
       this.type = type;
@@ -26,15 +32,7 @@ namespace X13 {
       }
     }
 
-    #region INotifyPropertyChanged Members
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void PropertyChangedReise([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "") {
-      if(PropertyChanged != null) {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-      }
-    }
-    #endregion INotifyPropertyChanged Members
-
+    public override string ToString() { return this.name; }
   }
   internal enum EntryType {
     none,
@@ -47,15 +45,6 @@ namespace X13 {
     system,
   }
 
-  internal class enNone : enBase {
-    public enNone()
-      : base(null, null, EntryType.none) {
-    }
-
-    public override string ToString() { return "none"; }
-
-
-  }
   internal class enDIO : enBase {
     public enDIO(XElement info, Pin parent)
       : base(info, parent, EntryType.dio) {
@@ -67,27 +56,94 @@ namespace X13 {
   internal class enSystem : enBase {
     public enSystem(XElement info, Pin parent)
       : base(info, parent, EntryType.system) {
-      resouces[parent.name + "_used"] = RcUse.Exclusive;
+      resouces[parent.name + "_used"] = (RcUse)(0x100);
     }
-    public override string ToString() {
-      return this.name;
+  }
+  internal class enAin : enBase {
+    private int _channel;
+
+    public enAin(XElement info, Pin parent)
+      : base(info, parent, EntryType.ain) {
+      resouces[parent.name + "_used"] = RcUse.Shared;
+      this._channel = int.Parse(info.Attribute("channel").Value);
+      this.name = "AIN" + _channel.ToString();
+      resouces[this.name] = RcUse.Exclusive;
+    }
+  }
+  internal class enPwm : enBase {
+    private int _channel;
+    private int _timer;
+    private int _af;
+
+    public enPwm(XElement info, Pin parent)
+      : base(info, parent, EntryType.pwm) {
+      resouces[parent.name + "_used"] = RcUse.Shared;
+      this._channel = int.Parse(info.Attribute("channel").Value);
+      this._timer = int.Parse(info.Attribute("timer").Value);
+      this._af = int.Parse(info.Attribute("af").Value);
+      this.name = "PWM" + _timer.ToString() + "_" + _channel.ToString();
+      resouces[this.name] = RcUse.Exclusive;
     }
   }
   internal class enSerial : enBase {
-    private byte _config;
-    private int _channel;
+    public readonly byte config;
+    public readonly int channel;
+    public readonly int signal; // 1 - rx, 2 - tx, 3 - de
 
     public enSerial(XElement info, Pin parent)
       : base(info, parent, EntryType.serial) {
       resouces[parent.name + "_used"] = RcUse.Shared;
+      this.channel = int.Parse(info.Attribute("channel").Value);
+      this.config = byte.Parse(info.Attribute("config").Value);
+      this.name = "UART" + channel.ToString() + "_" + info.Attribute("name").Value;
+      switch(info.Attribute("name").Value) {
+      case "RX":
+        signal = 1;
+        break;
+      case "TX":
+        signal = 2;
+        break;
+      case "DE":
+        signal = 3;
+        break;
+      }
+      resouces["UART" + channel.ToString() + "_CFG"] = (RcUse)(0x100 + config);
+    }
+    public override string ToString() {
+      return this.name + "_CFG" + config.ToString();
+    }
+  }
+  internal class enSpi : enBase {
+    private byte _config;
+    private int _channel;
+
+    public enSpi(XElement info, Pin parent)
+      : base(info, parent, EntryType.spi) {
+      resouces[parent.name + "_used"] = RcUse.Shared;
       this._channel = int.Parse(info.Attribute("channel").Value);
       this._config = byte.Parse(info.Attribute("config").Value);
-      this.name = "UART" + _channel.ToString() + "_" + info.Attribute("name").Value;
-      resouces[this.name] = RcUse.Exclusive;
-      resouces["UART" + _channel.ToString() + "_CFG"] = (RcUse)(0x100+_config);
+      this.name = "SPI" + _channel.ToString() + "_" + info.Attribute("name").Value;
+      resouces["SPI" + _channel.ToString() + "_CFG"] = (RcUse)(0x100 + _config);
     }
     public override string ToString() {
       return this.name + "_CFG" + _config.ToString();
     }
   }
+  internal class enTwi : enBase {
+    private byte _config;
+    private int _channel;
+
+    public enTwi(XElement info, Pin parent)
+      : base(info, parent, EntryType.twi) {
+      resouces[parent.name + "_used"] = RcUse.Shared;
+      this._channel = int.Parse(info.Attribute("channel").Value);
+      this._config = byte.Parse(info.Attribute("config").Value);
+      this.name = "TWI" + _channel.ToString() + "_" + info.Attribute("name").Value;
+      resouces["TWI" + _channel.ToString() + "_CFG"] = (RcUse)(0x100 + _config);
+    }
+    public override string ToString() {
+      return this.name + "_CFG" + _config.ToString();
+    }
+  }
+
 }

@@ -65,9 +65,24 @@ namespace X13 {
         buOk.IsEnabled = true;
       }
     }
+    private void cbPhy1_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+      if(prj != null) {
+        prj.phy1=phyBase.Create(cbPhy1.SelectedValue as string, 1);
+        tbProjectName.Text = prj.Path;
+      }
+    }
+    private void cbPhy2_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+      if(prj != null) {
+        prj.phy2 = phyBase.Create(cbPhy2.SelectedValue as string, 2);
+        tbProjectName.Text = prj.Path;
+      }
+
+    }
 
     private void buOk_Click(object sender, RoutedEventArgs e) {
       DialogResult = true;
     }
+
+
   }
 }

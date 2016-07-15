@@ -111,7 +111,9 @@
       <pwm timer="14"  channel="1" af="4"/>
       <ain name="AIN9" channel="9" />
     </pin>
-    <pin idx="2" fpin="16"></pin>
+    <pin idx="2" fpin="16">
+      <dio />
+    </pin>
     <pin idx="3" fpin="26">
       <dio />
       <pwm timer="2"   channel="2" af="2"/>
@@ -139,7 +141,7 @@
     </pin>
     <pin idx="8" fpin="31">
       <dio />
-      <pwm тimer="16"  channel="1" af="2"/>
+      <pwm timer="16"  channel="1" af="2"/>
     </pin>
   </port>
   <pin name="RTC">
