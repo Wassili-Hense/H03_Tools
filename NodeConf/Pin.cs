@@ -82,12 +82,10 @@ namespace X13 {
       PropertyChangedReise("pwmVis");
       PropertyChangedReise("pwmCur");
       PropertyChangedReise("pwmLst");
+      PropertyChangedReise("pwmIsAvaliable");
       PropertyChangedReise("serialVis");
       PropertyChangedReise("serialCur");
       PropertyChangedReise("serialLst");
-      PropertyChangedReise("spiVis");
-      PropertyChangedReise("spiCur");
-      PropertyChangedReise("spiLst");
       PropertyChangedReise("twiVis");
       PropertyChangedReise("twiCur");
       PropertyChangedReise("twiLst");
@@ -95,7 +93,7 @@ namespace X13 {
 
     #region view
     private bool GetVis(EntryType t) {
-      return entrys.Any(z => z.type == t && _owner.EntryIsEnabled(z));;
+      return entrys.Any(z => z.type == t && _owner.EntryIsEnabled(z));
     }
     private enBase GetCur(EntryType t) {
       enBase cur;
@@ -213,26 +211,26 @@ namespace X13 {
       }
     }
 
-    public System.Windows.Visibility dioVis { get { return ((_config == PinCfg.None || _config == PinCfg.IO) && GetVis(EntryType.dio)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility dioVis { get { return ((_config == PinCfg.None || _config == PinCfg.IO) && (GetVis(EntryType.dio) || GetVis(EntryType.ain))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public string dioCur {
       get {
-        return (!entrys.Any(z => z.type == EntryType.dio && _owner.EntryIsEnabled(z)) || _addr < 0) ? "none" : _addr.ToString();
+        return (!entrys.Any(z => z.type == EntryType.dio && _owner.EntryIsEnabled(z)) || _addr < 0) ? "--" : _addr.ToString("00");
       }
       set {
         int tmp;
         var en = entrys.FirstOrDefault(z => z.type == EntryType.dio) as enDIO;
-        if(en == null || value == "none" || !int.TryParse(value, out tmp)) {
+        if(en == null || value == "--" || !int.TryParse(value, out tmp)) {
           tmp = -1;
         }
         if(_addr != tmp) {
           _addr = tmp;
           if(_addr >= 0) {
             _config = PinCfg.IO;
-            foreach(var i2 in entrys.Where(z=>z.type!=EntryType.system && z.type!=EntryType.dio && z.type!=EntryType.spi && _owner.EntryIsEnabled(z))){
+            foreach(var i2 in entrys.Where(z=>z.type!=EntryType.system && z.type!=EntryType.spi && z.type!=EntryType.twi && z.signal!=Signal.UART_DE && _owner.EntryIsEnabled(z))){
               i2.selected=true;
             }
           } else if(_config == PinCfg.IO) {
-            foreach(var i2 in entrys.Where(z => z.type != EntryType.system && z.selected)) {
+            foreach(var i2 in entrys.Where(z => z.selected)) {
               i2.selected = false;
             }
             _config = PinCfg.None;
@@ -245,14 +243,14 @@ namespace X13 {
       get {
         var lst = new List<string>(100);
         string tmp;
-        lst.Add("none");
+        lst.Add("--");
         if(entrys.Any(z => z.type == EntryType.dio && _owner.EntryIsEnabled(z))) {
           for(int i = 0; i < 100; i++) {
-            lst.Add(i.ToString());
+            lst.Add(i.ToString("00"));
           }
           foreach(var p in _owner.pins) {
             tmp = p.dioCur;
-            if(p!=this && tmp != "none") {
+            if(p!=this && tmp != "--") {
               lst.Remove(tmp);
             }
           }
@@ -268,28 +266,53 @@ namespace X13 {
     }
     public List<enBase> ainLst { get { return GetLst(EntryType.ain); } }
 
-    public System.Windows.Visibility pwmVis { get { return ((_config == PinCfg.IO) && GetVis(EntryType.pwm)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility pwmVis { get { return ((_config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.pwm)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public enBase pwmCur {
-      get { return GetCur(EntryType.pwm); }
-      set { SetCur(EntryType.pwm, value); }
+      get {
+        enBase cur = entrys.FirstOrDefault(z => z.type == EntryType.pwm && z.selected);
+        return cur ?? enBase.none;
+      }
+      set {
+        if(value != pwmCur) {
+          foreach(var e in entrys.Where(z => z.type == EntryType.pwm && z.selected && z != value)) {
+            e.selected = false;
+          }
+          if(value != null && value.type == EntryType.pwm) {
+            value.selected = true;
+          }
+          _owner.RefreshView();
+        }
+      }
     }
-    public List<enBase> pwmLst { get { return GetLst(EntryType.pwm); } }
+    public bool pwmIsAvaliable {
+      get {
+        return pwmCur.isAvailable;
+      }
+    }
+    public List<enBase> pwmLst { 
+      get {
+        List<enBase> lst = new List<enBase>();
+        lst.Add(enBase.none);
+        lst.AddRange(entrys.Where(z => z.type == EntryType.pwm));
+        return lst;
+      } 
+    }
 
-    public System.Windows.Visibility serialVis { get { return ((_config == PinCfg.IO) && GetVis(EntryType.serial)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility serialVis { get { return ((_config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.serial && z.signal!=Signal.UART_DE && _owner.EntryIsEnabled(z))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public enBase serialCur {
       get { return GetCur(EntryType.serial); }
       set { SetCur(EntryType.serial, value); }
     }
-    public List<enBase> serialLst { get { return GetLst(EntryType.serial); } }
-
-    public System.Windows.Visibility spiVis { get { return ((_config == PinCfg.IO) && GetVis(EntryType.spi)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
-    public enBase spiCur {
-      get { return GetCur(EntryType.spi); }
-      set { SetCur(EntryType.spi, value); }
+    public List<enBase> serialLst { 
+      get {
+        List<enBase> lst = new List<enBase>();
+        lst.Add(enBase.none);
+        lst.AddRange(entrys.Where(z => z.type == EntryType.serial && z.signal != Signal.UART_DE && _owner.EntryIsEnabled(z)));
+        return lst;
+      } 
     }
-    public List<enBase> spiLst { get { return GetLst(EntryType.spi); } }
 
-    public System.Windows.Visibility twiVis { get { return ((_config == PinCfg.IO) && GetVis(EntryType.twi)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility twiVis { get { return ((_config == PinCfg.IO || _config==PinCfg.None) && GetVis(EntryType.twi)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public enBase twiCur {
       get { return GetCur(EntryType.twi); }
       set { SetCur(EntryType.twi, value); }
