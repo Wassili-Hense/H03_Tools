@@ -67,7 +67,7 @@ namespace X13 {
     SPI_MISO = ((int)EntryType.spi << 2) | 0,
     SPI_MOSI = ((int)EntryType.spi << 2) | 1,
     SPI_SCK = ((int)EntryType.spi << 2) | 2,
-    SPI_SS = ((int)EntryType.spi << 2) | 3,
+    SPI_NSS = ((int)EntryType.spi << 2) | 3,
     SYSTEM = ((int)EntryType.system << 2) | 0,
 
   }
@@ -107,7 +107,12 @@ namespace X13 {
       resouces[parent.name + "_used"] = RcUse.Shared;
       this._channel = int.Parse(info.Attribute("channel").Value);
       this._timer = int.Parse(info.Attribute("timer").Value);
-      this._af = int.Parse(info.Attribute("af").Value);
+      var xn = info.Attribute("af");
+      if(xn != null) {
+        this._af = int.Parse(xn.Value);
+      } else {
+        this._af = 0;
+      }
       this.name = "PWM " + _timer.ToString("00") + "." + _channel.ToString();
       resouces[this.name] = RcUse.Exclusive;
     }

@@ -5,7 +5,17 @@
         TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
         Title="Node Configurator" Width="1200">
     <Grid>
-    <Grid.RowDefinitions>
+    <Grid.Resources>
+      <LinearGradientBrush x:Key="BusyBorderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientBrush.GradientStops>
+          <GradientStopCollection>
+            <GradientStop Color="Orange" Offset="0.0"/>
+            <GradientStop Color="Yellow" Offset="1.0"/>
+          </GradientStopCollection>
+        </GradientBrush.GradientStops>
+      </LinearGradientBrush>
+    </Grid.Resources>
+      <Grid.RowDefinitions>
       <RowDefinition Height="30"/>
       <RowDefinition/>
     </Grid.RowDefinitions>
@@ -19,61 +29,59 @@
         <GridView AllowsColumnReorder="False">
           <GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
           <GridViewColumn Header="Pin" Width="40" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
-          <GridViewColumn Header="System" Width="100" >
+          <GridViewColumn Header="System" Width="105" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding systemVis}" MinWidth="90" ItemsSource="{Binding systemLst}" SelectedItem="{Binding systemCur}" />
+                <ComboBox MinWidth="85" Visibility="{Binding systemVis}" ItemsSource="{Binding systemLst}" SelectedItem="{Binding systemCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn Header="PHY1" Width="100" >
+          <GridViewColumn Header="PHY1" Width="120" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding phy1Vis}" MinWidth="90" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
+                <ComboBox MinWidth="105" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn Header="PHY2" Width="100" >
+          <GridViewColumn Header="PHY2" Width="120" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding phy2Vis}" MinWidth="90" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
+                <ComboBox MinWidth="105" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn Header="DIO" Width="60"  util:GridViewSort.PropertyName="dioCur" >
+          <GridViewColumn Header="Mapping" Width="75"  util:GridViewSort.PropertyName="dioCur" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding dioVis}" MinWidth="50"  ItemsSource="{Binding dioLst}" SelectedItem="{Binding dioCur}" />
+                <ComboBox Visibility="{Binding dioVis}" MinWidth="60"  ItemsSource="{Binding dioLst}" SelectedItem="{Binding dioCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
           <GridViewColumn Header="Analog" Width="80" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding ainVis}" MinWidth="70" ItemsSource="{Binding ainLst}" SelectedItem="{Binding ainCur}" />
+                <ComboBox Visibility="{Binding ainVis}" MinWidth="65" ItemsSource="{Binding ainLst}" SelectedItem="{Binding ainCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
           <GridViewColumn Header="PWM" Width="100" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding pwmVis}" MinWidth="90" ItemsSource="{Binding pwmLst}" SelectedItem="{Binding pwmCur}">
+                <ComboBox MinWidth="85" Visibility="{Binding pwmVis}" ItemsSource="{Binding pwmLst}" SelectedItem="{Binding pwmCur}">
                   <ComboBox.Style>
-                    <Style TargetType="ComboBox">
-                      <Setter Property="Background" Value="White" />
+                    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
                       <Style.Triggers>
                         <DataTrigger Binding="{Binding pwmIsAvaliable}" Value="False">
-                          <Setter Property="Background" Value="Orange" />
+                          <Setter Property="Background" Value="{StaticResource BusyBorderBrush}" />
                         </DataTrigger>
                       </Style.Triggers>
                     </Style>
                   </ComboBox.Style>
                   <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
-                      <Setter Property="Background" Value="White" />
                       <Style.Triggers>
                         <DataTrigger Binding="{Binding isAvailable}" Value="False">
-                          <Setter Property="Background" Value="Orange" />
+                          <Setter Property="Background" Value="{StaticResource BusyBorderBrush}" />
                         </DataTrigger>
                       </Style.Triggers>
                     </Style>
@@ -85,14 +93,14 @@
           <GridViewColumn Header="Serial" Width="100" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding serialVis}" MinWidth="90" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
+                <ComboBox MinWidth="85" Visibility="{Binding serialVis}" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
           <GridViewColumn Header="TWI" Width="100" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox Visibility="{Binding twiVis}" MinWidth="90" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
+                <ComboBox MinWidth="85" Visibility="{Binding twiVis}" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>

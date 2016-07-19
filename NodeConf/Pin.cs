@@ -13,6 +13,8 @@ namespace X13 {
       this.port = port;
       if(port == null) {
         this.name = info.Attribute("name").Value;
+        var xn = info.Attribute("fpin");
+        this.nr = xn != null ? xn.Value : null;
       } else {
         this.nr = info.Attribute("fpin").Value;
         this.idx = int.Parse(info.Attribute("idx").Value);
@@ -214,11 +216,11 @@ namespace X13 {
     public System.Windows.Visibility dioVis { get { return ((_config == PinCfg.None || _config == PinCfg.IO) && (GetVis(EntryType.dio) || GetVis(EntryType.ain))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public string dioCur {
       get {
-        return (!entrys.Any(z => z.type == EntryType.dio && _owner.EntryIsEnabled(z)) || _addr < 0) ? "--" : _addr.ToString("00");
+        return (!entrys.Any(z => (z.type == EntryType.dio || z.type==EntryType.ain) && _owner.EntryIsEnabled(z)) || _addr < 0) ? "--" : _addr.ToString("00");
       }
       set {
         int tmp;
-        var en = entrys.FirstOrDefault(z => z.type == EntryType.dio) as enDIO;
+        var en = entrys.FirstOrDefault(z => z.type == EntryType.dio || z.type == EntryType.ain);
         if(en == null || value == "--" || !int.TryParse(value, out tmp)) {
           tmp = -1;
         }
@@ -244,7 +246,7 @@ namespace X13 {
         var lst = new List<string>(100);
         string tmp;
         lst.Add("--");
-        if(entrys.Any(z => z.type == EntryType.dio && _owner.EntryIsEnabled(z))) {
+        if(entrys.Any(z => (z.type == EntryType.dio || z.type==EntryType.ain) && _owner.EntryIsEnabled(z))) {
           for(int i = 0; i < 100; i++) {
             lst.Add(i.ToString("00"));
           }
