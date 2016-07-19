@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cpu name="A1">
-  <!-- pin 
+<cpu name="A1" ainref="0x06">
+    <!-- ainref
+        Bit0 - Ext('e'), Bit1 - Vcc('v'), Bit2 - Int1('i'), Bit3 - Int2('I')
+    -->
+    <!-- pin 
             fpin    - номер ноги контроллера-->
-  <!-- pwm  
+    <!-- pwm  
             timer   - номер таймера
             channel - канал таймер
             -->
-  <!-- ain
+    <!-- ain
             channel - внутренний номер аналогового входа
             -->
   <port name="PORTB" titel="PB" offset="8" nr="1">
@@ -33,6 +36,16 @@
     <pin idx="5" fpin="17">
       <dio />
       <spi name="SCK" channel="1" config="0" />
+    </pin>
+    <pin idx="6" fpin="07">
+      <dio />
+      <system name="HSE_IN"/>
+      <system name="LSE_IN"/>
+    </pin>
+    <pin idx="7" fpin="08">
+      <dio />
+      <system name="HSE_OUT"/>
+      <system name="LSE_IN"/>
     </pin>
   </port>
   <port  name="PORTC" titel="PC" offset="16" nr="2">

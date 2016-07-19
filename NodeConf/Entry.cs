@@ -13,7 +13,8 @@ namespace X13 {
     protected readonly Pin _parent;
     public readonly EntryType type;
     public readonly Signal signal;
-    public string name { get; set; }
+    public string name { get; protected set; }
+    public string func;
     public bool selected { get; set; }
     public bool isAvailable {
       get {
@@ -77,6 +78,9 @@ namespace X13 {
       : base(info, parent, Signal.DIO) {
       resouces[parent.name + "_used"] = RcUse.Shared;
       base.name = parent.name;
+    }
+    public override string ToString() {
+      return func!=null?name+"_"+func:name;
     }
   }
 

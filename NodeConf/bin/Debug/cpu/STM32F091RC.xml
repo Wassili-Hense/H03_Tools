@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cpu name="S2">
-  <!-- pin 
+<cpu name="S2" ainref="0x02">
+    <!-- ainref
+        Bit0 - Ext('e'), Bit1 - Vcc('v'), Bit2 - Int1('i'), Bit3 - Int2('I')
+    -->
+    <!-- pin 
             fpin    - номер ноги контроллера-->
-  <!-- pwm  
+    <!-- pwm  
             timer   - номер таймера
             channel - канал таймер
             af      - номер альтернативной функции
             -->
-  <!-- ain
+    <!-- ain
             channel - внутренний номер аналогового входа
             -->
   <port name="GPIOA" titel="PA" offset="0" nr="0">
@@ -245,14 +248,24 @@
     </pin>
     <pin idx="14" fpin="03">
       <dio />
+      <system name="LSE_IN"/>
     </pin>
     <pin idx="15" fpin="04">
       <dio />
+      <system name="LSE_OUT"/>
     </pin>
   </port>
   <port  name="GPIOD" titel="PD" offset="48" nr="3">
     <pin idx="2" fpin="54">
       <serial name="DE" channel="3" config="1" />
+    </pin>
+  </port>
+  <port  name="GPIOF" titel="PF" offset="80" nr="5">
+    <pin idx="0" fpin="05">
+        <system name="HSE_IN"/>
+    </pin>
+    <pin idx="1" fpin="06">
+        <system name="HSE_OUT"/>
     </pin>
   </port>
   <pin name="RTC">

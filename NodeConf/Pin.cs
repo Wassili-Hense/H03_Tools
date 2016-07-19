@@ -91,6 +91,103 @@ namespace X13 {
       PropertyChangedReise("twiVis");
       PropertyChangedReise("twiCur");
       PropertyChangedReise("twiLst");
+      PropertyChangedReise("titelVis");
+    }
+    public void Load(XElement it) {
+      this._config = (PinCfg)Enum.Parse(typeof(PinCfg), it.Attribute("cfg").Value);
+      var xn = it.Attribute("addr");
+      if(xn != null && _config == PinCfg.IO) {
+        _addr = int.Parse(xn.Value);
+        xn = it.Attribute("titel");
+        if(xn != null && !string.IsNullOrEmpty(xn.Value)) {
+          titelCur = xn.Value;
+        }
+      } else {
+        _addr = -1;
+      }
+      foreach(var i2 in it.Elements("item")) {
+        string name = i2.Attribute("name").Value;
+        xn=i2.Attribute("func");
+        var en = entrys.FirstOrDefault(z => z.name == name);
+        if(en != null) {
+        if(_config == PinCfg.Phy1 && _owner.phy1 != null) {
+          _owner.phy1.SetCur(this, en, xn != null ? xn.Value : null);
+        }
+          en.selected = true;
+        }
+      }
+    }
+    public XElement Save() {
+      var el = new XElement("pin");
+      el.Add(new XAttribute("name", name));
+      el.Add(new XAttribute("cfg", _config.ToString()));
+      if(_config==PinCfg.IO && _addr>=0){
+        el.Add(new XAttribute("addr", _addr.ToString()));
+        if(titelCur != null) {
+          el.Add(new XAttribute("titel", titelCur));
+        }
+      }
+      
+      foreach(var en in entrys.Where(z=>z.selected)) {
+        var e2 = new XElement("item", new XAttribute("name", en.name));
+          if(en.func != null) {
+            e2.Add(new XAttribute("func", en.func));
+          }
+        el.Add(e2);
+      }
+      return el;
+    }
+    public void ExportX(Section section, XElement parent) {
+      XElement rez=null;
+      switch(section) {
+      case Section.IP:
+        if(_config == PinCfg.IO && entrys.Any(z => z.type == EntryType.dio && z.selected)) {
+          int ri = _owner.ExIndex(name + "_used");
+          rez = Project.CreateXItem("Ip" + _addr.ToString(), "AzX"+ri.ToString());
+          rez.Add(Project.CreateXItem("_description", "Digital input, "+titelCur??name));
+        }
+        break;
+      case Section.IN:
+        if(_config == PinCfg.IO && entrys.Any(z => z.type == EntryType.dio && z.selected)) {
+          int ri = _owner.ExIndex(name + "_used");
+          rez = Project.CreateXItem("In" + _addr.ToString(), "CzX" + ri.ToString());
+          rez.Add(Project.CreateXItem("_description", "Digital inverted input, " + titelCur ?? name));
+        }
+        break;
+      case Section.OP:
+        if(_config == PinCfg.IO && entrys.Any(z => z.type == EntryType.dio && z.selected)) {
+          int ri = _owner.ExIndex(name + "_used");
+          rez = Project.CreateXItem("Op" + _addr.ToString(), "BzX" + ri.ToString());
+          rez.Add(Project.CreateXItem("_description", "Digital output, " + titelCur ?? name));
+        }
+        break;
+      case Section.ON:
+        if(_config == PinCfg.IO && entrys.Any(z => z.type == EntryType.dio && z.selected)) {
+          int ri = _owner.ExIndex(name + "_used");
+          rez = Project.CreateXItem("On" + _addr.ToString(), "DzX" + ri.ToString());
+          rez.Add(Project.CreateXItem("_description", "Digital inverted output, " + titelCur ?? name));
+        }
+        break;
+      case Section.PP:
+        if(_config == PinCfg.IO && pwmCur.type==EntryType.pwm) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(pwmCur.name);
+          rez = Project.CreateXItem("Pp" + _addr.ToString(), "EzX" + ri.ToString()+", X"+ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "PWM output, " + titelCur ?? name));
+        }
+        break;
+      case Section.PN:
+        if(_config == PinCfg.IO && pwmCur.type == EntryType.pwm) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(pwmCur.name);
+          rez = Project.CreateXItem("Pn" + _addr.ToString(), "FzX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "PWM inverted output, " + titelCur ?? name));
+        }
+        break;
+      }
+      if(rez != null) {
+        parent.Add(rez);
+      }
     }
 
     #region view
@@ -154,7 +251,7 @@ namespace X13 {
       set {
         
         if(_owner.phy1 != null) {
-          bool refresh=_owner.phy1.SetCur(this, value);
+          bool refresh=_owner.phy1.SetCur(this, value, null);
           if(value != null && value.type != EntryType.none) {
             _config = PinCfg.Phy1;
           } else if(_config == PinCfg.Phy1) {
@@ -192,7 +289,7 @@ namespace X13 {
       set {
 
         if(_owner.phy2 != null) {
-          bool refresh = _owner.phy2.SetCur(this, value);
+          bool refresh = _owner.phy2.SetCur(this, value, null);
           if(value != null && value.type != EntryType.none) {
             _config = PinCfg.Phy2;
           } else if(_config == PinCfg.Phy2) {
@@ -229,7 +326,9 @@ namespace X13 {
           if(_addr >= 0) {
             _config = PinCfg.IO;
             foreach(var i2 in entrys.Where(z=>z.type!=EntryType.system && z.type!=EntryType.spi && z.type!=EntryType.twi && z.signal!=Signal.UART_DE && _owner.EntryIsEnabled(z))){
-              i2.selected=true;
+              if(i2.type != EntryType.pwm || !entrys.Any(z => z.type == i2.type && z.selected && z != i2)) {
+                i2.selected = true;
+              }
             }
           } else if(_config == PinCfg.IO) {
             foreach(var i2 in entrys.Where(z => z.selected)) {
@@ -321,6 +420,8 @@ namespace X13 {
     }
     public List<enBase> twiLst { get { return GetLst(EntryType.twi); } }
 
+    public System.Windows.Visibility titelVis { get { return _config == PinCfg.IO ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public string titelCur { get; set; }
     #endregion view
 
     #region INotifyPropertyChanged Members

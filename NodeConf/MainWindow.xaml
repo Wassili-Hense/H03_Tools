@@ -4,9 +4,9 @@
         xmlns:util="clr-namespace:Wpf.Util"
         TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
         Title="Node Configurator" Width="1200">
-    <Grid>
+  <Grid>
     <Grid.Resources>
-      <LinearGradientBrush x:Key="BusyBorderBrush" StartPoint="0,0" EndPoint="0,1">
+      <LinearGradientBrush x:Key="BusyBrush" StartPoint="0,0.1" EndPoint="1,0.9">
         <GradientBrush.GradientStops>
           <GradientStopCollection>
             <GradientStop Color="Orange" Offset="0.0"/>
@@ -14,17 +14,31 @@
           </GradientStopCollection>
         </GradientBrush.GradientStops>
       </LinearGradientBrush>
+      <LinearGradientBrush x:Key="TitelBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientBrush.GradientStops>
+          <GradientStopCollection>
+            <GradientStop Color="#FFF0FFF8" Offset="0.0"/>
+            <GradientStop Color="#FFF0FFF8" Offset="0.9"/>
+            <GradientStop Color="#FFE8F0FF" Offset="1.0"/>
+          </GradientStopCollection>
+        </GradientBrush.GradientStops>
+      </LinearGradientBrush>
     </Grid.Resources>
-      <Grid.RowDefinitions>
+    <Grid.RowDefinitions>
       <RowDefinition Height="30"/>
       <RowDefinition/>
     </Grid.RowDefinitions>
     <ToolBar Grid.Column="0" Grid.Row="0">
-      <Button Content="New" Click="buNew_Click" Width="60" />
-      <Button Content="Open" Width="60" />
-      <Button Content="Save" Width="60" />
+      <Button Content="New" Width="60" Click="buNew_Click" />
+      <Separator />
+      <Button Content="Open" Width="60" Click="buLoadProject_Click" />
+      <Separator />
+      <Button Content="Save" Width="60" Click="buSaveProject_Click" />
+      <Separator />
+      <Button Content="Export" Width="60" Click="buExport_Click" />
+      <Separator />
     </ToolBar>
-    <ListView Grid.Row="2" Name="lvPins" BorderThickness="0" KeyboardNavigation.TabNavigation="Continue" Focusable="False" util:GridViewSort.AutoSort="True" SelectionMode="Single">
+    <ListView Grid.Row="2" Name="lvPins" BorderThickness="0,1,0,0" KeyboardNavigation.TabNavigation="Continue" Focusable="False" util:GridViewSort.AutoSort="True" SelectionMode="Single">
       <ListView.View>
         <GridView AllowsColumnReorder="False">
           <GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
@@ -36,17 +50,17 @@
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn Header="PHY1" Width="120" >
+          <GridViewColumn Header="PHY1" Width="130" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox MinWidth="105" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
+                <ComboBox MinWidth="115" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-          <GridViewColumn Header="PHY2" Width="120" >
+          <GridViewColumn Header="PHY2" Width="130" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox MinWidth="105" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
+                <ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
@@ -72,7 +86,7 @@
                     <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
                       <Style.Triggers>
                         <DataTrigger Binding="{Binding pwmIsAvaliable}" Value="False">
-                          <Setter Property="Background" Value="{StaticResource BusyBorderBrush}" />
+                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
                         </DataTrigger>
                       </Style.Triggers>
                     </Style>
@@ -81,7 +95,7 @@
                     <Style TargetType="ComboBoxItem">
                       <Style.Triggers>
                         <DataTrigger Binding="{Binding isAvailable}" Value="False">
-                          <Setter Property="Background" Value="{StaticResource BusyBorderBrush}" />
+                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
                         </DataTrigger>
                       </Style.Triggers>
                     </Style>
@@ -101,6 +115,13 @@
             <GridViewColumn.CellTemplate>
               <DataTemplate>
                 <ComboBox MinWidth="85" Visibility="{Binding twiVis}" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="Titel" Width="120" util:GridViewSort.PropertyName="titelCur">
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <TextBox MinWidth="110" Visibility="{Binding titelVis}" Text="{Binding titelCur}" BorderThickness="0" Background="{StaticResource TitelBrush}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>

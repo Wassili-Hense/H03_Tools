@@ -31,5 +31,41 @@ namespace X13 {
         lvPins.ItemsSource = _prj.pins;
       }
     }
+    private void buLoadProject_Click(object sender, RoutedEventArgs e) {
+      var dlg = new Microsoft.Win32.OpenFileDialog();
+      dlg.DefaultExt = "*.xml";
+      dlg.Filter = "Project (*.xml)|*.xml|All Files|*.*";
+      dlg.CheckFileExists = true;
+      dlg.InitialDirectory = System.IO.Path.GetFullPath("projects");
+      if(!Directory.Exists(dlg.InitialDirectory)) {
+        Directory.CreateDirectory(dlg.InitialDirectory);
+      }
+      var res = dlg.ShowDialog();
+      if(res == true) {
+        var curDir = System.IO.Directory.GetCurrentDirectory();
+        var oPath = dlg.FileName;
+        if(oPath.StartsWith(curDir) && oPath.Length > curDir.Length) {
+          oPath = oPath.Substring(curDir.Length + 1);
+        }
+        _prj = Project.Load(oPath);
+        if(_prj != null) {
+          this.Title = System.IO.Path.GetFileNameWithoutExtension(_prj.Path) + " - Node Configurator";
+          lvPins.ItemsSource = _prj.pins;
+        }
+      }
+    }
+    private void buSaveProject_Click(object sender, RoutedEventArgs e) {
+      if(_prj != null) {
+        _prj.Save();
+      }
+    }
+
+    private void buExport_Click(object sender, RoutedEventArgs e) {
+      if(_prj != null) {
+        _prj.Export();
+      }
+
+    }
+
   }
 }

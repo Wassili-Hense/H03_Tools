@@ -25,10 +25,10 @@ namespace X13 {
     protected int _nr;
 
     public string signature { get; protected set; }
+    public string name { get; protected set; }
     public abstract List<enBase> GetLst(Pin pin);
     public abstract enBase GetCur(Pin pin);
-    public abstract bool SetCur(Pin pin, enBase en);
-
+    public abstract bool SetCur(Pin pin, enBase en, string func);
   }
 
   internal class phySerial : phyBase {
@@ -37,6 +37,7 @@ namespace X13 {
 
     public phySerial(int nr) {
       signature = "S";
+      name = "UART";
       this._nr = nr;
     }
 
@@ -61,7 +62,7 @@ namespace X13 {
       var en = pin.entrys.FirstOrDefault(z => z == _tx || z == _rx);
       return en ?? enBase.none;
     }
-    public override bool SetCur(Pin pin, enBase en) {
+    public override bool SetCur(Pin pin, enBase en, string func) {
       var old = GetCur(pin);
       if(en != null && old != en) {
         if(old.type == EntryType.serial) {
@@ -95,6 +96,7 @@ namespace X13 {
 
     public phyRS485(int nr) {
       signature = "R";
+      name = "RS485";
       this._nr = nr;
     }
 
@@ -132,7 +134,7 @@ namespace X13 {
       var en = pin.entrys.FirstOrDefault(z => z == _tx || z == _rx || z == _de);
       return en ?? enBase.none;
     }
-    public override bool SetCur(Pin pin, enBase en) {
+    public override bool SetCur(Pin pin, enBase en, string func) {
       var old = GetCur(pin);
       if(en != null && old != en) {
         if(old.type == EntryType.serial) {
@@ -170,6 +172,7 @@ namespace X13 {
 
     public phyCC1101(int nr) {
       signature = "C";
+      name = "CC1101";
       this._nr = nr;
     }
 
@@ -223,7 +226,7 @@ namespace X13 {
       var en = pin.entrys.FirstOrDefault(z => z == _miso || z == _mosi || z == _sck || z == _nss);
       return en ?? enBase.none;
     }
-    public override bool SetCur(Pin pin, enBase en) {
+    public override bool SetCur(Pin pin, enBase en, string func) {
       var old = GetCur(pin);
       if(en != null && old != en) {
         if(old.type != EntryType.none) {
@@ -237,7 +240,7 @@ namespace X13 {
             _sck = null;
           } else if(_nss == old) {
             if(_nss.type == EntryType.dio) {
-              _nss.name = pin.name;
+              _nss.func = null;
             }
             _nss = null;
           }
@@ -258,14 +261,13 @@ namespace X13 {
           en.selected = true;
           en.resouces[pin.name + "_used"] = RcUse.Exclusive;
           _nss = en;
-          _nss.name = pin.name + "_NSS";
+          _nss.func = "NSS";
         }
         return true;
       }
       return false;
     }
   }
-
   internal class phyENC28J60 : phyBase {
     private enSpi _mosi;
     private enSpi _miso;
@@ -274,6 +276,7 @@ namespace X13 {
 
     public phyENC28J60(int nr) {
       signature = "E";
+      name = "ENC28J60";
       this._nr = nr;
     }
 
@@ -327,7 +330,7 @@ namespace X13 {
       var en = pin.entrys.FirstOrDefault(z => z == _miso || z == _mosi || z == _sck || z == _nss);
       return en ?? enBase.none;
     }
-    public override bool SetCur(Pin pin, enBase en) {
+    public override bool SetCur(Pin pin, enBase en, string func) {
       var old = GetCur(pin);
       if(en != null && old != en) {
         if(old.type != EntryType.none) {
@@ -341,7 +344,7 @@ namespace X13 {
             _sck = null;
           } else if(_nss == old) {
             if(_nss.type == EntryType.dio) {
-              _nss.name = pin.name;
+              _nss.func = null;
             }
             _nss = null;
           }
@@ -362,7 +365,7 @@ namespace X13 {
           en.selected = true;
           en.resouces[pin.name + "_used"] = RcUse.Exclusive;
           _nss = en;
-          _nss.name = pin.name + "_NSS";
+          _nss.func ="NSS";
         }
         return true;
       }
@@ -379,6 +382,7 @@ namespace X13 {
 
     public phyRFM69(int nr) {
       signature = "Q";
+      name = "RFM69";
       this._nr = nr;
     }
 
@@ -432,7 +436,7 @@ namespace X13 {
       var en = pin.entrys.FirstOrDefault(z => z == _miso || z == _mosi || z == _sck || z == _nss || z == _irq);
       return en ?? enBase.none;
     }
-    public override bool SetCur(Pin pin, enBase en) {
+    public override bool SetCur(Pin pin, enBase en, string func) {
       var old = GetCur(pin);
       if(en != null && old != en) {
         if(old.type != EntryType.none) {
@@ -446,11 +450,11 @@ namespace X13 {
             _sck = null;
           } else if(_nss == old) {
             if(_nss.type == EntryType.dio) {
-              _nss.name = pin.name;
+              _nss.func = null;
             }
             _nss = null;
           } else if(_irq == old) {
-            _irq.name = pin.name;
+            _irq.func = null;
             _irq = null;
           }
         }
@@ -492,13 +496,13 @@ namespace X13 {
           }
           bool dio_nss = !pin._owner.pins.SelectMany(z => z.entrys).Where(z => z.signal == Signal.SPI_NSS && pin._owner.EntryIsEnabled(z)).OfType<enSpi>().Where(z => !defined || (z.channel == channel && z.config == config)).Any();
 
-          if(dio_nss && _nss == null) {
+          if(dio_nss && _nss == null && func!="IRQ") {
             _nss = en as enDIO;
-            _nss.name = pin.name + "_NSS";
+            _nss.func = "NSS";
 
           } else if(_irq == null) {
             _irq = en as enDIO;
-            _irq.name = pin.name + "_IRQ";
+            _irq.func = "IRQ";
           }
         }
         return true;
