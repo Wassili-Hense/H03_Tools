@@ -13,7 +13,7 @@ namespace X13 {
       dev.Add(new XAttribute("name", name));
       dev.Add(new XAttribute("value", value));
       dev.Add(new XAttribute("saved", "True"));
-      dev.Add(new XAttribute("type", "System.String"));
+      dev.Add(new XAttribute("type", "string"));
       return dev;
     }
 
@@ -23,6 +23,7 @@ namespace X13 {
       try {
         XDocument doc = XDocument.Load(System.IO.Path.GetFullPath(@".\cpu\" + p._cpuPath + ".xml"));
         p._cpuSignature = doc.Root.Attribute("name").Value;
+        p._ainRef = int.Parse(doc.Root.Attribute("ainref").Value.Substring(2), System.Globalization.NumberStyles.HexNumber);
         List<Pin> pins = new List<Pin>();
         pins.AddRange(doc.Root.Elements("port").SelectMany(z => Port.CreatePort(p, z)));
         pins.AddRange(doc.Root.Elements("pin").Select(z => new Pin(p, z, null)));
@@ -66,6 +67,7 @@ namespace X13 {
     private phyBase _phy1;
     private phyBase _phy2;
     private List<string> _exResouces;
+    private int _ainRef;
 
     public Pin[] pins { get; private set; }
     public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
@@ -167,6 +169,16 @@ namespace X13 {
       dev.Add(PP);
       var PN = new XElement("item", new XAttribute("name", "PWM inverted"));
       dev.Add(PN);
+      XElement ain;
+      if(_ainRef != 0) {
+        ain = new XElement("item", new XAttribute("name", "Analog inputs"));
+        dev.Add(ain);
+      } else {
+        ain = null;
+      }
+      var uart = new XElement("item", new XAttribute("name", "Serial interface"));
+      Pin twi_sda=null;
+      Pin twi_scl=null;
       foreach(var p in pins) {
         p.ExportX(Section.IP, IP);
         p.ExportX(Section.OP, OP);
@@ -174,7 +186,43 @@ namespace X13 {
         p.ExportX(Section.ON, ON);
         p.ExportX(Section.PP, PP);
         p.ExportX(Section.PN, PN);
+        if((_ainRef & 1) == 1) {
+          p.ExportX(Section.Ae, ain);
+        }
+        if((_ainRef & 2) == 2) {
+          p.ExportX(Section.Av, ain);
+        }
+        if((_ainRef & 4) == 4) {
+          p.ExportX(Section.Ai, ain);
+        }
+        if((_ainRef & 8) == 8) {
+          p.ExportX(Section.AI, ain);
+        }
+        p.ExportX(Section.Serial, uart);
+        if(p.twiCur.signal == Signal.TWI_SDA) {
+          twi_sda = p;
+        } else if(p.twiCur.signal == Signal.TWI_SCL) {
+          twi_scl = p;
+        }
       }
+      if(uart.HasElements) {
+        dev.Add(uart);
+      }
+      if(twi_sda != null && twi_scl != null) {
+        var twi1 = new XElement("item", new XAttribute("name", "TWI"));
+        int r1 = ExIndex(twi_sda.name + "_used");
+        int r2 = ExIndex(twi_scl.name + "_used");
+        var twi2 = CreateXItem("Ta0", "ZbX" + r1.ToString() + ", X" + r2.ToString());
+        twi2.Add(CreateXItem("_description", "TWI devices"));
+        twi1.Add(twi2);
+        dev.Add(twi1);
+      }
+      var add = new XElement("item", new XAttribute("name", "Add"));
+      add.Add(CreateXItem("bool", "yZ"));
+      add.Add(CreateXItem("long", "yI"));
+      add.Add(CreateXItem("string", "yS"));
+      add.Add(CreateXItem("Byte array", "yB"));
+      dev.Add(add);
       dev.Add(CreateXItem("remove", "zD"));
       using(StreamWriter writer = File.CreateText(System.IO.Path.ChangeExtension(_prjPath, "xst"))) {
         doc.Save(writer);
@@ -200,5 +248,10 @@ namespace X13 {
     ON,
     PP,
     PN,
+    Ae,
+    Av,
+    Ai,
+    AI,
+    Serial,
   }
 }

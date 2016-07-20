@@ -184,6 +184,85 @@ namespace X13 {
           rez.Add(Project.CreateXItem("_description", "PWM inverted output, " + titelCur ?? name));
         }
         break;
+      case Section.Ae:
+        if(_config == PinCfg.IO && ainCur.type==EntryType.ain) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(ainCur.name);
+          rez = Project.CreateXItem("Ae" + _addr.ToString(), "GiX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Analog input external reference, " + titelCur ?? name));
+        }
+        break;
+      case Section.Av:
+        if(_config == PinCfg.IO && ainCur.type == EntryType.ain) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(ainCur.name);
+          rez = Project.CreateXItem("Av" + _addr.ToString(), "GiX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Analog input AVcc reference, " + titelCur ?? name));
+        }
+        break;
+      case Section.Ai:
+        if(_config == PinCfg.IO && ainCur.type == EntryType.ain) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(ainCur.name);
+          rez = Project.CreateXItem("Ai" + _addr.ToString(), "GiX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Analog input internal reference, " + titelCur ?? name));
+        }
+        break;
+      case Section.AI:
+        if(_config == PinCfg.IO && ainCur.type == EntryType.ain) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(ainCur.name);
+          rez = Project.CreateXItem("AI" + _addr.ToString(), "GiX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Analog input internal2 reference, " + titelCur ?? name));
+        }
+        break;
+      case Section.Serial:{
+        enSerial uart;
+        if(_config == PinCfg.IO && (uart=serialCur as enSerial)!=null) {
+          int r_pin = _owner.ExIndex(name + "_used");
+          int r_s0 = _owner.ExIndex("UART" + uart.channel.ToString() + "_s0");
+          int r_s1 = _owner.ExIndex("UART" + uart.channel.ToString() + "_s1");
+          int r_s2 = _owner.ExIndex("UART" + uart.channel.ToString() + "_s2");
+          int r_s3 = _owner.ExIndex("UART" + uart.channel.ToString() + "_s3");
+          int r_s4 = _owner.ExIndex("UART" + uart.channel.ToString() + "_s4");
+          if(uart.signal == Signal.UART_RX) {
+            rez = Project.CreateXItem("Sr" + uart.channel.ToString(), string.Format("NbX{0},S{1},B{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "RxD 2400, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("Sr" + (16+uart.channel).ToString(), string.Format("NbX{0},B{1},S{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "RxD 4800, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("Sr" + (32 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},S{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "RxD 9600, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("Sr" + (48 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},B{3},S{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "RxD 19200, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("Sr" + (64 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},B{3},B{4},S{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "RxD 38400, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = null;
+          } else if(uart.signal == Signal.UART_TX) {
+            rez = Project.CreateXItem("St" + uart.channel.ToString(), string.Format("NbX{0},S{1},B{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "TxD 2400, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("St" + (16 + uart.channel).ToString(), string.Format("NbX{0},B{1},S{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "TxD 4800, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("St" + (32 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},S{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "TxD 9600, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("St" + (48 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},B{3},S{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "TxD 19200, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = Project.CreateXItem("St" + (64 + uart.channel).ToString(), string.Format("NbX{0},B{1},B{2},B{3},B{4},S{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4));
+            rez.Add(Project.CreateXItem("_description", "TxD 38400, " + titelCur ?? name));
+            parent.Add(rez);
+            rez = null;
+          }
+        }
+      }
+        break;
       }
       if(rez != null) {
         parent.Add(rez);
