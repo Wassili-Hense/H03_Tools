@@ -69,6 +69,7 @@ namespace X13 {
     private List<string> _exResouces;
     private int _ainRef;
 
+    public enDIO led;
     public Pin[] pins { get; private set; }
     public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
     public phyBase phy2 { get { return _phy2; } set { _phy2 = value; _prjPath = null; } }
@@ -130,6 +131,9 @@ namespace X13 {
       }
     }
     public void Save() {
+      if(!Directory.Exists(System.IO.Path.GetDirectoryName(_prjPath))) {
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_prjPath));
+      }
       XDocument doc = new XDocument(new XElement("prj"));
       doc.Root.Add(new XAttribute("cpu", _cpuPath));
       if(_phy1 != null) {
@@ -146,7 +150,47 @@ namespace X13 {
       }
     }
     public void Export() {
+      if(!Directory.Exists(System.IO.Path.GetDirectoryName(_prjPath))) {
+        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_prjPath));
+      }
+
       _exResouces = new List<string>();
+      // UART mapping
+      var uMap = new List<int>();
+      int idx;
+      enSerial up;
+      foreach(var p in pins) {
+        up = p.serialCur as enSerial;
+        if(up != null) {
+          idx = uMap.IndexOf(up.channel);
+          if(idx < 0) {
+            idx = uMap.Count;
+            uMap.Add(up.channel);
+          }
+          up.mapping = idx;
+        }
+      }
+      foreach(var p in pins) {
+        up = p.phy1Cur as enSerial;
+        if(up != null) {
+          idx = uMap.IndexOf(up.channel);
+          if(idx < 0) {
+            idx = uMap.Count;
+            uMap.Add(up.channel);
+          }
+          up.mapping = idx;
+        }
+        up = p.phy2Cur as enSerial;
+        if(up != null) {
+          idx = uMap.IndexOf(up.channel);
+          if(idx < 0) {
+            idx = uMap.Count;
+            uMap.Add(up.channel);
+          }
+          up.mapping = idx;
+        }
+      }
+      //  UART mapping
       XDocument doc = new XDocument(new XElement("root", new XAttribute("head", "/etc/declarers/dev") ) );
       string name=System.IO.Path.GetFileNameWithoutExtension(this.Path);
       if(name.Length > 6) {
@@ -176,7 +220,6 @@ namespace X13 {
       } else {
         ain = null;
       }
-      var uart = new XElement("item", new XAttribute("name", "Serial interface"));
       Pin twi_sda=null;
       Pin twi_scl=null;
       foreach(var p in pins) {
@@ -198,15 +241,12 @@ namespace X13 {
         if((_ainRef & 8) == 8) {
           p.ExportX(Section.AI, ain);
         }
-        p.ExportX(Section.Serial, uart);
+        p.ExportX(Section.Serial, dev);
         if(p.twiCur.signal == Signal.TWI_SDA) {
           twi_sda = p;
         } else if(p.twiCur.signal == Signal.TWI_SCL) {
           twi_scl = p;
         }
-      }
-      if(uart.HasElements) {
-        dev.Add(uart);
       }
       if(twi_sda != null && twi_scl != null) {
         var twi1 = new XElement("item", new XAttribute("name", "TWI"));

@@ -80,7 +80,7 @@ namespace X13 {
       base.name = parent.name;
     }
     public override string ToString() {
-      return func!=null?name+"_"+func:name;
+      return func??name;
     }
   }
 
@@ -124,6 +124,7 @@ namespace X13 {
   internal class enSerial : enBase {
     public readonly byte config;
     public readonly int channel;
+    public int mapping;
 
     public enSerial(XElement info, Pin parent)
       : base(info, parent, (Signal)Enum.Parse(typeof(Signal), "UART_" + info.Attribute("name").Value)) {
