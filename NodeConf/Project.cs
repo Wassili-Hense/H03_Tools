@@ -154,8 +154,15 @@ namespace X13 {
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_prjPath));
       }
 
+      var now = DateTime.Now;
+
       _exResouces = new List<string>();
-      // UART mapping
+      string name = System.IO.Path.GetFileNameWithoutExtension(this.Path);
+      if(name.Length > 6) {
+        name = name.Substring(0, 6);
+      }
+
+      #region UART mapping
       var uMap = new List<int>();
       int idx;
       enSerial up;
@@ -190,14 +197,11 @@ namespace X13 {
           up.mapping = idx;
         }
       }
-      //  UART mapping
+      #endregion UART mapping
+
+      #region export .xst
       XDocument doc = new XDocument(new XElement("root", new XAttribute("head", "/etc/declarers/dev") ) );
-      string name=System.IO.Path.GetFileNameWithoutExtension(this.Path);
-      if(name.Length > 6) {
-        name = name.Substring(0, 6);
-      }
       var dev=CreateXItem(name, "pack://application:,,/CC;component/Images/" + (_phy2 == null ? "ty_unode.png" : "ty_ugate.png"));
-      var now = DateTime.Now;
       dev.Add(new XAttribute("ver", (new Version(3, now.Year % 100, now.Month * 100 + now.Day))));
 
       doc.Root.Add(dev);
@@ -267,6 +271,43 @@ namespace X13 {
       using(StreamWriter writer = File.CreateText(System.IO.Path.ChangeExtension(_prjPath, "xst"))) {
         doc.Save(writer);
       }
+      #endregion export .xst
+
+      #region export .h
+      var h_sb = new StringBuilder();
+
+      h_sb.AppendLine("// This file is part of the https://github.com/X13home project.");
+      h_sb.AppendFormat("\r\n#ifndef _{0}_H\r\n#define _{0}_H\r\n\r\n", name);
+      h_sb.AppendFormat("// Board: {0}\r\n", name);
+      h_sb.AppendFormat("// uC: {0}\r\n", System.IO.Path.GetFileNameWithoutExtension(_cpuPath));
+      if(_phy1 != null) {
+        h_sb.AppendFormat("// PHY1: {0}\r\n", _phy1.name);
+      }
+      if(_phy2 != null) {
+        h_sb.AppendFormat("// PHY2: {0}\r\n", _phy2.name);
+      }
+      h_sb.AppendLine();
+      string tmp;
+      Port port=null;
+      foreach(var p in pins.OrderBy(z => z.name)) {
+        if(p.port != port) {
+          port = p.port;
+          if(port != null) {
+            h_sb.Append("//\t" + port.name + "\r\n");
+          }
+        }
+        tmp = p.ExportPinOut();
+        if(tmp != null) {
+          h_sb.Append(tmp);
+        }
+      }
+
+      //================================================= 
+      h_sb.AppendFormat("\r\n#endif //_{0}_H\r\n", name);
+      
+      File.WriteAllText(System.IO.Path.ChangeExtension(_prjPath, "h"), h_sb.ToString());
+      h_sb = null;
+      #endregion export .h
 
     }
 
