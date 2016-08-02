@@ -100,6 +100,9 @@ namespace X13 {
       this.name = "AIN " + _channel.ToString("00");
       resouces[this.name] = RcUse.Exclusive;
     }
+    public int GetConfig() {
+      return _channel;
+    }
   }
   internal class enPwm : enBase {
     private int _channel;
@@ -119,6 +122,9 @@ namespace X13 {
       }
       this.name = "PWM " + _timer.ToString("00") + "." + _channel.ToString();
       resouces[this.name] = RcUse.Exclusive;
+    }
+    public int GetConfig() {
+      return (_af << 8) | (_timer << 3) | (_channel);
     }
   }
   internal class enSerial : enBase {

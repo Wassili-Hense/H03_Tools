@@ -18,11 +18,11 @@
     </pin>
     <pin idx="1" fpin="13">
       <dio />
-      <pwm name="OC1A" timer="1" channel="1"/>
+      <pwm name="OC1A" timer="1" channel="0"/>
     </pin>
     <pin idx="2" fpin="14">
       <dio />
-      <pwm name="OC1B" timer="1" channel="2"/>
+      <pwm name="OC1B" timer="1" channel="1"/>
       <spi name="NSS" channel="1" config="0" />
     </pin>
     <pin idx="3" fpin="15">
@@ -96,11 +96,11 @@
     </pin>
     <pin idx="5" fpin="09">
       <dio />
-      <pwm name="OC0B" timer="0" channel="2"/>
+      <pwm name="OC0B" timer="0" channel="1"/>
     </pin>
     <pin idx="6" fpin="10">
       <dio />
-      <pwm name="OC0A" timer="0" channel="1"/>
+      <pwm name="OC0A" timer="0" channel="0"/>
     </pin>
     <pin idx="7" fpin="11">
       <dio />

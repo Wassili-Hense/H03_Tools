@@ -61,6 +61,7 @@ namespace X13 {
     public string name { get; private set; }
     public string nr { get; private set; }
     public int idx { get; private set; }
+    public int mapping { get { return _addr; } }
 
     private PinCfg config;
     private int _addr;
@@ -299,10 +300,10 @@ namespace X13 {
           sb.Append("| " + pwmCur.name + "\t");
         }
         if(twiCur.type != EntryType.none) {
-          sb.Append("| " + twiCur.name + "\t");
+          sb.Append("| " + twiCur.signal.ToString() + "\t");
         }
         if(serialCur.type != EntryType.none) {
-          sb.Append("| " + serialCur.name + "\t");
+          sb.Append("| " + serialCur.signal.ToString()+" "+ (serialCur as enSerial).mapping.ToString() + "\t");
         }
       }
       sb.Append("\r\n");

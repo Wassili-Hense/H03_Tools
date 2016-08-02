@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<prj cpu="ATMEGA328P" phy1="UART">
+  <pin name="PORTB.00" cfg="System" />
+  <pin name="PORTB.01" cfg="None" />
+  <pin name="PORTB.02" cfg="None" />
+  <pin name="PORTB.03" cfg="None" />
+  <pin name="PORTB.04" cfg="None" />
+  <pin name="PORTB.05" cfg="None" />
+  <pin name="PORTB.06" cfg="None" />
+  <pin name="PORTB.07" cfg="None" />
+  <pin name="PORTC.00" cfg="None" />
+  <pin name="PORTC.01" cfg="None" />
+  <pin name="PORTC.02" cfg="None" />
+  <pin name="PORTC.03" cfg="None" />
+  <pin name="PORTC.04" cfg="None" />
+  <pin name="PORTC.05" cfg="None" />
+  <pin name="PORTD.00" cfg="Phy1">
+    <item name="RX 1.0" />
+  </pin>
+  <pin name="PORTD.01" cfg="Phy1">
+    <item name="TX 1.0" />
+  </pin>
+  <pin name="PORTD.02" cfg="IO" addr="2" titel="2">
+    <item name="PORTD.02" />
+  </pin>
+  <pin name="PORTD.03" cfg="IO" addr="3" titel="3">
+    <item name="PORTD.03" />
+  </pin>
+  <pin name="PORTD.04" cfg="IO" addr="4" titel="4">
+    <item name="PORTD.04" />
+  </pin>
+  <pin name="PORTD.05" cfg="IO" addr="5" titel="5">
+    <item name="PORTD.05" />
+    <item name="PWM 00.2" />
+  </pin>
+  <pin name="PORTD.06" cfg="IO" addr="6" titel="6">
+    <item name="PORTD.06" />
+    <item name="PWM 00.1" />
+  </pin>
+  <pin name="PORTD.07" cfg="IO" addr="7" titel="7">
+    <item name="PORTD.07" />
+  </pin>
+  <pin name="AIN6" cfg="IO" addr="0" titel="0">
+    <item name="AIN 06" />
+  </pin>
+  <pin name="AIN7" cfg="IO" addr="1" titel="2">
+    <item name="AIN 07" />
+  </pin>
+</prj>
