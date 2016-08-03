@@ -12,12 +12,18 @@ namespace X13 {
       p.name = info.Attribute("name").Value;
       p.offset = int.Parse(info.Attribute("offset").Value);
       p.nr = int.Parse(info.Attribute("nr").Value);
-
+      p.pinset = info.Attribute("pinset").Value;
+      p.pinrst = info.Attribute("pinrst").Value;
+      p.pinget = info.Attribute("pinget").Value;
       return info.Elements("pin").Select(z => new Pin(owner, z, p));
 
     }
     public string name { get; private set; }
     public int offset { get; private set; }
     public int nr { get; private set; }
+    public string pinset { get; private set; }
+    public string pinrst { get; private set; }
+    public string pinget { get; private set; }
+
   }
 }

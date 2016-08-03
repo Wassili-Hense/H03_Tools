@@ -29,6 +29,7 @@ namespace X13 {
     public abstract List<enBase> GetLst(Pin pin);
     public abstract enBase GetCur(Pin pin);
     public abstract bool SetCur(Pin pin, enBase en, string func);
+    public abstract string ExportH();
   }
 
   internal class phySerial : phyBase {
@@ -88,6 +89,24 @@ namespace X13 {
       return false;
 
     }
+    public override string ExportH() {
+      if(_tx == null || _rx == null) {
+        return "\r\n//UART PHY"+_nr.ToString()+" NOT CONFIGURED\r\n";
+      }
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//UART PHY{0} Section\tTX: {2}, RX: {1}\r\n", _nr, _rx.parent.name, _tx.parent.name);
+      sb.AppendFormat("#define HAL_USE_USART{0}            {1}\r\n", _tx.channel, _tx.mapping);
+      if(_tx.config != 0) {
+        sb.AppendFormat("#define HAL_USART{1}_REMAP          {0}\r\n", _tx.config, _tx.channel);
+      }
+      sb.AppendFormat("#define UART_PHY_PORT               {0}\r\n", _tx.mapping);
+      sb.AppendFormat("#define UART_PHY                    {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/UART/uart_phy.h\"");
+      sb.AppendFormat("//End UART PHY{0} Section\r\n", _nr);
+
+      return sb.ToString();
+    }
   }
   internal class phyRS485 : phyBase {
     private enSerial _tx;
@@ -95,7 +114,7 @@ namespace X13 {
     private enSerial _de;
 
     public phyRS485(int nr) {
-      signature = "R";
+      signature = "M";
       name = "RS485";
       this._nr = nr;
     }
@@ -162,6 +181,24 @@ namespace X13 {
         return true;
       }
       return false;
+    }
+    public override string ExportH() {
+      if(_tx == null || _rx == null || _de==null) {
+        return "\r\n//RS485 PHY" + _nr.ToString() + " NOT CONFIGURED\r\n";
+      }
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//RS485 PHY{0} Section\tTX: {2}, RX: {1}, DE: {3}\r\n", _nr, _rx.parent.name, _tx.parent.name, _de.parent.name);
+      sb.AppendFormat("#define HAL_USE_USART{0}            {1}\r\n", _tx.channel, _tx.mapping);
+      if(_tx.config != 0) {
+        sb.AppendFormat("#define HAL_USART{1}_REMAP          {0}\r\n", _tx.config, _tx.channel);
+      }
+      sb.AppendFormat("#define RS485_PHY_PORT              {0}\r\n", _tx.mapping);
+      sb.AppendFormat("#define RS485_PHY                   {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/RS485/rs485_phy.h\"");
+      sb.AppendFormat("//End UART PHY{0} Section\r\n", _nr);
+
+      return sb.ToString();
     }
   }
   internal class phyCC1101 : phyBase {
@@ -267,6 +304,25 @@ namespace X13 {
       }
       return false;
     }
+    public override string ExportH() {
+      if(_mosi == null || _miso == null || _sck == null || _nss==null || _nss.parent.port==null) {
+        return "\r\n//CC11 PHY" + _nr.ToString() + " NOT CONFIGURED\r\n";
+      }
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//CC11 PHY{0} Section\tMOSI: {1}, MISO: {2}, SCK: {3}, NSS: {4}\r\n", _nr, _mosi.parent.name, _miso.parent.name, _sck.parent.name, _nss.parent.name);
+      sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", _mosi.channel, _mosi.config);
+      sb.AppendFormat("#define CC11_USE_SPI                {0}\r\n", _mosi.channel);
+      sb.AppendFormat("#define CC11_NSS_PIN                {0}\r\n", _nss.parent.idx + _nss.parent.port.offset);
+      sb.AppendFormat("#define CC11_WAIT_LOW_MISO()        while({0})\r\n", string.Format(_miso.parent.port.pinget, _miso.parent.idx));
+      sb.AppendFormat("#define CC11_SELECT()               {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
+      sb.AppendFormat("#define CC11_RELEASE()              {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
+      sb.AppendFormat("#define CC11_PHY                    {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/CC1101/cc11_phy.h\"");
+      sb.AppendFormat("//End CC11 PHY{0} Section\r\n", _nr);
+
+      return sb.ToString();
+    }
   }
   internal class phyENC28J60 : phyBase {
     private enSpi _mosi;
@@ -370,6 +426,24 @@ namespace X13 {
         return true;
       }
       return false;
+    }
+    public override string ExportH() {
+      if(_mosi == null || _miso == null || _sck == null || _nss == null || _nss.parent.port == null) {
+        return "\r\n//ENC26J60 PHY" + _nr.ToString() + " NOT CONFIGURED\r\n";
+      }
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//ENC PHY{0} Section\tMOSI: {1}, MISO: {2}, SCK: {3}, NSS: {4}\r\n", _nr, _mosi.parent.name, _miso.parent.name, _sck.parent.name, _nss.parent.name);
+      sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", _mosi.channel, _mosi.config);
+      sb.AppendFormat("#define ENC_USE_SPI                 {0}\r\n", _mosi.channel);
+      sb.AppendFormat("#define ENC_NSS_PIN                 {0}\r\n", _nss.parent.idx + _nss.parent.port.offset);
+      sb.AppendFormat("#define ENC_SELECT()                {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
+      sb.AppendFormat("#define ENC_RELEASE()               {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
+      sb.AppendFormat("#define ENC_PHY                     {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/ENC28J60/enc28j60_phy.h\"");
+      sb.AppendFormat("//End ENC PHY{0} Section\r\n", _nr);
+
+      return sb.ToString();
     }
   }
 
@@ -508,6 +582,26 @@ namespace X13 {
         return true;
       }
       return false;
+    }
+    public override string ExportH() {
+      if(_mosi == null || _miso == null || _sck == null || _nss == null || _nss.parent.port == null || _irq==null || _irq.parent.port==null) {
+        return "\r\n//RFM69 PHY" + _nr.ToString() + " NOT CONFIGURED\r\n";
+      }
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//RFM69 PHY{0} Section\tMOSI: {1}, MISO: {2}, SCK: {3}, NSS: {4}, IRQ: {5}\r\n", _nr, _mosi.parent.name, _miso.parent.name, _sck.parent.name, _nss.parent.name, _irq.parent.name);
+      sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", _mosi.channel, _mosi.config);
+      sb.AppendFormat("#define RFM69_USE_SPI               {0}\r\n", _mosi.channel);
+      sb.AppendFormat("#define RFM69_NSS_PIN               {0}\r\n", _nss.parent.idx + _nss.parent.port.offset);
+      sb.AppendFormat("#define RFM69_SELECT()              {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
+      sb.AppendFormat("#define RFM69_RELEASE()             {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
+      sb.AppendFormat("#define RFM69_IRQ_PIN               {0}\r\n", _irq.parent.idx + _irq.parent.port.offset);
+      sb.AppendFormat("#define RFM69_IRQ_STATE()           ({0} != 0)\r\n", string.Format(_irq.parent.port.pinget, _irq.parent.idx));
+      sb.AppendFormat("#define RFM69_PHY                   {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/RFM69/rfm69_phy.h\"");
+      sb.AppendFormat("//End RFM69 PHY{0} Section\r\n", _nr);
+
+      return sb.ToString();
     }
   }
 }

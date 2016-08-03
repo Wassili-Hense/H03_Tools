@@ -12,8 +12,12 @@
   <pin name="PORTC.01" cfg="None" />
   <pin name="PORTC.02" cfg="None" />
   <pin name="PORTC.03" cfg="None" />
-  <pin name="PORTC.04" cfg="None" />
-  <pin name="PORTC.05" cfg="None" />
+  <pin name="PORTC.04" cfg="None">
+    <item name="SDA 1.0" />
+  </pin>
+  <pin name="PORTC.05" cfg="None">
+    <item name="SCL 1.0" />
+  </pin>
   <pin name="PORTD.00" cfg="Phy1">
     <item name="RX 1.0" />
   </pin>
@@ -31,11 +35,11 @@
   </pin>
   <pin name="PORTD.05" cfg="IO" addr="5" titel="5">
     <item name="PORTD.05" />
-    <item name="PWM 00.2" />
+    <item name="PWM 00.1" />
   </pin>
   <pin name="PORTD.06" cfg="IO" addr="6" titel="6">
     <item name="PORTD.06" />
-    <item name="PWM 00.1" />
+    <item name="PWM 00.0" />
   </pin>
   <pin name="PORTD.07" cfg="IO" addr="7" titel="7">
     <item name="PORTD.07" />
@@ -43,7 +47,7 @@
   <pin name="AIN6" cfg="IO" addr="0" titel="0">
     <item name="AIN 06" />
   </pin>
-  <pin name="AIN7" cfg="IO" addr="1" titel="2">
+  <pin name="AIN7" cfg="IO" addr="1" titel="1">
     <item name="AIN 07" />
   </pin>
 </prj>

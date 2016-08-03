@@ -12,7 +12,7 @@
     <!-- ain
             channel - внутренний номер аналогового входа
             -->
-  <port name="PORTB" titel="PB" offset="8" nr="1">
+  <port name="PORTB" titel="PB" offset="08" nr="1" pinset="PORTB |= (1 &lt;&lt; {0})" pinrst="PORTB &amp;= ~(1 &lt;&lt; {0})" pinget="PINB &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="12">
       <dio />
     </pin>
@@ -48,7 +48,7 @@
       <system name="LSE_IN"/>
     </pin>
   </port>
-  <port  name="PORTC" titel="PC" offset="16" nr="2">
+  <port name="PORTC" titel="PC" offset="16" nr="2" pinset="PORTC |= (1 &lt;&lt; {0})" pinrst="PORTC &amp;= ~(1 &lt;&lt; {0})" pinget="PINC &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="23">
       <dio />
       <ain name="AIN0" channel="0" />
@@ -76,7 +76,7 @@
       <twi name="SCL" channel="1" config="0" />
     </pin>
   </port>
-  <port  name="PORTD" titel="PD" offset="24" nr="3">
+  <port name="PORTD" titel="PD" offset="24" nr="3" pinset="PORTD |= (1 &lt;&lt; {0})" pinrst="PORTD &amp;= ~(1 &lt;&lt; {0})" pinget="PIND &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="30">
       <dio />
       <serial name="RX" channel="1" config="0" />
@@ -111,5 +111,10 @@
   </pin>
   <pin name="AIN7" fpin="22">
       <ain name="AIN7" channel="7" />
+  </pin>
+  <pin name="Osc">
+    <system name="Ext 8.0MHz"   src="#define F_CPU                       8000000UL" />
+    <system name="Ext 12.5MHz"  src="#define F_CPU                      12500000UL" />
+    <system name="Ext 16.0MHz"  src="#define F_CPU                      16000000UL" />
   </pin>
 </cpu>

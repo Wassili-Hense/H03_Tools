@@ -43,6 +43,7 @@ namespace X13 {
       }
     }
 
+    public Pin parent { get { return _parent; } }
     public override string ToString() { return this.name; }
   }
   internal enum EntryType {
@@ -88,7 +89,14 @@ namespace X13 {
     public enSystem(XElement info, Pin parent)
       : base(info, parent, Signal.SYSTEM) {
       resouces[parent.name + "_used"] = (RcUse)(0x100);
+      var xn = info.Attribute("src");
+      if(xn != null) {
+        this.src = xn.Value;
+      } else {
+        this.src = null;
+      }
     }
+    public string src { get; private set; }
   }
   internal class enAin : enBase {
     private int _channel;

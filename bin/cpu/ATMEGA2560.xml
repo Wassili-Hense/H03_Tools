@@ -13,7 +13,7 @@
   <!-- ain
     channel - внутренний номер аналогового входа
   -->
-  <port name="PORTA" titel="PA" offset="00" nr="0">
+  <port name="PORTA" titel="PA" offset="00" nr="0" pinset="PORTA |= (1 &lt;&lt; {0})" pinrst="PORTA amp;= ~(1 &lt;&lt; {0})" pinget="PINA &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="78">
       <dio />
     </pin>
@@ -39,7 +39,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTB" titel="PB" offset="08" nr="1">
+  <port name="PORTB" titel="PB" offset="08" nr="1" pinset="PORTB |= (1 &lt;&lt; {0})" pinrst="PORTB &amp;= ~(1 &lt;&lt; {0})" pinget="PINB &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="19">
       <dio />
       <spi name="NSS"  channel="1" config="0" />
@@ -73,7 +73,7 @@
       <pwm name="OC0A" timer="0" channel="0"/>
     </pin>
   </port>
-  <port name="PORTC" titel="PC" offset="16" nr="2">
+  <port name="PORTC" titel="PC" offset="16" nr="2" pinset="PORTC |= (1 &lt;&lt; {0})" pinrst="PORTC &amp;= ~(1 &lt;&lt; {0})" pinget="PINC &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="53">
       <dio />
     </pin>
@@ -99,7 +99,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTD" titel="PD" offset="24" nr="3">
+  <port name="PORTD" titel="PD" offset="24" nr="3" pinset="PORTD |= (1 &lt;&lt; {0})" pinrst="PORTD &amp;= ~(1 &lt;&lt; {0})" pinget="PIND &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="43">
       <dio />
       <twi name="SCL" channel="1" config="0" />
@@ -129,7 +129,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTE" titel="PE" offset="32" nr="4">
+  <port name="PORTE" titel="PE" offset="32" nr="4" pinset="PORTE |= (1 &lt;&lt; {0})" pinrst="PORTE &amp;= ~(1 &lt;&lt; {0})" pinget="PINE &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="02">
       <dio />
       <serial name="RX" channel="0" config="0" />
@@ -160,7 +160,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTF" titel="PF" offset="40" nr="5">
+  <port name="PORTF" titel="PF" offset="40" nr="5" pinset="PORTF |= (1 &lt;&lt; {0})" pinrst="PORTF &amp;= ~(1 &lt;&lt; {0})" pinget="PINF &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="97">
       <dio />
       <ain name="AIN0" channel="0" />
@@ -198,7 +198,7 @@
       <system name="JTDI" />
     </pin>
   </port>
-  <port name="PORTG" titel="PG" offset="48" nr="6">
+  <port name="PORTG" titel="PG" offset="48" nr="6" pinset="PORTG |= (1 &lt;&lt; {0})" pinrst="PORTG &amp;= ~(1 &lt;&lt; {0})" pinget="PING &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="51">
       <dio />
     </pin>
@@ -221,7 +221,7 @@
       <pwm name="OC0B" timer="0" channel="1"/>
     </pin>
   </port>
-  <port name="PORTH" titel="PH" offset="56" nr="7">
+  <port name="PORTH" titel="PH" offset="56" nr="7" pinset="PORTH |= (1 &lt;&lt; {0})" pinrst="PORTH &amp;= ~(1 &lt;&lt; {0})" pinget="PINH &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="12">
       <dio />
       <serial name="RX" channel="2" config="0" />
@@ -252,7 +252,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTJ" titel="PJ" offset="64" nr="8">
+  <port name="PORTJ" titel="PJ" offset="64" nr="8" pinset="PORTJ |= (1 &lt;&lt; {0})" pinrst="PORTJ &amp;= ~(1 &lt;&lt; {0})" pinget="PINJ &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="63">
       <dio />
       <serial name="RX" channel="3" config="0" />
@@ -280,7 +280,7 @@
       <dio />
     </pin>
   </port>
-  <port name="PORTK" titel="PK" offset="72" nr="9">
+  <port name="PORTK" titel="PK" offset="72" nr="9" pinset="PORTK |= (1 &lt;&lt; {0})" pinrst="PORTK &amp;= ~(1 &lt;&lt; {0})" pinget="PINK &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="89">
       <dio />
       <ain name="AIN8" channel="32" />
@@ -314,7 +314,7 @@
       <ain name="AIN15" channel="39" />
     </pin>
   </port>
-  <port name="PORTL" titel="PL" offset="80" nr="10">
+  <port name="PORTL" titel="PL" offset="80" nr="10" pinset="PORTL |= (1 &lt;&lt; {0})" pinrst="PORTL &amp;= ~(1 &lt;&lt; {0})" pinget="PINL &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="35">
       <dio />
     </pin>
@@ -343,4 +343,10 @@
       <dio />
     </pin>
   </port>
+  <pin name="Osc">
+    <system name="Ext 8.0MHz"   src="#define F_CPU                       8000000UL" />
+    <system name="Ext 12.5MHz"  src="#define F_CPU                      12500000UL" />
+    <system name="Ext 16.0MHz"  src="#define F_CPU                      16000000UL" />
+  </pin>
+  
 </cpu>

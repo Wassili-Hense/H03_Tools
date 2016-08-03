@@ -113,8 +113,11 @@ namespace X13 {
         if(en != null) {
           if(config == PinCfg.Phy1 && _owner.phy1 != null) {
             _owner.phy1.SetCur(this, en, xn != null ? xn.Value : null);
+          } else if(config == PinCfg.Phy2 && _owner.phy2 != null) {
+            _owner.phy2.SetCur(this, en, xn != null ? xn.Value : null);
+          } else {
+            en.selected = true;
           }
-          en.selected = true;
         }
       }
     }
@@ -281,7 +284,7 @@ namespace X13 {
         return null;
       }
       var sb = new StringBuilder();
-      sb.Append("// " + (port==null?"  ":(port.offset+idx).ToString("00")) + "\t" + name + "\t");
+      sb.Append("// " + nr + "\t" + name + "\t");
       if(!string.IsNullOrEmpty(titelCur)) {
         sb.Append(titelCur);
       }

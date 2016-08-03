@@ -302,7 +302,12 @@ namespace X13 {
         }
       }
       h_sb.Append("\r\n#ifdef __cplusplus\r\nextern \"C\" {\r\n#endif\r\n");
-      // TODO: RTC
+      {
+        foreach(var p in pins.Where(z => z.systemCur.type == EntryType.system).Select(z => z.systemCur as enSystem).Where(z => z.src != null)) {
+          h_sb.AppendLine();
+          h_sb.AppendLine(p.src);
+        }
+      }
       {  // DIO
         int cur_m = 0;
         bool dio_used = false;
@@ -330,7 +335,7 @@ namespace X13 {
           if(dio_port_min > 0) {
             h_sb.AppendFormat("#define EXTDIO_PORT_OFFSET\t{0}\r\n", dio_port_min);
           }
-          h_sb.AppendFormat("#define EXTDIO_MAXPORT_NR\t{0}\r\n", dio_port_max - dio_port_min+1);
+          h_sb.AppendFormat("#define EXTDIO_MAXPORT_NR\t{0}\r\n", dio_port_max - dio_port_min + 1);
           dio_sb.Remove(dio_sb.Length - 2, 2);
           dio_sb.Append("}");
           h_sb.AppendLine(dio_sb.ToString());
@@ -399,7 +404,7 @@ namespace X13 {
           foreach(var p in lst) {
             h_sb.AppendFormat("#define HAL_USE_USART{0}\t\t{1}\r\n", p.channel, p.mapping);
             if(p.config != 0) {
-              h_sb.AppendFormat("#define HAL_USART1_REMAP\t\t{0}", p.config);
+              h_sb.AppendFormat("#define HAL_USART{1}_REMAP\t\t{0}\r\n", p.config, p.channel);
             }
           }
           h_sb.AppendFormat("#define EXTSER_USED\t\t{0}\r\n", lst.Length);
@@ -413,15 +418,33 @@ namespace X13 {
       {  // TWI
         var p = pins.FirstOrDefault(z => z.twiCur.signal == Signal.TWI_SDA);
         enTwi twi;
-        if(p != null && (twi = p.twiCur as enTwi)!=null) {
+        if(p != null && (twi = p.twiCur as enTwi) != null) {
           h_sb.AppendLine("\r\n// TWI Section");
           h_sb.AppendLine("#define EXTTWI_USED\t\t1");
           h_sb.AppendFormat("#define HAL_TWI_BUS\t\t{0}\r\n", twi.channel);
           if(twi.config != 0) {
-            h_sb.AppendFormat("#HAL_TWI_REMAP\t\t{0}\r\n", twi.config);
+            h_sb.AppendFormat("#HAL_TWI_REMAP\t\t\t{0}\r\n", twi.config);
           }
           h_sb.AppendLine("// End TWI Section");
         }
+      }
+      if(_phy1 != null) {
+        h_sb.AppendLine(_phy1.ExportH());
+      }
+      if(_phy2 != null) {
+        h_sb.AppendLine(_phy2.ExportH());
+      }
+      { // Object's Dictionary Section
+        h_sb.AppendLine("\r\n// Object's Dictionary Section");
+        h_sb.AppendFormat("#define OD_MAX_INDEX_LIST\t{0}\r\n", pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count());
+        string pn = System.IO.Path.GetFileNameWithoutExtension(_prjPath);
+        h_sb.AppendFormat("#define OD_DEV_UC_TYPE\t\t'{0}'\r\n", pn.Length > 0 ? pn[0] : _cpuSignature[0]);
+        h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE\t'{0}'\r\n", pn.Length > 1 ? pn[1] : _cpuSignature[1]);
+        h_sb.AppendFormat("#define OD_DEV_PHY1\t\t'{0}'\r\n", pn.Length > 2 ? pn[2] : ' ');
+        h_sb.AppendFormat("#define OD_DEV_PHY2\t\t'{0}'\r\n", pn.Length > 3 ? pn[3] : ' ');
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_H\t\t'{0}'\r\n", pn.Length > 4 ? pn[4] : '-');
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_L\t\t'{0}'\r\n", pn.Length > 5 ? pn[5] : '-');
+        h_sb.AppendLine("// End Object's Dictionary Section");
       }
       //================================================= 
       h_sb.Append("\r\n#ifdef __cplusplus\r\n}\r\n#endif\r\n");
