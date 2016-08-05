@@ -4,129 +4,155 @@
         xmlns:util="clr-namespace:Wpf.Util"
         TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
         Title="Node Configurator" Width="1200">
-  <Grid>
-    <Grid.Resources>
-      <LinearGradientBrush x:Key="BusyBrush" StartPoint="0,0.1" EndPoint="1,0.9">
-        <GradientBrush.GradientStops>
-          <GradientStopCollection>
-            <GradientStop Color="Orange" Offset="0.0"/>
-            <GradientStop Color="Yellow" Offset="1.0"/>
-          </GradientStopCollection>
-        </GradientBrush.GradientStops>
-      </LinearGradientBrush>
-      <LinearGradientBrush x:Key="TitelBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientBrush.GradientStops>
-          <GradientStopCollection>
-            <GradientStop Color="#FFF0FFF8" Offset="0.0"/>
-            <GradientStop Color="#FFF0FFF8" Offset="0.9"/>
-            <GradientStop Color="#FFE8F0FF" Offset="1.0"/>
-          </GradientStopCollection>
-        </GradientBrush.GradientStops>
-      </LinearGradientBrush>
-    </Grid.Resources>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="30"/>
-      <RowDefinition/>
-    </Grid.RowDefinitions>
-    <ToolBar Grid.Column="0" Grid.Row="0">
-      <Button Content="New" Width="60" Click="buNew_Click" />
-      <Separator />
-      <Button Content="Open" Width="60" Click="buLoadProject_Click" />
-      <Separator />
-      <Button Content="Save" Width="60" Click="buSaveProject_Click" />
-      <Separator />
-      <Button Content="Export" Width="60" Click="buExport_Click" />
-      <Separator />
-    </ToolBar>
-    <ListView Grid.Row="2" Name="lvPins" BorderThickness="0,1,0,0" KeyboardNavigation.TabNavigation="Continue" Focusable="False" util:GridViewSort.AutoSort="True" SelectionMode="Single">
-      <ListView.View>
-        <GridView AllowsColumnReorder="False">
-          <GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
-          <GridViewColumn Header="Pin" Width="40" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
-          <GridViewColumn Header="System" Width="105" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="85" Visibility="{Binding systemVis}" ItemsSource="{Binding systemLst}" SelectedItem="{Binding systemCur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="PHY1" Width="130" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="115" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="PHY2" Width="130" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="Mapping" Width="75"  util:GridViewSort.PropertyName="dioCur" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox Visibility="{Binding dioVis}" MinWidth="60"  ItemsSource="{Binding dioLst}" SelectedItem="{Binding dioCur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="Analog" Width="80" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox Visibility="{Binding ainVis}" MinWidth="65" ItemsSource="{Binding ainLst}" SelectedItem="{Binding ainCur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="PWM" Width="100" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="85" Visibility="{Binding pwmVis}" ItemsSource="{Binding pwmLst}" SelectedItem="{Binding pwmCur}">
-                  <ComboBox.Style>
-                    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
-                      <Style.Triggers>
-                        <DataTrigger Binding="{Binding pwmIsAvaliable}" Value="False">
-                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </ComboBox.Style>
-                  <ComboBox.ItemContainerStyle>
-                    <Style TargetType="ComboBoxItem">
-                      <Style.Triggers>
-                        <DataTrigger Binding="{Binding isAvailable}" Value="False">
-                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </ComboBox.ItemContainerStyle>
-                </ComboBox>
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="Serial" Width="100" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="85" Visibility="{Binding serialVis}" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="TWI" Width="100" >
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <ComboBox MinWidth="85" Visibility="{Binding twiVis}" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-          <GridViewColumn Header="Titel" Width="120" util:GridViewSort.PropertyName="titelCur">
-            <GridViewColumn.CellTemplate>
-              <DataTemplate>
-                <TextBox MinWidth="110" Visibility="{Binding titelVis}" Text="{Binding titelCur}" BorderThickness="0" Background="{StaticResource TitelBrush}" />
-              </DataTemplate>
-            </GridViewColumn.CellTemplate>
-          </GridViewColumn>
-        </GridView>
-      </ListView.View>
-    </ListView>
-  </Grid>
+	<Grid>
+		<Grid.Resources>
+			<LinearGradientBrush x:Key="BusyBrush" StartPoint="0,0.1" EndPoint="1,0.9">
+				<GradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="Orange" Offset="0.0"/>
+						<GradientStop Color="Yellow" Offset="1.0"/>
+					</GradientStopCollection>
+				</GradientBrush.GradientStops>
+			</LinearGradientBrush>
+			<LinearGradientBrush x:Key="TitelBrush" StartPoint="0,0" EndPoint="0,1">
+				<GradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="#FFFFFFB9" Offset="0.0"/>
+						<GradientStop Color="#FFFFFFB9" Offset="0.9"/>
+						<GradientStop Color="Orange"  Offset="1.0"/>
+					</GradientStopCollection>
+				</GradientBrush.GradientStops>
+			</LinearGradientBrush>
+		</Grid.Resources>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<ToolBar Grid.Column="0" Grid.Row="0">
+			<Button Content="New" Width="60" Click="buNew_Click" />
+			<Separator />
+			<Button Content="Open" Width="60" Click="buLoadProject_Click" />
+			<Separator />
+			<Button Content="Save" Width="60" Click="buSaveProject_Click" />
+			<Separator />
+			<Button Content="Export" Width="60" Click="buExport_Click" />
+			<Separator />
+		</ToolBar>
+		<ListView Grid.Row="2" Name="lvPins" BorderThickness="0,1,0,0" KeyboardNavigation.TabNavigation="Continue" Focusable="False" util:GridViewSort.AutoSort="True" SelectionMode="Single" AlternationCount="2">
+			<ListView.View>
+				<GridView AllowsColumnReorder="False">
+					<GridViewColumn Header="Port" Width="90" DisplayMemberBinding="{Binding name}" util:GridViewSort.PropertyName="name" />
+					<GridViewColumn Header="Pin" Width="40" DisplayMemberBinding="{Binding nr}" util:GridViewSort.PropertyName="nr"/>
+					<GridViewColumn Header="System" Width="105" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="85" Visibility="{Binding systemVis}" ItemsSource="{Binding systemLst}" SelectedItem="{Binding systemCur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="PHY1" Width="130" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="115" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="PHY2" Width="130" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Mapping" Width="75"  util:GridViewSort.PropertyName="dioCur" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox Visibility="{Binding dioVis}" MinWidth="60"  ItemsSource="{Binding dioLst}" SelectedItem="{Binding dioCur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Analog" Width="80" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox Visibility="{Binding ainVis}" MinWidth="65" ItemsSource="{Binding ainLst}" SelectedItem="{Binding ainCur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="PWM" Width="100" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="85" Visibility="{Binding pwmVis}" ItemsSource="{Binding pwmLst}" SelectedItem="{Binding pwmCur}">
+									<ComboBox.Style>
+										<Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding pwmIsAvaliable}" Value="False">
+													<Setter Property="Background" Value="{StaticResource BusyBrush}" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</ComboBox.Style>
+									<ComboBox.ItemContainerStyle>
+										<Style TargetType="ComboBoxItem">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding isAvailable}" Value="False">
+													<Setter Property="Background" Value="{StaticResource BusyBrush}" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</ComboBox.ItemContainerStyle>
+								</ComboBox>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Serial" Width="100" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="85" Visibility="{Binding serialVis}" ItemsSource="{Binding serialLst}" SelectedItem="{Binding serialCur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="TWI" Width="100" >
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox MinWidth="85" Visibility="{Binding twiVis}" ItemsSource="{Binding twiLst}" SelectedItem="{Binding twiCur}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Titel" Width="120" util:GridViewSort.PropertyName="titelCur">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox MinWidth="110" Visibility="{Binding titelVis}" Text="{Binding titelCur}" BorderThickness="0" Background="{StaticResource TitelBrush}" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+			<ListView.ItemContainerStyle>
+				<Style TargetType="{x:Type ListViewItem}">
+					<Setter Property="Background" Value="White"/>
+					<Setter Property="BorderBrush" Value="White" />
+					<Setter Property="Template">
+						<Setter.Value>
+							<ControlTemplate TargetType="{x:Type ListBoxItem}">
+								<Border Background="{TemplateBinding Background}" 
+                                         BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1" Padding="3,1">
+									<GridViewRowPresenter Content="{TemplateBinding Property=ContentControl.Content}"/>
+								</Border>
+								<ControlTemplate.Triggers>
+									<Trigger Property="ItemsControl.AlternationIndex" Value="1">
+										<Setter Property="Background" Value="#FFD8FFD8"/>
+										<Setter Property="BorderBrush" Value="#FFD8FFD8"/>
+									</Trigger>
+									<Trigger Property="IsSelected" Value="True">
+										<Setter Property="Background" Value="#FFEAFCFF"/>
+										<Setter Property="BorderBrush" Value="Black"/>
+									</Trigger>
+								</ControlTemplate.Triggers>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</ListView.ItemContainerStyle>
+		</ListView>
+	</Grid>
 </Window>
