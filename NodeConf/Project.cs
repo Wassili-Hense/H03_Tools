@@ -23,7 +23,7 @@ namespace X13 {
       try {
         XDocument doc = XDocument.Load(System.IO.Path.GetFullPath(@".\cpu\" + p._cpuPath + ".xml"));
         p._cpuSignature = doc.Root.Attribute("name").Value;
-        p._ainRef = int.Parse(doc.Root.Attribute("ainref").Value.Substring(2), System.Globalization.NumberStyles.HexNumber);
+        p.ainRef = int.Parse(doc.Root.Attribute("ainref").Value.Substring(2), System.Globalization.NumberStyles.HexNumber);
         List<Pin> pins = new List<Pin>();
         pins.AddRange(doc.Root.Elements("port").SelectMany(z => Port.CreatePort(p, z)));
         pins.AddRange(doc.Root.Elements("pin").Select(z => new Pin(p, z, null)));
@@ -67,12 +67,12 @@ namespace X13 {
     private phyBase _phy1;
     private phyBase _phy2;
     private List<string> _exResouces;
-    private int _ainRef;
 
     public enDIO led;
     public Pin[] pins { get; private set; }
     public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
     public phyBase phy2 { get { return _phy2; } set { _phy2 = value; _prjPath = null; } }
+    public int ainRef { get; private set; }
 
     public string Path {
       get {
@@ -218,7 +218,7 @@ namespace X13 {
       var PN = new XElement("item", new XAttribute("name", "PWM inverted"));
       dev.Add(PN);
       XElement ain;
-      if(_ainRef != 0) {
+      if(ainRef != 0) {
         ain = new XElement("item", new XAttribute("name", "Analog inputs"));
         dev.Add(ain);
       } else {
@@ -226,6 +226,7 @@ namespace X13 {
       }
       Pin twi_sda = null;
       Pin twi_scl = null;
+      enAin cAin;
       foreach(var p in pins) {
         p.ExportX(Section.IP, IP);
         p.ExportX(Section.OP, OP);
@@ -233,17 +234,20 @@ namespace X13 {
         p.ExportX(Section.ON, ON);
         p.ExportX(Section.PP, PP);
         p.ExportX(Section.PN, PN);
-        if((_ainRef & 1) == 1) {
-          p.ExportX(Section.Ae, ain);
-        }
-        if((_ainRef & 2) == 2) {
-          p.ExportX(Section.Av, ain);
-        }
-        if((_ainRef & 4) == 4) {
-          p.ExportX(Section.Ai, ain);
-        }
-        if((_ainRef & 8) == 8) {
-          p.ExportX(Section.AI, ain);
+        cAin = p.ainCur as enAin;
+        if(cAin != null) {
+          if((cAin.ainRef & 1) == 1) {
+            p.ExportX(Section.Ae, ain);
+          }
+          if((cAin.ainRef & 2) == 2) {
+            p.ExportX(Section.Av, ain);
+          }
+          if((cAin.ainRef & 4) == 4) {
+            p.ExportX(Section.Ai, ain);
+          }
+          if((cAin.ainRef & 8) == 8) {
+            p.ExportX(Section.AI, ain);
+          }
         }
         p.ExportX(Section.Serial, dev);
         if(p.twiCur.signal == Signal.TWI_SDA) {

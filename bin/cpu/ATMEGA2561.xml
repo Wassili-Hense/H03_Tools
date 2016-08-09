@@ -42,19 +42,19 @@
   <port name="PORTB" titel="PB" offset="08" nr="1" pinset="PORTB |= (1 &lt;&lt; {0})" pinrst="PORTB &amp;= ~(1 &lt;&lt; {0})" pinget="PINB &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="10">
       <dio />
-      <spi name="NSS"  channel="1" config="0" />
+      <spi name="NSS"  channel="1" config="1" />
     </pin>
     <pin idx="1" fpin="11">
       <dio />
-      <spi name="SCK"  channel="1" config="0" />
+      <spi name="SCK"  channel="1" config="1" />
     </pin>
     <pin idx="2" fpin="12">
       <dio />
-      <spi name="MOSI" channel="1" config="0" />
+      <spi name="MOSI" channel="1" config="1" />
     </pin>
     <pin idx="3" fpin="13">
       <dio />
-      <spi name="MISO" channel="1" config="0" />
+      <spi name="MISO" channel="1" config="1" />
     </pin>
     <pin idx="4" fpin="14">
       <dio />
@@ -222,8 +222,8 @@
     </pin>
   </port>
   <pin name="Osc">
-    <system name="Ext 8.0MHz"   src="#define F_CPU                       8000000UL" />
-    <system name="Ext 12.5MHz"  src="#define F_CPU                      12500000UL" />
-    <system name="Ext 16.0MHz"  src="#define F_CPU                      16000000UL" />
+    <system name="8.0MHz"   src="#define F_CPU                       8000000UL" />
+    <system name="12.5MHz"  src="#define F_CPU                       12500000UL" />
+    <system name="16.0MHz"  src="#define F_CPU                       16000000UL" />
   </pin>
 </cpu>

@@ -23,19 +23,19 @@
     <pin idx="2" fpin="14">
       <dio />
       <pwm name="OC1B" timer="1" channel="1"/>
-      <spi name="NSS" channel="1" config="0" />
+      <spi name="NSS" channel="1" config="1" />
     </pin>
     <pin idx="3" fpin="15">
       <dio />
-      <spi name="MOSI" channel="1" config="0" />
+      <spi name="MOSI" channel="1" config="1" />
     </pin>
     <pin idx="4" fpin="16">
       <dio />
-      <spi name="MISO" channel="1" config="0" />
+      <spi name="MISO" channel="1" config="1" />
     </pin>
     <pin idx="5" fpin="17">
       <dio />
-      <spi name="SCK" channel="1" config="0" />
+      <spi name="SCK" channel="1" config="1" />
     </pin>
     <pin idx="6" fpin="07">
       <dio />
@@ -79,11 +79,11 @@
   <port name="PORTD" titel="PD" offset="24" nr="3" pinset="PORTD |= (1 &lt;&lt; {0})" pinrst="PORTD &amp;= ~(1 &lt;&lt; {0})" pinget="PIND &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="30">
       <dio />
-      <serial name="RX" channel="1" config="0" />
+      <serial name="RX" channel="0" config="0" />
     </pin>
     <pin idx="1" fpin="31">
       <dio />
-      <serial name="TX" channel="1" config="0" />
+      <serial name="TX" channel="0" config="0" />
     </pin>
     <pin idx="2" fpin="32">
       <dio />
@@ -112,9 +112,16 @@
   <pin name="AIN7" fpin="22">
       <ain name="AIN7" channel="7" />
   </pin>
+  <pin name="Vbg">
+      <ain name="VBG" channel="14" ainref="0x02" />
+  </pin>
   <pin name="Osc">
-    <system name="Ext 8.0MHz"   src="#define F_CPU                       8000000UL" />
-    <system name="Ext 12.5MHz"  src="#define F_CPU                      12500000UL" />
-    <system name="Ext 16.0MHz"  src="#define F_CPU                      16000000UL" />
+    <system name="8.0MHz"  src="#define F_CPU                       8000000UL" />
+    <system name="12.5MHz" src="#define F_CPU                       12500000UL" />
+    <system name="16.0MHz" src="#define F_CPU                       16000000UL" />
+  </pin>
+  <pin name="ASLEEP">
+    <system name="Off"  src="#define ASLEEP                      1&#13;&#10;#define OD_DEFAULT_TASLEEP          0" />
+    <system name="5min" src="#define ASLEEP                      1&#13;&#10;#define OD_DEFAULT_TASLEEP          300" />
   </pin>
 </cpu>

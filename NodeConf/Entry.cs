@@ -100,11 +100,16 @@ namespace X13 {
   }
   internal class enAin : enBase {
     private int _channel;
+    public readonly int ainRef;
 
     public enAin(XElement info, Pin parent)
       : base(info, parent, Signal.AIN) {
       resouces[parent.name + "_used"] = RcUse.Shared;
       this._channel = int.Parse(info.Attribute("channel").Value);
+      var xn = info.Attribute("ainref");
+      if(xn == null || xn.Value.Length <= 2 || !int.TryParse(xn.Value.Substring(2), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out ainRef)) {
+        ainRef = parent._owner.ainRef;
+      }
       this.name = "AIN " + _channel.ToString("00");
       resouces[this.name] = RcUse.Exclusive;
     }

@@ -318,6 +318,7 @@ namespace X13 {
       sb.AppendFormat("#define CC11_SELECT()               {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
       sb.AppendFormat("#define CC11_RELEASE()              {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
       sb.AppendFormat("#define CC11_PHY                    {0}\r\n", _nr);
+      sb.AppendLine("#define CC11_DEFAULT_FREQ           868300000UL");
       sb.AppendLine("#include \"PHY/CC1101/cc11_phy.h\"");
       sb.AppendFormat("//End CC11 PHY{0} Section\r\n", _nr);
 
@@ -440,13 +441,13 @@ namespace X13 {
       sb.AppendFormat("#define ENC_SELECT()                {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
       sb.AppendFormat("#define ENC_RELEASE()               {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
       sb.AppendFormat("#define ENC_PHY                     {0}\r\n", _nr);
+      sb.AppendLine("#define OD_DEF_DEV_MAC              {0x00,0x04,0xA3,0x00,0x00,0x05}   // MAC MSB->LSB");
       sb.AppendLine("#include \"PHY/ENC28J60/enc28j60_phy.h\"");
       sb.AppendFormat("//End ENC PHY{0} Section\r\n", _nr);
 
       return sb.ToString();
     }
   }
-
   internal class phyRFM69 : phyBase {
     private enSpi _mosi;
     private enSpi _miso;
@@ -598,6 +599,7 @@ namespace X13 {
       sb.AppendFormat("#define RFM69_IRQ_PIN               {0}\r\n", _irq.parent.idx + _irq.parent.port.offset);
       sb.AppendFormat("#define RFM69_IRQ_STATE()           ({0} != 0)\r\n", string.Format(_irq.parent.port.pinget, _irq.parent.idx));
       sb.AppendFormat("#define RFM69_PHY                   {0}\r\n", _nr);
+      sb.AppendLine("#define RFM69_DEFAULT_FREQ          868300000UL");
       sb.AppendLine("#include \"PHY/RFM69/rfm69_phy.h\"");
       sb.AppendFormat("//End RFM69 PHY{0} Section\r\n", _nr);
 
