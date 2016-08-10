@@ -15,12 +15,15 @@ namespace X13 {
       p.pinset = info.Attribute("pinset").Value;
       p.pinrst = info.Attribute("pinrst").Value;
       p.pinget = info.Attribute("pinget").Value;
+      var xn = info.Attribute("titel");
+      p.titel = (xn != null && !string.IsNullOrEmpty(xn.Value)) ? xn.Value : p.name;
       return info.Elements("pin").Select(z => new Pin(owner, z, p));
 
     }
     public string name { get; private set; }
     public int offset { get; private set; }
     public int nr { get; private set; }
+    public string titel { get; private set; }
     public string pinset { get; private set; }
     public string pinrst { get; private set; }
     public string pinget { get; private set; }

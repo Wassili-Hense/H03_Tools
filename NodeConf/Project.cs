@@ -68,7 +68,6 @@ namespace X13 {
     private phyBase _phy2;
     private List<string> _exResouces;
 
-    public enDIO led;
     public Pin[] pins { get; private set; }
     public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
     public phyBase phy2 { get { return _phy2; } set { _phy2 = value; _prjPath = null; } }
@@ -430,6 +429,22 @@ namespace X13 {
             h_sb.AppendFormat("#HAL_TWI_REMAP\t\t\t{0}\r\n", twi.config);
           }
           h_sb.AppendLine("// End TWI Section");
+        }
+      }
+      {  // LED
+        var p = pins.FirstOrDefault(z => z.systemCur.signal == Signal.SYS_LED);
+        if(p != null) {
+          var l = p.systemCur as enSysLed;
+          if(l != null && p.port!=null) {
+            h_sb.AppendLine();
+            if(l.pnp) {
+              h_sb.AppendFormat("#define LED_On()                    {0}\r\n", string.Format(p.port.pinrst, p.idx));
+              h_sb.AppendFormat("#define LED_Off()                   {0}\r\n", string.Format(p.port.pinset, p.idx));
+            } else {
+              h_sb.AppendFormat("#define LED_On()                    {0}\r\n", string.Format(p.port.pinset, p.idx));
+              h_sb.AppendFormat("#define LED_Off()                   {0}\r\n", string.Format(p.port.pinrst, p.idx));
+            }
+          }
         }
       }
       if(_phy1 != null) {

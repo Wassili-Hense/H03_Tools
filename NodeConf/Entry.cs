@@ -71,6 +71,7 @@ namespace X13 {
     SPI_SCK = ((int)EntryType.spi << 2) | 2,
     SPI_NSS = ((int)EntryType.spi << 2) | 3,
     SYSTEM = ((int)EntryType.system << 2) | 0,
+    SYS_LED = ((int)EntryType.system << 2) | 1,
 
   }
 
@@ -86,6 +87,9 @@ namespace X13 {
   }
 
   internal class enSystem : enBase {
+    protected enSystem(Pin parent, Signal signal)
+      : base(null, parent, signal) {
+    }
     public enSystem(XElement info, Pin parent)
       : base(info, parent, Signal.SYSTEM) {
       resouces[parent.name + "_used"] = (RcUse)(0x100);
@@ -97,6 +101,15 @@ namespace X13 {
       }
     }
     public string src { get; private set; }
+  }
+  internal class enSysLed : enSystem {
+    public enSysLed(enDIO dio, bool pnp) : base(dio.parent, Signal.SYS_LED) {
+      this.pnp = pnp;
+      resouces[parent.name + "_used"] = (RcUse)(0x100);
+      resouces["SYSTEM_LED"] = RcUse.Exclusive;
+      base.name = pnp ? "LED_P" : "LED_N";
+    }
+    public bool pnp { get; private set; }
   }
   internal class enAin : enBase {
     private int _channel;

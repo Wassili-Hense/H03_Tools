@@ -30,6 +30,8 @@ namespace X13 {
           break;
         case "dio":
           c = new enDIO(el, this);
+          entrys.Add(new enSysLed((enDIO)c, true));
+          entrys.Add(new enSysLed((enDIO)c, false));
           break;
         case "ain":
           c = new enAin(el, this);
@@ -314,14 +316,6 @@ namespace X13 {
       return sb.ToString();
     }
 
-    private enDIO Led() {
-      enDIO e = entrys.FirstOrDefault(z => z.type == EntryType.dio) as enDIO;
-      if(e != null && (_owner.led == null || _owner.led == e)) {
-        return e;
-      }
-      return null;
-    }
-
     #region view
     private bool GetVis(EntryType t) {
       return entrys.Any(z => z.type == t && _owner.EntryIsEnabled(z));
@@ -332,12 +326,6 @@ namespace X13 {
         c.selected = false;
       }
       cur = entrys.FirstOrDefault(z => z.type == t && z.selected);
-      if(cur == null && t == EntryType.system) {
-        var l = Led();
-        if(l != null && l == _owner.led) {
-          return l;
-        }
-      }
       return cur ?? enBase.none;
     }
     private void SetCur(EntryType t, enBase v) {
@@ -347,15 +335,6 @@ namespace X13 {
         }
         if(v != null && v.type == t) {
           v.selected = true;
-        }
-        if(t == EntryType.system) {
-          if(v.type == EntryType.dio) {
-            _owner.led = v as enDIO;
-            _owner.led.func = "LED";
-          } else if(_owner.led != null && Led() == _owner.led) {
-            _owner.led.func = null;
-            _owner.led = null;
-          }
         }
         _owner.RefreshView();
       }
@@ -369,7 +348,7 @@ namespace X13 {
 
     public System.Windows.Visibility systemVis {
       get {
-        return ((config == PinCfg.None || config == PinCfg.System) && (GetVis(EntryType.system) || Led() != null)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        return ((config == PinCfg.None || config == PinCfg.System) && (GetVis(EntryType.system))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
       }
     }
     public enBase systemCur {
@@ -391,12 +370,7 @@ namespace X13 {
     }
     public List<enBase> systemLst {
       get {
-        var lst = GetLst(EntryType.system);
-        var l = Led();
-        if(l != null) {
-          lst.Add(l);
-        }
-        return lst;
+        return GetLst(EntryType.system);
       }
     }
 
