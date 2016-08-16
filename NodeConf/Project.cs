@@ -426,7 +426,7 @@ namespace X13 {
           h_sb.AppendLine("#define EXTTWI_USED\t\t1");
           h_sb.AppendFormat("#define HAL_TWI_BUS\t\t{0}\r\n", twi.channel);
           if(twi.config != 0) {
-            h_sb.AppendFormat("#HAL_TWI_REMAP\t\t\t{0}\r\n", twi.config);
+            h_sb.AppendFormat("#define HAL_TWI_REMAP\t\t{0}\r\n", twi.config);
           }
           h_sb.AppendLine("// End TWI Section");
         }
@@ -437,12 +437,13 @@ namespace X13 {
           var l = p.systemCur as enSysLed;
           if(l != null && p.port!=null) {
             h_sb.AppendLine();
+            h_sb.AppendFormat("#define LED_Init()                  hal_dio_configure({0}, DIO_MODE_OUT_PP)\r\n", p.port.offset + p.idx);
             if(l.pnp) {
-              h_sb.AppendFormat("#define LED_On()                    {0}\r\n", string.Format(p.port.pinrst, p.idx));
-              h_sb.AppendFormat("#define LED_Off()                   {0}\r\n", string.Format(p.port.pinset, p.idx));
-            } else {
               h_sb.AppendFormat("#define LED_On()                    {0}\r\n", string.Format(p.port.pinset, p.idx));
               h_sb.AppendFormat("#define LED_Off()                   {0}\r\n", string.Format(p.port.pinrst, p.idx));
+            } else {
+              h_sb.AppendFormat("#define LED_On()                    {0}\r\n", string.Format(p.port.pinrst, p.idx));
+              h_sb.AppendFormat("#define LED_Off()                   {0}\r\n", string.Format(p.port.pinset, p.idx));
             }
           }
         }
