@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phy name="CC1101" signature="C">
+  <pin name="NCS" signal="SPI_NSS"/>
+  <pin name="CLK" signal="SPI_SCK"/>
+  <pin name="SO"  signal="SPI_MISO"/>
+  <pin name="SI"  signal="SPI_MOSI"/>
+  <pin name="GPIO0" signal="DIO" optional="true" />
+  <pin name="GPIO2" signal="DIO" optional="true" />
+  <append fmt="#define CC11_USE_SPI                {0}&#13;&#10;">
+      <var name="spi.channel"/>
+  </append>
+  <append fmt="#define CC11_NSS_PIN                {0}&#13;&#10;">
+      <var name="spi.nss.pinnr"/>  <!-- _nss.parent.idx + _nss.parent.port.offset -->
+  </append>
+  <append fmt="#define CC11_WAIT_LOW_MISO()        while({0})&#13;&#10;">
+    <var name="spi.miso.pinget" /> <!--format name="spi.miso.parent.port.pinget"> <var name="spi.miso.parent.idx"/> </format-->
+  </append>
+  <append fmt="#define CC11_SELECT()               {0}&#13;&#10;">
+    <var name="spi.nss.pinrst" /> <!--format name="spi.nss.parent.port.pinrst"> <var name="spi.nss.parent.idx"/> </format-->
+  </append>
+  <append fmt="#define CC11_RELEASE()              {0}&#13;&#10;">
+    <var name="spi.nss.pinset"/> <!--format name="spi.nss.parent.port.pinset"> <var name="spi.nss.parent.idx"/> </format-->
+  </append>
+  <append fmt="#define CC11_PHY                    {0}&#13;&#10;">
+      <var name="nr"/>
+  </append>
+  <append fmt="#define CC11_DEFAULT_FREQ           868300000UL&#13;&#10;"/>
+  <append fmt="#include &quot;PHY/CC1101/cc11_phy.h&quot;&#13;&#10;"/>
+</phy>

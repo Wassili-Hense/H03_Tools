@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phy name="UART" signature="S">
+  <pin name="RX" signal="UART_RX"/>
+  <pin name="TX" signal="UART_TX"/>
+  <pin name="DE" signal="UART_DE"/>
+  <!--
+      sb.AppendFormat("#define HAL_USE_USART{0}            {1}\r\n", _tx.channel, _tx.mapping);
+      if(_tx.config != 0) 
+      {
+        sb.AppendFormat("#define HAL_USART{1}_REMAP          {0}\r\n", _tx.config, _tx.channel);
+      }
+      sb.AppendFormat("#define RS485_PHY_PORT              {0}\r\n", _tx.mapping);
+      sb.AppendFormat("#define RS485_PHY                   {0}\r\n", _nr);
+      sb.AppendLine("#include \"PHY/RS485/rs485_phy.h\"");
+  -->
+</phy>

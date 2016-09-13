@@ -23,7 +23,7 @@ namespace X13 {
     public CreateDialog() {
       InitializeComponent();
       cbCPU.ItemsSource = Directory.GetFiles(@".\cpu", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z));
-      var phys = new string[] {"none", "CC1101", "ENC28J60", "RFM69", "RS485", "UART" };
+      var phys = (new string[]{"none"}).Union(Directory.GetFiles(@".\phy", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z))).ToArray();
       cbPhy1.ItemsSource = phys;
       cbPhy1.SelectedIndex = 0;
       cbPhy2.ItemsSource = phys;

@@ -149,14 +149,15 @@ namespace X13 {
       }
     }
     public void Export() {
-      if(!Directory.Exists(System.IO.Path.GetDirectoryName(_prjPath))) {
-        Directory.CreateDirectory(System.IO.Path.GetDirectoryName(_prjPath));
+      string name = System.IO.Path.GetFileNameWithoutExtension(this.Path);
+      string ePath = "export//" + name + "//";
+      if(!Directory.Exists(ePath)) {
+        Directory.CreateDirectory(ePath);
       }
 
       var now = DateTime.Now;
 
       _exResouces = new List<string>();
-      string name = System.IO.Path.GetFileNameWithoutExtension(this.Path);
       if(name.Length > 6) {
         name = name.Substring(0, 6);
       }
@@ -271,7 +272,7 @@ namespace X13 {
       add.Add(CreateXItem("Byte array", "yB"));
       dev.Add(add);
       dev.Add(CreateXItem("remove", "zD"));
-      using(StreamWriter writer = File.CreateText(System.IO.Path.ChangeExtension(_prjPath, "xst"))) {
+      using(StreamWriter writer = File.CreateText(ePath+name+".xst")) {
         doc.Save(writer);
       }
       #endregion export .xst
@@ -470,7 +471,7 @@ namespace X13 {
       h_sb.Append("\r\n#ifdef __cplusplus\r\n}\r\n#endif\r\n");
       h_sb.AppendFormat("\r\n#endif //_{0}_H\r\n", name);
 
-      File.WriteAllText(System.IO.Path.ChangeExtension(_prjPath, "h"), h_sb.ToString());
+      File.WriteAllText(ePath + name + ".h", h_sb.ToString());
       h_sb = null;
       #endregion export .h
 

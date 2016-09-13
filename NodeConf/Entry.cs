@@ -44,7 +44,9 @@ namespace X13 {
     }
 
     public Pin parent { get { return _parent; } }
-    public override string ToString() { return this.name; }
+    public override string ToString() {
+      return this.func ?? this.name;
+    }
   }
   internal enum EntryType {
     none,
@@ -80,9 +82,6 @@ namespace X13 {
       : base(info, parent, Signal.DIO) {
       resouces[parent.name + "_used"] = RcUse.Shared;
       base.name = parent.name;
-    }
-    public override string ToString() {
-      return func??name;
     }
   }
 

@@ -3,35 +3,168 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace X13 {
-  internal abstract class phyBase {
+  internal class phyBase {
     public static phyBase Create(string name, int nr) {
-      switch(name) {
-      case "UART":
-        return new phySerial(nr);
-      case "RS485":
-        return new phyRS485(nr);
-      case "CC1101":
-        return new phyCC1101(nr);
-      case "ENC28J60":
-        return new phyENC28J60(nr);
-      case "RFM69":
-        return new phyRFM69(nr);
+      if(name == "none") {
+        return null;
+      }
+      var p = new phyBase();
+      p._nr = nr;
+      try {
+        XDocument doc = XDocument.Load(System.IO.Path.GetFullPath(@".\phy\" + name + ".xml"));
+        p.signature = doc.Root.Attribute("signature").Value;
+        p.name = doc.Root.Attribute("name").Value;
+        p._pins = doc.Root.Elements("pin").Select(z => new phyPin(z)).ToArray();
+        var ex=new List<Tuple<string, string[]>>();
+        foreach(var a in doc.Root.Elements("append")) {
+          ex.Add(new Tuple<string, string[]>(a.Attribute("fmt").Value, a.Elements("var").Select(z=>z.Attribute("name").Value).ToArray()));
+        }
+        p._exportH = ex.ToArray();
+      }
+      catch(Exception ex) {
+        Console.WriteLine(ex.ToString());
+        return null;
+      }
+
+      return p;
+    }
+
+    private int _nr;
+    private phyPin[] _pins;
+    private Tuple<string, string[]>[] _exportH;
+
+    public string signature { get; private set; }
+    public string name { get; private set; }
+
+    public List<enBase> GetLst(Pin pin) {
+      // SPI
+      bool spi_defined = false;
+      bool spi_hw_nss = pin._owner.pins.SelectMany(z => z.entrys).Where(z => z.signal == Signal.SPI_NSS).OfType<enSpi>().Any();
+      int spi_channel = 0;
+      int spi_config = 0;
+      enSpi sp;
+
+      for(int i = 0; i < _pins.Length; i++) {
+        if(_pins[i].pin != null && _pins[i].pin.type == EntryType.spi) {
+          sp = _pins[i].pin as enSpi;
+          spi_defined = true;
+          spi_channel = sp.channel;
+          spi_config = sp.config;
+          break;
+        }
+      }
+
+      var lst = new List<enBase>();
+      foreach(var en in pin.entrys.Where(z => pin._owner.EntryIsEnabled(z))) {
+        if(_pins.Any(z => z.pin == en || (z.pin == null && (en.signal == z.signal || (z.signal == Signal.SPI_NSS && !spi_hw_nss && en.signal == Signal.DIO))))) {
+          if(en.type == EntryType.spi && spi_defined && ((en as enSpi).channel != spi_channel || (en as enSpi).config != spi_config)) {
+            continue;
+          }
+          lst.Add(en);
+        }
+      }
+
+      if(lst.Count > 0) {
+        lst.Insert(0, enBase.none);
+        return lst;
       }
       return null;
     }
+    public enBase GetCur(Pin pin) {
+      var en = pin.entrys.FirstOrDefault(z => _pins.Any(z1 => z1.pin == z));
+      return en ?? enBase.none;
+    }
+    public bool SetCur(Pin pin, enBase en, string func) {
+      var op = _pins.FirstOrDefault(z => pin.entrys.Any(z1 => z1 == z.pin));
+      if(en != null && (op == null ?en.signal!=Signal.NONE:op.pin != en)) {
+        if(op != null) {
+          op.pin.selected = false;
+          op.pin.resouces[pin.name + "_used"] = RcUse.Shared;
+          op.pin.func = null;
+          op.pin = null;
+        }
+        op = _pins.FirstOrDefault(z => z.pin == null && (z.signal == en.signal
+          || (z.signal == Signal.SPI_NSS && !pin._owner.pins.SelectMany(z1 => z1.entrys).Where(z1 => z1.signal == Signal.SPI_NSS).OfType<enSpi>().Any() && en.signal == Signal.DIO)));
+        if(op != null) {
+          en.selected = true;
+          en.resouces[pin.name + "_used"] = RcUse.Exclusive;
+          op.pin = en;
+          en.func = op.name;
+        }
+        return true;
+      }
+      return false;
+    }
+    public string ExportH() {
+      if(_pins.Any(z => z.pin == null && !z.optional)) {
+        return "\r\n#error "+ name +"_PHY" + _nr.ToString() + "_NOT_CONFIGURED\r\n";
+      }
+      // SPI
+      var vars = new Dictionary<string, string>();
+      bool spi_defined = false;
+      enSpi sp;
 
-    protected int _nr;
+      for(int i = 0; i < _pins.Length; i++) {
+        if(_pins[i].pin != null && _pins[i].pin.type == EntryType.spi) {
+          sp = _pins[i].pin as enSpi;
+          spi_defined = true;
+          vars["spi.channel"] = sp.channel.ToString();
+          vars["spi.config"] = sp.config.ToString();
+          break;
+        }
+      }
 
-    public string signature { get; protected set; }
-    public string name { get; protected set; }
-    public abstract List<enBase> GetLst(Pin pin);
-    public abstract enBase GetCur(Pin pin);
-    public abstract bool SetCur(Pin pin, enBase en, string func);
-    public abstract string ExportH();
+
+      var sb = new StringBuilder();
+
+      sb.AppendFormat("\r\n//{0} PHY{1} Section\t", name, _nr);
+      for(int i = 0; i < _pins.Length; i++) {
+        if(_pins[i].pin == null) {
+          continue;
+        }
+        if(i>0){
+          sb.Append(",");
+        }
+        sb.AppendFormat(" {0}: {1}", _pins[i].name ?? _pins[i].signal.ToString(), _pins[i].pin.parent.name);
+      }
+      sb.AppendLine();
+      if(spi_defined) {
+        sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", vars["spi.channel"], vars["spi.config"]);
+      }
+
+      sb.AppendFormat("//End {0} PHY{1} Section\r\n", name, _nr);
+
+      return sb.ToString();
+    }
+    private class phyPin {
+      public phyPin(XElement info) {
+        var xn = info.Attribute("signal");
+        Signal s;
+        if(xn != null && Enum.TryParse<Signal>(info.Attribute("signal").Value, out s)) {
+          this.signal = s;
+          this.type = (EntryType)((int)s >> 2);
+        } else {
+          throw new ArgumentException("unknown signal in " + info.ToString(SaveOptions.DisableFormatting));
+        }
+        xn = info.Attribute("name");
+        if(xn != null) {
+          this.name = xn.Value;
+        }
+        xn = info.Attribute("optional");
+        this.optional = xn != null && xn.Value == "true";
+      }
+      public readonly EntryType type;
+      public readonly Signal signal;
+      public readonly string name;
+      public readonly bool optional;
+      public enBase pin;
+
+    }
   }
-
+  /*
   internal class phySerial : phyBase {
     private enSerial _tx;
     private enSerial _rx;
@@ -605,5 +738,5 @@ namespace X13 {
 
       return sb.ToString();
     }
-  }
+  }*/
 }

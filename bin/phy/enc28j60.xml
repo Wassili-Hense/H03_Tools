@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phy name="ENC28J60" signature="E">
+  <pin name="NCS" signal="SPI_NSS"/>
+  <pin name="CLK" signal="SPI_SCK"/>
+  <pin name="SO"  signal="SPI_MISO"/>
+  <pin name="SI"  signal="SPI_MOSI"/>
+  <!--
+      sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", _mosi.channel, _mosi.config);
+      sb.AppendFormat("#define ENC_USE_SPI                 {0}\r\n", _mosi.channel);
+      sb.AppendFormat("#define ENC_NSS_PIN                 {0}\r\n", _nss.parent.idx + _nss.parent.port.offset);
+      sb.AppendFormat("#define ENC_SELECT()                {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
+      sb.AppendFormat("#define ENC_RELEASE()               {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
+      sb.AppendFormat("#define ENC_PHY                     {0}\r\n", _nr);
+      sb.AppendLine("#define OD_DEF_DEV_MAC              {0x00,0x04,0xA3,0x00,0x00,0x05}   // MAC MSB->LSB");
+      sb.AppendLine("#include \"PHY/ENC28J60/enc28j60_phy.h\"");
+  -->
+</phy>
