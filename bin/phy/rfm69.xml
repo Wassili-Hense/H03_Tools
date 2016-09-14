@@ -5,16 +5,27 @@
   <pin name="SO"  signal="SPI_MISO"/>
   <pin name="SI"  signal="SPI_MOSI"/>
   <pin name="IRQ" signal="DIO"/>
-  <!--
-      sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", _mosi.channel, _mosi.config);
-      sb.AppendFormat("#define RFM69_USE_SPI               {0}\r\n", _mosi.channel);
-      sb.AppendFormat("#define RFM69_NSS_PIN               {0}\r\n", _nss.parent.idx + _nss.parent.port.offset);
-      sb.AppendFormat("#define RFM69_SELECT()              {0}\r\n", string.Format(_nss.parent.port.pinrst, _nss.parent.idx));
-      sb.AppendFormat("#define RFM69_RELEASE()             {0}\r\n", string.Format(_nss.parent.port.pinset, _nss.parent.idx));
-      sb.AppendFormat("#define RFM69_IRQ_PIN               {0}\r\n", _irq.parent.idx + _irq.parent.port.offset);
-      sb.AppendFormat("#define RFM69_IRQ_STATE()           ({0} != 0)\r\n", string.Format(_irq.parent.port.pinget, _irq.parent.idx));
-      sb.AppendFormat("#define RFM69_PHY                   {0}\r\n", _nr);
-      sb.AppendLine("#define RFM69_DEFAULT_FREQ          868300000UL");
-      sb.AppendLine("#include \"PHY/RFM69/rfm69_phy.h\"");
-  -->
+  <append fmt="#define RFM69_USE_SPI               {0}">
+      <var name="spi.channel"/>
+  </append>
+  <append fmt="#define RFM69_NSS_PIN               {0}">
+      <var name="NCS.pinnr"/>
+  </append>
+  <append fmt="#define RFM69_SELECT()              {0}">
+    <var name="NCS.pinrst" />
+  </append>
+  <append fmt="#define RFM69_RELEASE()             {0}">
+    <var name="NCS.pinset"/>
+  </append>
+  <append fmt="#define RFM69_IRQ_PIN()             {0}">
+    <var name="IRQ.pinnr"/>
+  </append>
+  <append fmt="#define RFM69_IRQ_STATE()           (({0}) != 0)">
+    <var name="IRQ.pinget"/>
+  </append>
+  <append fmt="#define RFM69_PHY                   {0}">
+      <var name="nr"/>
+  </append>
+  <append fmt="#define RFM69_DEFAULT_FREQ          868300000UL"/>
+  <append fmt="#include &quot;PHY/RFM69/rfm69_phy.h&quot;"/>
 </phy>

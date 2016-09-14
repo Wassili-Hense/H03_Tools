@@ -424,11 +424,11 @@ namespace X13 {
         enTwi twi;
         if(p != null && (twi = p.twiCur as enTwi) != null) {
           h_sb.AppendLine("\r\n// TWI Section");
-          h_sb.AppendLine("#define EXTTWI_USED\t\t1");
           h_sb.AppendFormat("#define HAL_TWI_BUS\t\t{0}\r\n", twi.channel);
           if(twi.config != 0) {
             h_sb.AppendFormat("#define HAL_TWI_REMAP\t\t{0}\r\n", twi.config);
           }
+          h_sb.AppendLine("#define EXTTWI_USED\t\t1");
           h_sb.AppendLine("// End TWI Section");
         }
       }
@@ -450,10 +450,10 @@ namespace X13 {
         }
       }
       if(_phy1 != null) {
-        h_sb.AppendLine(_phy1.ExportH());
+        h_sb.Append(_phy1.ExportH());
       }
       if(_phy2 != null) {
-        h_sb.AppendLine(_phy2.ExportH());
+        h_sb.Append(_phy2.ExportH());
       }
       { // Object's Dictionary Section
         h_sb.AppendLine("\r\n// Object's Dictionary Section");
