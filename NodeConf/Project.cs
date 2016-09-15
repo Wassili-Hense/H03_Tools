@@ -69,8 +69,37 @@ namespace X13 {
     private List<string> _exResouces;
 
     public Pin[] pins { get; private set; }
-    public phyBase phy1 { get { return _phy1; } set { _phy1 = value; _prjPath = null; } }
-    public phyBase phy2 { get { return _phy2; } set { _phy2 = value; _prjPath = null; } }
+    public string cpu { get { return _cpuPath; } }
+    public phyBase phy1 { 
+      get { 
+        return _phy1; 
+      } 
+      set { 
+        _phy1 = value; 
+        _prjPath = null;
+        foreach(var p in pins) {
+          if(p.config == PinCfg.Phy1) {
+            p.config = PinCfg.None;
+            p.ViewChanged();
+          }
+        }
+      } 
+    }
+    public phyBase phy2 { 
+      get { 
+        return _phy2; 
+      } 
+      set { 
+        _phy2 = value; 
+        _prjPath = null;
+        foreach(var p in pins) {
+          if(p.config == PinCfg.Phy1) {
+            p.config = PinCfg.None;
+            p.ViewChanged();
+          }
+        }
+      } 
+    }
     public int ainRef { get; private set; }
 
     public string Path {

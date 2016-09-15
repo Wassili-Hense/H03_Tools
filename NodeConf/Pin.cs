@@ -65,7 +65,7 @@ namespace X13 {
     public int idx { get; private set; }
     public int mapping { get { return _addr; } }
 
-    private PinCfg config;
+    public PinCfg config;
     private int _addr;
 
     public void ViewChanged() {
@@ -377,7 +377,7 @@ namespace X13 {
     public System.Windows.Visibility phy1Vis {
       get {
         bool v = false;
-        if(_owner.phy1 != null && config == PinCfg.None || config == PinCfg.Phy1) {
+        if(_owner.phy1 != null && (config == PinCfg.None || config == PinCfg.Phy1)) {
           var lst = _owner.phy1.GetLst(this);
           v = lst != null;
         }
@@ -389,7 +389,6 @@ namespace X13 {
         return _owner.phy1 != null ? _owner.phy1.GetCur(this) : enBase.none;
       }
       set {
-
         if(_owner.phy1 != null) {
           bool refresh = _owner.phy1.SetCur(this, value, null);
           if(value != null && value.type != EntryType.none) {
@@ -415,7 +414,7 @@ namespace X13 {
     public System.Windows.Visibility phy2Vis {
       get {
         bool v = false;
-        if(_owner.phy2 != null && config == PinCfg.None || config == PinCfg.Phy2) {
+        if(_owner.phy2 != null && (config == PinCfg.None || config == PinCfg.Phy2)) {
           var lst = _owner.phy2.GetLst(this);
           v = lst != null;
         }
