@@ -151,12 +151,12 @@ namespace X13 {
       }
       sb.AppendLine();
       if(spi_defined) {
-        sb.AppendFormat("#define HAL_USE_SPI{0}              {1}\r\n", vars["spi.channel"], vars["spi.config"]);
+        sb.AppendFormat("#define HAL_USE_SPI{0}                {1}\r\n", vars["spi.channel"], vars["spi.config"]);
       }
       if(uart_defined) {
-        sb.AppendFormat("#define HAL_USE_USART{0}            {1}\r\n", vars["uart.channel"], vars["uart.mapping"]);
+        sb.AppendFormat("#define HAL_USE_USART{0}              {1}\r\n", vars["uart.channel"], vars["uart.mapping"]);
         if(vars["uart.config"] != "0") {
-          sb.AppendFormat("#define HAL_USART{0}_REMAP          {1}\r\n", vars["uart.channel"], vars["uart.config"]);
+          sb.AppendFormat("#define HAL_USART{0}_REMAP           {1}\r\n", vars["uart.channel"], vars["uart.config"]);
         }
       }
       bool miss;

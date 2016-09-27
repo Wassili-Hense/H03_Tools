@@ -347,7 +347,7 @@ namespace X13 {
         int dio_port_min = 255;
         int dio_port_max = -1;
         var dio_sb = new StringBuilder();
-        dio_sb.Append("#define HAL_DIO_MAPPING\t\t{");
+        dio_sb.Append("#define HAL_DIO_MAPPING             {");
         foreach(var p in pins.Where(z => z.port != null && z.mapping >= 0 && z.entrys.Any(y => y.type == EntryType.dio)).OrderBy(z => z.mapping)) {
           dio_used = true;
           while(p.mapping > cur_m) {
@@ -364,11 +364,11 @@ namespace X13 {
           }
         }
         if(dio_used) {
-          h_sb.Append("\r\n// DIO Section\r\n#define EXTDIO_USED\t\t1\r\n");
+          h_sb.Append("\r\n// DIO Section\r\n#define EXTDIO_USED                 1\r\n");
           if(dio_port_min > 0) {
-            h_sb.AppendFormat("#define EXTDIO_PORT_OFFSET\t{0}\r\n", dio_port_min);
+            h_sb.AppendFormat("#define EXTDIO_PORT_OFFSET          {0}\r\n", dio_port_min);
           }
-          h_sb.AppendFormat("#define EXTDIO_MAXPORT_NR\t{0}\r\n", dio_port_max - dio_port_min + 1);
+          h_sb.AppendFormat("#define EXTDIO_MAXPORT_NR           {0}\r\n", dio_port_max - dio_port_min + 1);
           dio_sb.Remove(dio_sb.Length - 2, 2);
           dio_sb.Append("}");
           h_sb.AppendLine(dio_sb.ToString());
@@ -379,7 +379,7 @@ namespace X13 {
         int pwm_min = 255;
         var pwm_sb = new StringBuilder();
         int cur_m = 0;
-        pwm_sb.Append("#define HAL_PWM_PORT2CFG\t{");
+        pwm_sb.Append("#define HAL_PWM_PORT2CFG            {");
 
         var lst = pins.Where(z => z.mapping >= 0 && z.pwmCur.type == EntryType.pwm).OrderBy(z => z.mapping).Select(z => new Tuple<int, int>(z.mapping, (z.pwmCur as enPwm).GetConfig())).ToArray();
         if(lst.Length > 0) {
@@ -394,9 +394,9 @@ namespace X13 {
             cur_m++;
           }
 
-          h_sb.Append("\r\n// PWM Section\r\n#define EXTPWM_USED\t\t1\r\n");
+          h_sb.Append("\r\n// PWM Section\r\n#define EXTPWM_USED                 1\r\n");
           if(pwm_min > 0) {
-            h_sb.AppendFormat("#define HAL_PWM_BASE_OFFSET\t{0}\r\n", pwm_min);
+            h_sb.AppendFormat("#define HAL_PWM_BASE_OFFSET         {0}\r\n", pwm_min);
           }
           pwm_sb.Remove(pwm_sb.Length - 2, 2);
           pwm_sb.Append("}");
@@ -408,7 +408,7 @@ namespace X13 {
         int ain_max;
         var ain_sb = new StringBuilder();
         int cur_m = 0;
-        ain_sb.Append("#define HAL_AIN_BASE2APIN\t{");
+        ain_sb.Append("#define HAL_AIN_BASE2APIN           {");
         var lst = pins.Where(z => z.mapping >= 0 && z.ainCur.type == EntryType.ain).OrderBy(z => z.mapping).Select(z => new Tuple<int, int>(z.mapping, (z.ainCur as enAin).GetConfig())).ToArray();
         if(lst.Length > 0) {
           ain_max = lst.Max(z => z.Item2) + 1;
@@ -421,8 +421,8 @@ namespace X13 {
             cur_m++;
           }
 
-          h_sb.Append("\r\n// Analogue Inputs\r\n#define EXTAIN_USED\t\t1\r\n");
-          h_sb.AppendFormat("#define EXTAIN_MAXPORT_NR\t{0}\r\n", ain_max);
+          h_sb.Append("\r\n// Analogue Inputs\r\n#define EXTAIN_USED                 1\r\n");
+          h_sb.AppendFormat("#define EXTAIN_MAXPORT_NR           {0}\r\n", ain_max);
           ain_sb.Remove(ain_sb.Length - 2, 2);
           ain_sb.Append("}");
           h_sb.AppendLine(ain_sb.ToString());
@@ -435,15 +435,15 @@ namespace X13 {
         h_sb.AppendLine("\r\n// UART Section");
         if(lst.Length > 0) {
           foreach(var p in lst) {
-            h_sb.AppendFormat("#define HAL_USE_USART{0}\t\t{1}\r\n", p.channel, p.mapping);
+            h_sb.AppendFormat("#define HAL_USE_USART{0}              {1}\r\n", p.channel, p.mapping);
             if(p.config != 0) {
-              h_sb.AppendFormat("#define HAL_USART{1}_REMAP\t\t{0}\r\n", p.config, p.channel);
+              h_sb.AppendFormat("#define HAL_USART{1}_REMAP            {0}\r\n", p.config, p.channel);
             }
           }
-          h_sb.AppendFormat("#define EXTSER_USED\t\t{0}\r\n", lst.Length);
-          h_sb.AppendFormat("#define HAL_UART_NUM_PORTS\t{0}\r\n", lst.Length + sp_cnt);
+          h_sb.AppendFormat("#define EXTSER_USED                 {0}\r\n", lst.Length);
+          h_sb.AppendFormat("#define HAL_UART_NUM_PORTS          {0}\r\n", lst.Length + sp_cnt);
         } else if(sp_cnt > 0) {
-          h_sb.AppendFormat("#define HAL_UART_NUM_PORTS\t{0}\r\n", sp_cnt);
+          h_sb.AppendFormat("#define HAL_UART_NUM_PORTS          {0}\r\n", sp_cnt);
         }
         h_sb.AppendLine("// End UART Section");
 
@@ -453,11 +453,11 @@ namespace X13 {
         enTwi twi;
         if(p != null && (twi = p.twiCur as enTwi) != null) {
           h_sb.AppendLine("\r\n// TWI Section");
-          h_sb.AppendFormat("#define HAL_TWI_BUS\t\t{0}\r\n", twi.channel);
+          h_sb.AppendFormat("#define HAL_TWI_BUS                 {0}\r\n", twi.channel);
           if(twi.config != 0) {
-            h_sb.AppendFormat("#define HAL_TWI_REMAP\t\t{0}\r\n", twi.config);
+            h_sb.AppendFormat("#define HAL_TWI_REMAP               {0}\r\n", twi.config);
           }
-          h_sb.AppendLine("#define EXTTWI_USED\t\t1");
+          h_sb.AppendLine("#define EXTTWI_USED                 1");
           h_sb.AppendLine("// End TWI Section");
         }
       }
@@ -486,14 +486,14 @@ namespace X13 {
       }
       { // Object's Dictionary Section
         h_sb.AppendLine("\r\n// Object's Dictionary Section");
-        h_sb.AppendFormat("#define OD_MAX_INDEX_LIST\t{0}\r\n", pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count());
+        h_sb.AppendFormat("#define OD_MAX_INDEX_LIST           {0}\r\n", pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count());
         string pn = System.IO.Path.GetFileNameWithoutExtension(_prjPath);
-        h_sb.AppendFormat("#define OD_DEV_UC_TYPE\t\t'{0}'\r\n", pn.Length > 0 ? pn[0] : _cpuSignature[0]);
-        h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE\t'{0}'\r\n", pn.Length > 1 ? pn[1] : _cpuSignature[1]);
-        h_sb.AppendFormat("#define OD_DEV_PHY1\t\t'{0}'\r\n", pn.Length > 2 ? pn[2] : ' ');
-        h_sb.AppendFormat("#define OD_DEV_PHY2\t\t'{0}'\r\n", pn.Length > 3 ? pn[3] : ' ');
-        h_sb.AppendFormat("#define OD_DEV_HW_TYP_H\t\t'{0}'\r\n", pn.Length > 4 ? pn[4] : '-');
-        h_sb.AppendFormat("#define OD_DEV_HW_TYP_L\t\t'{0}'\r\n", pn.Length > 5 ? pn[5] : '-');
+        h_sb.AppendFormat("#define OD_DEV_UC_TYPE              '{0}'\r\n", pn.Length > 0 ? pn[0] : _cpuSignature[0]);
+        h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE           '{0}'\r\n", pn.Length > 1 ? pn[1] : _cpuSignature[1]);
+        h_sb.AppendFormat("#define OD_DEV_PHY1                 '{0}'\r\n", pn.Length > 2 ? pn[2] : ' ');
+        h_sb.AppendFormat("#define OD_DEV_PHY2                 '{0}'\r\n", pn.Length > 3 ? pn[3] : ' ');
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_H             '{0}'\r\n", pn.Length > 4 ? pn[4] : '-');
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_L             '{0}'\r\n", pn.Length > 5 ? pn[5] : '-');
         h_sb.AppendLine("// End Object's Dictionary Section");
       }
       //================================================= 
