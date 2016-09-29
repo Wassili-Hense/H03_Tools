@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prj cpu="ATMEGA328P" phy1="ENC28J60">
-  <pin name="PORTB.00" cfg="System" />
+  <pin name="PORTB.00" cfg="System">
+    <item name="LED_N" />
+  </pin>
   <pin name="PORTB.01" cfg="None" />
   <pin name="PORTB.02" cfg="Phy1">
-    <item name="NSS 1.1" />
+    <item name="NSS 1.1" func="NCS" />
   </pin>
   <pin name="PORTB.03" cfg="Phy1">
-    <item name="MOSI 1.1" />
+    <item name="MOSI 1.1" func="SI" />
   </pin>
   <pin name="PORTB.04" cfg="Phy1">
-    <item name="MISO 1.1" />
+    <item name="MISO 1.1" func="SO" />
   </pin>
   <pin name="PORTB.05" cfg="Phy1">
-    <item name="SCK 1.1" />
+    <item name="SCK 1.1" func="CLK" />
   </pin>
   <pin name="PORTB.06" cfg="System">
     <item name="HSE_IN" />
@@ -78,7 +80,7 @@
   <pin name="AIN7" cfg="IO" addr="1" titel="CN19">
     <item name="AIN 07" />
   </pin>
-  <pin name="Vbg" cfg="IO" addr="16">
+  <pin name="Vbg" cfg="IO" addr="16" titel="Vcc">
     <item name="AIN 14" />
   </pin>
   <pin name="Osc" cfg="System">

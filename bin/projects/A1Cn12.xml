@@ -3,7 +3,9 @@
   <pin name="PORTB.00" cfg="System">
     <item name="LED_N" />
   </pin>
-  <pin name="PORTB.01" cfg="None" />
+  <pin name="PORTB.01" cfg="Phy1">
+    <item name="PORTB.01" func="GPIO0" />
+  </pin>
   <pin name="PORTB.02" cfg="Phy1">
     <item name="NSS 1.1" func="NCS" />
   </pin>

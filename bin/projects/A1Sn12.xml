@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prj cpu="ATMEGA328P" phy1="UART">
-  <pin name="PORTB.00" cfg="System" />
+  <pin name="PORTB.00" cfg="System">
+    <item name="LED_N" />
+  </pin>
   <pin name="PORTB.01" cfg="IO" addr="16">
     <item name="PORTB.01" />
     <item name="PWM 01.0" />
@@ -51,10 +53,10 @@
     <item name="SCL 1.0" />
   </pin>
   <pin name="PORTD.00" cfg="Phy1">
-    <item name="RX 0.0" />
+    <item name="RX 0.0" func="RX" />
   </pin>
   <pin name="PORTD.01" cfg="Phy1">
-    <item name="TX 0.0" />
+    <item name="TX 0.0" func="TX" />
   </pin>
   <pin name="PORTD.02" cfg="IO" addr="10" titel="CN8">
     <item name="PORTD.02" />
@@ -82,7 +84,7 @@
   <pin name="AIN7" cfg="IO" addr="1" titel="CN19">
     <item name="AIN 07" />
   </pin>
-  <pin name="Vbg" cfg="IO" addr="21">
+  <pin name="Vbg" cfg="IO" addr="21" titel="Vcc">
     <item name="AIN 14" />
   </pin>
   <pin name="Osc" cfg="System">

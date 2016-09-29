@@ -24,6 +24,13 @@ namespace X13 {
           ex.Add(new Tuple<string, string[], bool>(a.Attribute("fmt").Value, a.Elements("var").Select(z=>z.Attribute("name").Value).ToArray(), op!=null && op.Value=="true"));
         }
         p._exportH = ex.ToArray();
+        var xa = doc.Root.Attribute("color");
+        int tmp;
+        if(xa != null && !string.IsNullOrEmpty(xa.Value) && xa.Value.StartsWith("#") && int.TryParse(xa.Value.Substring(1), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out tmp)) {
+          p.color = System.Windows.Media.Color.FromRgb((byte)(tmp >> 16), (byte)(tmp >> 8), (byte)tmp);
+        } else {
+          p.color = System.Windows.Media.Colors.Black;
+        }
       }
       catch(Exception ex) {
         Console.WriteLine(ex.ToString());
@@ -39,6 +46,7 @@ namespace X13 {
 
     public string signature { get; private set; }
     public string name { get; private set; }
+    public System.Windows.Media.Color color { get; private set; }
 
     public List<enBase> GetLst(Pin pin) {
       // SPI

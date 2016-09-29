@@ -21,20 +21,20 @@
   <pin name="PORTA.06" cfg="IO" addr="29" titel="XP2.33">
     <item name="PORTA.06" />
   </pin>
-  <pin name="PORTA.07" cfg="IO" addr="48">
+  <pin name="PORTA.07" cfg="IO" addr="48" titel="XP4.15">
     <item name="PORTA.07" />
   </pin>
   <pin name="PORTB.00" cfg="Phy1">
-    <item name="NSS 1.1" />
+    <item name="NSS 1.1" func="NCS" />
   </pin>
   <pin name="PORTB.01" cfg="Phy1">
-    <item name="SCK 1.1" />
+    <item name="SCK 1.1" func="CLK" />
   </pin>
   <pin name="PORTB.02" cfg="Phy1">
-    <item name="MOSI 1.1" />
+    <item name="MOSI 1.1" func="SI" />
   </pin>
   <pin name="PORTB.03" cfg="Phy1">
-    <item name="MISO 1.1" />
+    <item name="MISO 1.1" func="SO" />
   </pin>
   <pin name="PORTB.04" cfg="IO" addr="5" titel="XP1.15">
     <item name="PORTB.04" />
@@ -72,7 +72,7 @@
   <pin name="PORTC.06" cfg="IO" addr="43" titel="XP4.10">
     <item name="PORTC.06" />
   </pin>
-  <pin name="PORTC.07" cfg="IO" addr="46" titel="Xp4.13">
+  <pin name="PORTC.07" cfg="IO" addr="46" titel="XP4.13">
     <item name="PORTC.07" />
   </pin>
   <pin name="PORTD.00" cfg="IO" addr="30" titel="XT2.4">

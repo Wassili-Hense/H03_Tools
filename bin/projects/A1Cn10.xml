@@ -8,16 +8,16 @@
     <item name="PWM 01.0" />
   </pin>
   <pin name="PORTB.02" cfg="Phy1">
-    <item name="NSS 1.1" />
+    <item name="NSS 1.1" func="NCS" />
   </pin>
   <pin name="PORTB.03" cfg="Phy1">
-    <item name="MOSI 1.1" />
+    <item name="MOSI 1.1" func="SI" />
   </pin>
   <pin name="PORTB.04" cfg="Phy1">
-    <item name="MISO 1.1" />
+    <item name="MISO 1.1" func="SO" />
   </pin>
   <pin name="PORTB.05" cfg="Phy1">
-    <item name="SCK 1.1" />
+    <item name="SCK 1.1" func="CLK" />
   </pin>
   <pin name="PORTB.06" cfg="System">
     <item name="HSE_IN" />

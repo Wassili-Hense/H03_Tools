@@ -168,16 +168,16 @@
     </pin>
     <pin idx="13" fpin="26">
       <dio />
-      <spi name="SCK" channel="2" config="0" />
+      <spi name="SCK" channel="2" config="1" />
     </pin>
     <pin idx="14" fpin="27">
       <dio />
-      <spi name="MISO" channel="2" config="0" />
+      <spi name="MISO" channel="2" config="1" />
       <pwm timer="15"  channel="0" af="1"/>
     </pin>
     <pin idx="15" fpin="28">
       <dio />
-      <spi name="MOSI" channel="2" config="0" />
+      <spi name="MOSI" channel="2" config="1" />
       <pwm timer="15"  channel="1" af="1"/>
     </pin>
   </port>
@@ -203,9 +203,11 @@
     </pin>
     <pin idx="6" fpin="35">
       <dio />
+      <twi name="SCL" channel="2" config="3" />
     </pin>
     <pin idx="7" fpin="36">
       <dio />
+      <twi name="SDA" channel="2" config="3" />
     </pin>
   </port>
   <pin name="RTC">

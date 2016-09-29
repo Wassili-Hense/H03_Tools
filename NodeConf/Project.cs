@@ -93,7 +93,7 @@ namespace X13 {
         _phy2 = value; 
         _prjPath = null;
         foreach(var p in pins) {
-          if(p.config == PinCfg.Phy1) {
+          if(p.config == PinCfg.Phy2) {
             p.config = PinCfg.None;
             p.ViewChanged();
           }
@@ -486,7 +486,16 @@ namespace X13 {
       }
       { // Object's Dictionary Section
         h_sb.AppendLine("\r\n// Object's Dictionary Section");
-        h_sb.AppendFormat("#define OD_MAX_INDEX_LIST           {0}\r\n", pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count());
+        int od_cnt = pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count();
+        {
+          var plc_p = pins.FirstOrDefault(z=>z.config==PinCfg.System && z.name.ToUpper()=="PLC");
+          enSystem plc_e;
+          int plc_val;
+          if(plc_p != null && (plc_e=plc_p.systemCur as enSystem)!=null && int.TryParse(plc_e.name, out plc_val)) {
+            od_cnt += plc_val;
+          }
+        }
+        h_sb.AppendFormat("#define OD_MAX_INDEX_LIST           {0}\r\n", od_cnt);
         string pn = System.IO.Path.GetFileNameWithoutExtension(_prjPath);
         h_sb.AppendFormat("#define OD_DEV_UC_TYPE              '{0}'\r\n", pn.Length > 0 ? pn[0] : _cpuSignature[0]);
         h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE           '{0}'\r\n", pn.Length > 1 ? pn[1] : _cpuSignature[1]);

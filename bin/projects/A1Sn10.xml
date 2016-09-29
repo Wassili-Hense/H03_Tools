@@ -53,10 +53,10 @@
     <item name="SCL 1.0" />
   </pin>
   <pin name="PORTD.00" cfg="Phy1">
-    <item name="RX 0.0" />
+    <item name="RX 0.0" func="RX" />
   </pin>
   <pin name="PORTD.01" cfg="Phy1">
-    <item name="TX 0.0" />
+    <item name="TX 0.0" func="TX" />
   </pin>
   <pin name="PORTD.02" cfg="IO" addr="10" titel="D2">
     <item name="PORTD.02" />
@@ -78,10 +78,10 @@
   <pin name="PORTD.07" cfg="IO" addr="15" titel="D7">
     <item name="PORTD.07" />
   </pin>
-  <pin name="AIN6" cfg="IO" addr="6">
+  <pin name="AIN6" cfg="IO" addr="6" titel="A6">
     <item name="AIN 06" />
   </pin>
-  <pin name="AIN7" cfg="IO" addr="7">
+  <pin name="AIN7" cfg="IO" addr="7" titel="A7">
     <item name="AIN 07" />
   </pin>
   <pin name="Vbg" cfg="None" />

@@ -20,8 +20,8 @@ namespace X13 {
 
     public MainWindow() {
       InitializeComponent();
-      cbCPU.ItemsSource = Directory.GetFiles(@".\cpu", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z));
-      var phys = (new string[] { "none" }).Union(Directory.GetFiles(@".\phy", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z))).ToArray();
+      cbCPU.ItemsSource = Directory.GetFiles(@".\cpu", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z).ToUpper());
+      var phys = (new string[] { "none" }).Union(Directory.GetFiles(@".\phy", "*.xml", SearchOption.TopDirectoryOnly).Select(z => System.IO.Path.GetFileNameWithoutExtension(z).ToUpper())).ToArray();
       cbPhy1.ItemsSource = phys;
       cbPhy1.SelectedIndex = 0;
       cbPhy2.ItemsSource = phys;
@@ -33,6 +33,8 @@ namespace X13 {
       if(_prj != null && _prj.cpu == cpu) {
         return;
       }
+      cbPhy1.SelectedItem = "none";
+      cbPhy2.SelectedItem = "none";
       _prj = Project.LoadFromCpu(cpu);
       if(_prj != null) {
         cbPhy1.IsEnabled = true;
@@ -48,13 +50,17 @@ namespace X13 {
         return;
       }
       string phy = cbPhy1.SelectedItem as string;
-      if(_prj.phy1 != null && _prj.phy1.name == phy) {
-        return;
+      if(_prj.phy1 == null || _prj.phy1.name != phy) {
+        _prj.phy1 = phyBase.Create(phy, 1);
       }
-      _prj.phy1 = phyBase.Create(phy, 1);
       this.Title = System.IO.Path.GetFileNameWithoutExtension(_prj.Path) + " - Node Configurator";
       lvPins.ItemsSource = null;
       lvPins.ItemsSource = _prj.pins;
+      if(_prj.phy1 != null) {
+        cbPhy1.BorderBrush = new SolidColorBrush(_prj.phy1.color);
+      } else {
+        cbPhy1.BorderBrush = null;
+      }
     }
     private void cbPhy2_SelectionChanged(object sender, SelectionChangedEventArgs e) {
       if(_prj == null) {
@@ -63,13 +69,17 @@ namespace X13 {
         return;
       }
       string phy = cbPhy2.SelectedItem as string;
-      if(_prj.phy2 != null && _prj.phy2.name == phy) {
-        return;
+      if(_prj.phy2 == null || _prj.phy2.name != phy) {
+        _prj.phy2 = phyBase.Create(phy, 2);
       }
-      _prj.phy2 = phyBase.Create(phy, 2);
       this.Title = System.IO.Path.GetFileNameWithoutExtension(_prj.Path) + " - Node Configurator";
       lvPins.ItemsSource = null;
       lvPins.ItemsSource = _prj.pins;
+      if(_prj.phy2 != null) {
+        cbPhy2.BorderBrush = new SolidColorBrush(_prj.phy2.color);
+      } else {
+        cbPhy2.BorderBrush = null;
+      }
     }
     private void buLoadProject_Click(object sender, RoutedEventArgs e) {
       var dlg = new Microsoft.Win32.OpenFileDialog();

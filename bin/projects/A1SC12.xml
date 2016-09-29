@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prj cpu="ATMEGA328P" phy1="UART" phy2="CC1101">
-  <pin name="PORTB.00" cfg="System" />
-  <pin name="PORTB.01" cfg="None" />
+  <pin name="PORTB.00" cfg="System">
+    <item name="LED_N" />
+  </pin>
+  <pin name="PORTB.01" cfg="Phy2">
+    <item name="PORTB.01" func="GPIO0" />
+  </pin>
   <pin name="PORTB.02" cfg="Phy2">
-    <item name="NSS 1.1" />
+    <item name="NSS 1.1" func="NCS" />
   </pin>
   <pin name="PORTB.03" cfg="Phy2">
-    <item name="MOSI 1.1" />
+    <item name="MOSI 1.1" func="SI" />
   </pin>
   <pin name="PORTB.04" cfg="Phy2">
-    <item name="MISO 1.1" />
+    <item name="MISO 1.1" func="SO" />
   </pin>
   <pin name="PORTB.05" cfg="Phy2">
-    <item name="SCK 1.1" />
+    <item name="SCK 1.1" func="CLK" />
   </pin>
   <pin name="PORTB.06" cfg="System">
     <item name="HSE_IN" />
@@ -47,10 +51,10 @@
     <item name="SCL 1.0" />
   </pin>
   <pin name="PORTD.00" cfg="Phy1">
-    <item name="RX 0.0" />
+    <item name="RX 0.0" func="RX" />
   </pin>
   <pin name="PORTD.01" cfg="Phy1">
-    <item name="TX 0.0" />
+    <item name="TX 0.0" func="TX" />
   </pin>
   <pin name="PORTD.02" cfg="IO" addr="10" titel="CN8">
     <item name="PORTD.02" />
@@ -69,7 +73,7 @@
     <item name="PORTD.06" />
     <item name="PWM 00.0" />
   </pin>
-  <pin name="PORTD.07" cfg="IO" addr="15">
+  <pin name="PORTD.07" cfg="IO" addr="15" titel="CN3">
     <item name="PORTD.07" />
   </pin>
   <pin name="AIN6" cfg="IO" addr="0" titel="CN20">

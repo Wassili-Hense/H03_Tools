@@ -31,9 +31,9 @@
     <ToolBar Grid.Column="0" Grid.Row="0">
       <Button Content="Open" Width="70" Click="buLoadProject_Click" />
       <Separator />
-      <ComboBox Name="cbCPU"  Height="22" Width="140" Margin="7,1" SelectionChanged="cbCPU_SelectionChanged" />
-      <ComboBox Name="cbPhy1" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy1_SelectionChanged"/>
-      <ComboBox Name="cbPhy2" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy2_SelectionChanged"/>
+      <ComboBox Name="cbCPU"  Height="22" Width="140" Margin="7,1" SelectionChanged="cbCPU_SelectionChanged" BorderThickness="0,0,0,2" />
+      <ComboBox Name="cbPhy1" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy1_SelectionChanged" BorderThickness="0,0,0,2" />
+      <ComboBox Name="cbPhy2" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy2_SelectionChanged" BorderThickness="0,0,0,2" />
       <Separator />
       <Button Content="Save" Width="70" Click="buSaveProject_Click" />
       <Separator />
@@ -57,14 +57,14 @@
           <GridViewColumn Header="PHY1" Width="130" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox MinWidth="115" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" />
+                <ComboBox MinWidth="115" Visibility="{Binding phy1Vis}" ItemsSource="{Binding phy1Lst}" SelectedItem="{Binding phy1Cur}" BorderBrush="{Binding phy1Border}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
           <GridViewColumn Header="PHY2" Width="130" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}" />
+                <ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}"  BorderBrush="{Binding phy2Border}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
@@ -144,8 +144,8 @@
                 </Border>
                 <ControlTemplate.Triggers>
                   <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="#FFD8FFD8"/>
-                    <Setter Property="BorderBrush" Value="#FFD8FFD8"/>
+                    <Setter Property="Background" Value="#FFE8FFE8"/>
+                    <Setter Property="BorderBrush" Value="#FFE8FFE8"/>
                   </Trigger>
                   <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="#FFEAFCFF"/>
