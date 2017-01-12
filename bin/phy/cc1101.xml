@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phy name="CC1101" signature="C" color="#FF0000">
+<phy name="CC1101" signature="C">
   <pin name="NCS" signal="SPI_NSS"/>
   <pin name="CLK" signal="SPI_SCK"/>
   <pin name="SO"  signal="SPI_MISO"/>
@@ -10,17 +10,25 @@
       <var name="spi.channel"/>
   </append>
   <append fmt="#define CC11_NSS_PIN                {0}">
-      <var name="NCS.pinnr"/>  <!-- _nss.parent.idx + _nss.parent.port.offset -->
+      <var name="NCS.pinnr"/>
   </append>
   <append fmt="#define CC11_WAIT_LOW_MISO()        while({0})">
-    <var name="SO.pinget" /> <!--format name="spi.miso.parent.port.pinget"> <var name="spi.miso.parent.idx"/> </format-->
+    <var name="SO.pinget" />
   </append>
   <append fmt="#define CC11_SELECT()               {0}">
-    <var name="NCS.pinrst" /> <!--format name="spi.nss.parent.port.pinrst"> <var name="spi.nss.parent.idx"/> </format-->
+    <var name="NCS.pinrst" />
   </append>
   <append fmt="#define CC11_RELEASE()              {0}">
-    <var name="NCS.pinset"/> <!--format name="spi.nss.parent.port.pinset"> <var name="spi.nss.parent.idx"/> </format-->
+    <var name="NCS.pinset"/>
   </append>
+  <!--IRQ -->
+  <append fmt="#define CC11_IRQ_PIN                {0}">
+      <var name="GPIO0.pinnr"/>
+  </append>
+  <append fmt="#define CC11_IRQ_STATE()            (({0}) != 0)">
+    <var name="GPIO0.pinget"/>
+  </append>
+  <!-- Global -->
   <append fmt="#define CC11_PHY                    {0}">
       <var name="nr"/>
   </append>

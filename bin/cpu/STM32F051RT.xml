@@ -168,16 +168,16 @@
     </pin>
     <pin idx="13" fpin="34">
       <dio />
-      <spi name="SCK" channel="2" config="0" />
+      <spi name="SCK" channel="2" config="1" />
     </pin>
     <pin idx="14" fpin="35">
       <dio />
-      <spi name="MISO" channel="2" config="0" />
+      <spi name="MISO" channel="2" config="1" />
       <pwm timer="15"  channel="0" af="1"/>
     </pin>
     <pin idx="15" fpin="36">
       <dio />
-      <spi name="MOSI" channel="2" config="0" />
+      <spi name="MOSI" channel="2" config="1" />
       <pwm timer="15"  channel="1" af="1"/>
     </pin>
   </port>
@@ -208,15 +208,19 @@
     </pin>
     <pin idx="6" fpin="37">
       <dio />
+      <pwm timer="3"  channel="0" af="0"/>
     </pin>
     <pin idx="7" fpin="38">
       <dio />
+      <pwm timer="3"  channel="1" af="0"/>
     </pin>
     <pin idx="8" fpin="39">
       <dio />
+      <pwm timer="3"  channel="2" af="0"/>
     </pin>
     <pin idx="9" fpin="40">
       <dio />
+      <pwm timer="3"  channel="3" af="0"/>
     </pin>
     <pin idx="10" fpin="51">
       <dio />
@@ -270,5 +274,10 @@
     <system name="LSI" src="#define                            HAL_USE_RTC 1" />
     <system name="HSE" src="#define                            HAL_USE_RTC 1&#13;&#10;#define                            HAL_RTC_USE_HSE" />
     <system name="LSE" src="#define                            HAL_USE_RTC 1&#13;&#10;#define                            HAL_RTC_CHECK_LSE 1" />
+  </pin>
+  <pin name="PLC">
+    <system name="8" />
+    <system name="16" />
+    <system name="32" />
   </pin>
 </cpu>

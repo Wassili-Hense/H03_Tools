@@ -18,112 +18,107 @@
     <pin idx="0" fpin="14">
       <dio />
       <ain name="AIN0" channel="0" />
-      <pwm name="TIM2_CH1" timer="2" channel="0" af="1"/>
+      <pwm name="TIM2_CH1" timer="2" channel="1" af="1"/>
     </pin>
     <pin idx="1" fpin="15">
       <dio />
       <ain name="AIN1" channel="1" />
-      <pwm timer="2" channel="1" af="1"/>
+      <pwm timer="2" channel="2" af="1"/>
       <serial name="DE" channel="2" config="0" />
     </pin>
     <pin idx="2" fpin="16">
       <dio />
       <ain name="AIN2" channel="2" />
-      <pwm timer="2"   channel="2" af="1"/>
+      <pwm timer="2"   channel="3" af="1"/>
+      <pwm timer="15"  channel="1" af="9"/>
       <serial name="TX" channel="2" config="0" />
-      <pwm timer="15"  channel="0" af="9"/>
+      <serial name="TX" channel="2" config="13" />
     </pin>
     <pin idx="3" fpin="17">
       <dio />
       <ain name="AIN3" channel="3" />
-      <pwm timer="2"   channel="3" af="1"/>
+      <pwm timer="2"   channel="4" af="1"/>
+      <pwm timer="15"  channel="2" af="9"/>
       <serial name="RX" channel="2" config="0" />
-      <pwm timer="15"  channel="1" af="9"/>
     </pin>
     <pin idx="4" fpin="20">
       <dio />
       <ain name="AIN4" channel="4" />
-      <pwm timer="3"  channel="1" af="2"/>
+      <pwm timer="3"  channel="2" af="2"/>
     </pin>
     <pin idx="5" fpin="21">
       <dio />
       <ain name="AIN5" channel="5" />
-      <pwm timer="2"   channel="0" af="1"/>
+      <pwm timer="2"   channel="1" af="1"/>
       <spi name="SCK" channel="1" config="1" />
     </pin>
     <pin idx="6" fpin="22">
       <dio />
       <ain name="AIN6" channel="6" />
-      <pwm timer="16"  channel="0" af="1"/>
-      <pwm timer="3"   channel="0" af="2"/>
+      <pwm timer="3"   channel="1" af="2"/>
+      <pwm timer="16"  channel="1" af="1"/>
       <spi name="MISO" channel="1" config="1" />
     </pin>
     <pin idx="7" fpin="23">
       <dio />
+      <pwm timer="3"   channel="2" af="2"/>
+      <pwm timer="17"  channel="1" af="1"/>
       <ain name="AIN7" channel="7" />
-      <pwm timer="17"  channel="0" af="1"/>
-      <pwm timer="3"   channel="1" af="2"/>
       <spi name="MOSI" channel="1" config="1" />
     </pin>
     <pin idx="8" fpin="41">
       <dio />
-      <pwm timer="1"   channel="0" af="6"/>
+      <pwm timer="1"   channel="1" af="6"/>
     </pin>
     <pin idx="9" fpin="42">
       <dio />
-      <twi name="SCL" channel="2" config="0" />
-      <pwm timer="1"   channel="1" af="6"/>
+      <pwm timer="1"   channel="2" af="6"/>
+      <pwm timer="2"   channel="3" af="10"/>
       <serial name="TX" channel="1" config="0" />
-      <pwm timer="2"   channel="2" af="10"/>
     </pin>
     <pin idx="10" fpin="43">
       <dio />
-      <twi name="SDA" channel="2" config="0" />
-      <pwm timer="1"   channel="2" af="6"/>
-      <serial name="RX" channel="1" config="0" />
+      <pwm timer="1"   channel="3" af="6"/>
       <pwm timer="2"   channel="4" af="10"/>
+      <serial name="RX" channel="1" config="0" />
     </pin>
     <pin idx="11" fpin="44">
       <dio />
-      <pwm timer="4"   channel="0" af="10"/>
-      <pwm timer="1"   channel="3" af="11"/>
+      <pwm timer="1"   channel="4" af="11"/>
     </pin>
     <pin idx="12" fpin="45">
       <dio />
-      <pwm timer="16"  channel="0" af="1"/>
+      <pwm timer="16"  channel="1" af="1"/>
       <serial name="DE" channel="1" config="0" />
-      <pwm timer="4"   channel="1" af="10"/>
     </pin>
     <pin idx="13" fpin="46" default="SWDAT">
       <dio />
       <system name="SWDAT" af="0" />
-      <pwm timer="4"   channel="2" af="10"/>
     </pin>
     <pin idx="14" fpin="49" default="SWCLK">
       <dio />
       <system name="SWCLK" af="0" />
-      <twi name="SDA" channel="1" config="2" />
-      <pwm timer="8"   channel="1" af="5"/>
-      <serial name="TX" channel="2" config="1"/>
+      <serial name="TX" channel="2" config="3"/>
+      <twi name="SDA" channel="1" config="1" />
     </pin>
     <pin idx="15" fpin="50">
       <dio />
-      <pwm timer="2"   channel="0" af="1"/>
-      <pwm timer="8"   channel="0" af="2"/>
-      <twi name="SCL" channel="1" config="2" />
-      <serial name="RX" channel="2" config="1"/>
+      <pwm timer="2"   channel="1" af="2"/>
+      <serial name="RX" channel="2" config="3"/>
+      <serial name="RX" channel="2" config="13"/>
+      <twi name="SCL" channel="1" config="1" />
     </pin>
   </port>
   <port name="GPIOB" titel="PB" offset="16" nr="1" pinset="GPIOB-&gt;BSRR = (1 &lt;&lt; {0})" pinrst="GPIOB-&gt;BRR = (1 &lt;&lt; {0})" pinget="GPIOB-&gt;IDR &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="26">
       <dio />
+      <pwm timer="3"   channel="3" af="2"/>
       <ain name="AIN8" channel="8" />
-      <pwm timer="3"   channel="2" af="2"/>
     </pin>
     <pin idx="1" fpin="27">
       <dio />
+      <pwm timer="3"   channel="4" af="2"/>
       <ain name="AIN9" channel="9" />
-      <pwm timer="3"   channel="3" af="2"/>
     </pin>
     <pin idx="2" fpin="28">
       <dio />
@@ -131,64 +126,54 @@
     </pin>
     <pin idx="3" fpin="55">
       <dio />
-      <pwm timer="2"   channel="1" af="1"/>
+      <pwm timer="2"   channel="2" af="1"/>
+      <pwm timer="3"   channel="1" af="2"/>
       <spi name="SCK"  channel="1" config="2" />
-      <spi name="SCK"  channel="3" config="1" />
       <serial name="TX" channel="2" config="2" />
     </pin>
     <pin idx="4" fpin="56">
       <dio />
-      <pwm timer="16"  channel="0" af="1"/>
-      <pwm timer="3"   channel="0" af="2"/>
+      <pwm timer="16"  channel="1" af="1"/>
+      <pwm timer="3"   channel="1" af="2"/>
       <spi name="MISO" channel="1" config="2" />
-      <spi name="MISO" channel="3" config="1" />
       <serial name="RX" channel="2" config="2" />
     </pin>
     <pin idx="5" fpin="57">
       <dio />
-      <pwm timer="3"   channel="1" af="2"/>
+      <pwm timer="17"  channel="1" af="10"/>
       <spi name="MOSI" channel="1" config="2" />
-      <spi name="MOSI" channel="3" config="1" />
-      <pwm timer="17"  channel="0" af="10"/>
     </pin>
     <pin idx="6" fpin="58">
       <dio />
-      <pwm timer="4"  channel="0" af="2"/>
-      <twi name="SCL" channel="1" config="0" />
-      <pwm timer="8"  channel="0" af="5"/>
       <serial name="TX" channel="1" config="1" />
+      <twi name="SCL" channel="1" config="1" />
     </pin>
     <pin idx="7" fpin="59">
       <dio />
-      <pwm timer="4"  channel="1" af="2"/>
-      <twi name="SDA" channel="1" config="0" />
+      <pwm timer="3"   channel="4" af="10"/>
       <serial name="RX" channel="1" config="1" />
-      <pwm timer="3"   channel="3" af="10"/>
+      <twi name="SDA" channel="1" config="1" />
     </pin>
     <pin idx="8" fpin="61">
       <dio />
-      <pwm timer="16"  channel="0" af="1"/>
-      <pwm timer="4"  channel="2" af="2"/>
-      <twi name="SCL" channel="1" config="1" />
-      <serial name="RX" channel="3" config="2" />
-      <pwm timer="8"  channel="1" af="10"/>
+      <twi name="SCL" channel="1" config="2" />
+      <pwm timer="16"  channel="1" af="1"/>
+      <serial name="RX" channel="3" config="1" />
     </pin>
     <pin idx="9" fpin="62">
       <dio />
-      <pwm timer="17"  channel="0" af="1"/>
-      <pwm timer="4"  channel="3" af="2"/>
-      <twi name="SDA" channel="1" config="1" />
-      <serial name="TX" channel="3" config="2" />
-      <pwm timer="8"  channel="2" af="10"/>
+      <twi name="SDA" channel="1" config="2" />
+      <pwm timer="17"  channel="1" af="1"/>
+      <serial name="TX" channel="3" config="1" />
     </pin>
     <pin idx="10" fpin="29">
       <dio />
-      <pwm timer="2"  channel="2" af="1"/>
+      <pwm timer="2"  channel="3" af="1"/>
       <serial name="TX" channel="3" config="0" />
     </pin>
     <pin idx="11" fpin="30">
       <dio />
-      <pwm timer="2"  channel="3" af="1"/>
+      <pwm timer="2"  channel="4" af="1"/>
       <serial name="RX" channel="3" config="0" />
     </pin>
     <pin idx="12" fpin="33">
@@ -198,26 +183,24 @@
     <pin idx="13" fpin="34">
       <dio />
       <ain name="AIN12" channel="12" />
-      <spi name="SCK" channel="2" config="1" />
+      <serial name="DE" channel="3" config="0" />
     </pin>
     <pin idx="14" fpin="35">
       <dio />
       <ain name="AIN13" channel="13" />
-      <pwm timer="15" channel="0" af="1"/>
-      <spi name="MISO" channel="2" config="1" />
-      <serial name="DE" channel="3" config="0" />
+      <pwm timer="15" channel="1" af="1"/>
     </pin>
     <pin idx="15" fpin="36">
       <dio />
       <ain name="AIN14" channel="14" />
-      <pwm timer="15" channel="1" af="1"/>
-      <spi name="MOSI" channel="2" config="1" />
+      <pwm timer="15" channel="2" af="1"/>
     </pin>
   </port>
   <port name="GPIOC" titel="PC" offset="32" nr="2" pinset="GPIOC-&gt;BSRR = (1 &lt;&lt; {0})" pinrst="GPIOC-&gt;BRR = (1 &lt;&lt; {0})" pinget="GPIOC-&gt;IDR &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="08">
       <dio />
       <ain name="AIN15" channel="15" />
+      <pwm timer="1" channel="1" af="2"/>
     </pin>
     <pin idx="1" fpin="09">
       <dio />
@@ -226,10 +209,12 @@
     <pin idx="2" fpin="10">
       <dio />
       <ain name="AIN17" channel="17" />
+      <pwm timer="1" channel="3" af="2"/>
     </pin>
     <pin idx="3" fpin="11">
       <dio />
       <ain name="AIN18" channel="18" />
+      <pwm timer="1" channel="4" af="2"/>
     </pin>
     <pin idx="4" fpin="24">
       <dio />
@@ -243,37 +228,30 @@
     </pin>
     <pin idx="6" fpin="37">
       <dio />
-      <pwm timer="3" channel="0" af="2"/>
-      <pwm timer="8" channel="0" af="4"/>
+      <pwm timer="3" channel="1" af="2"/>
     </pin>
     <pin idx="7" fpin="38">
       <dio />
-      <pwm timer="3" channel="1" af="2"/>
-      <pwm timer="8" channel="1" af="4"/>
+      <pwm timer="3" channel="2" af="2"/>
     </pin>
     <pin idx="8" fpin="39">
       <dio />
-      <pwm timer="3" channel="2" af="2"/>
-      <pwm timer="8" channel="2" af="4"/>
+      <pwm timer="3" channel="3" af="2"/>
     </pin>
     <pin idx="9" fpin="40">
       <dio />
-      <pwm timer="3" channel="3" af="2"/>
-      <pwm timer="8" channel="3" af="4"/>
+      <pwm timer="3" channel="4" af="2"/>
     </pin>
     <pin idx="10" fpin="51">
       <dio />
-      <spi name="SCK" channel="3" config="2" />
-      <serial name="TX" channel="3" config="1" />
+      <serial name="TX" channel="3" config="2" />
     </pin>
     <pin idx="11" fpin="52">
       <dio />
-      <spi name="MISO" channel="3" config="2" />
-      <serial name="RX" channel="3" config="1" />
+      <serial name="RX" channel="3" config="2" />
     </pin>
     <pin idx="12" fpin="53">
       <dio />
-      <spi name="MOSI" channel="3" config="2" />
     </pin>
     <pin idx="13" fpin="02">
         <dio />
@@ -295,26 +273,14 @@
   <port name="GPIOF" titel="PF" offset="80" nr="5" pinset="GPIOF-&gt;BSRR = (1 &lt;&lt; {0})" pinrst="GPIOF-&gt;BRR = (1 &lt;&lt; {0})" pinget="GPIOF-&gt;IDR &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="05">
         <system name="HSE_IN"/>
-        <system name="EXT_CLOCK" src="#define HSE_CRYSTAL_BYPASS          1" />
-        <dio />
     </pin>
     <pin idx="1" fpin="06">
         <system name="HSE_OUT"/>
-        <dio />
-    </pin>
-    <pin idx="4" fpin="18">
-        <!-- <ain name="1In5" channel="15" /> -->
-        <dio />
     </pin>
   </port>
   <pin name="RTC">
-    <system name="LSI" src="#define HAL_USE_RTC                1" />
-    <system name="HSE" src="#define HAL_USE_RTC                1&#13;&#10;#define HAL_RTC_USE_HSE            1" />
-    <system name="LSE" src="#define HAL_USE_RTC                1&#13;&#10;#define HAL_RTC_CHECK_LSE          1" />
-  </pin>
-  <pin name="PLC">
-    <system name="8" />
-    <system name="16" />
-    <system name="32" />
+    <system name="LSI" src="#define                            HAL_USE_RTC 1" />
+    <system name="HSE" src="#define                            HAL_USE_RTC 1&#13;&#10;#define                            HAL_RTC_USE_HSE" />
+    <system name="LSE" src="#define                            HAL_USE_RTC 1&#13;&#10;#define                            HAL_RTC_CHECK_LSE 1" />
   </pin>
 </cpu>

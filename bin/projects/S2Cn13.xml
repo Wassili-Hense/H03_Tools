@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<prj cpu="STM32F051CT" phy1="RFM69">
+<prj cpu="STM32F051CT" phy1="CC1101">
   <pin name="GPIOA.00" cfg="IO" addr="15" titel="CN3">
     <item name="GPIOA.00" />
     <item name="PWM 02.0" />
@@ -42,9 +42,7 @@
     <item name="PWM 03.1" />
     <item name="AIN 07" />
   </pin>
-  <pin name="GPIOA.08" cfg="Phy1">
-    <item name="GPIOA.08" func="IRQ" />
-  </pin>
+  <pin name="GPIOA.08" cfg="None" />
   <pin name="GPIOA.09" cfg="IO" addr="9" titel="CN9">
     <item name="GPIOA.09" />
     <item name="PWM 01.1" />
@@ -123,7 +121,7 @@
   <pin name="GPIOF.06" cfg="None" />
   <pin name="GPIOF.07" cfg="None" />
   <pin name="RTC" cfg="System">
-    <item name="LSI" />
+    <item name="HSE" />
   </pin>
   <pin name="PLC" cfg="System">
     <item name="8" />
