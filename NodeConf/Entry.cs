@@ -1,4 +1,7 @@
-﻿using System;
+﻿///<remarks>This file is part of the <see cref="https://github.com/X13home">X13.Home</see> project.<remarks>
+using JSC = NiL.JS.Core;
+using JSL = NiL.JS.BaseLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -43,6 +46,9 @@ namespace X13 {
       }
     }
 
+    public virtual void ExportX04(JSC.JSObject children) {
+    }
+
     public Pin parent { get { return _parent; } }
     public override string ToString() {
       return this.func ?? this.name;
@@ -82,6 +88,33 @@ namespace X13 {
       : base(info, parent, Signal.DIO) {
       resouces[parent.name + "_used"] = RcUse.Shared;
       base.name = parent.name;
+    }
+    public override void ExportX04(JSC.JSObject children) {
+      if(_parent.config == PinCfg.IO && selected) {
+        int ri = _parent._owner.ExIndex(name + "_used");
+        ExportS(children, ri, "Digital Input", "Ip");
+        ExportS(children, ri, "Digital inverted input", "In");
+        ExportS(children, ri, "Digital output", "Op");
+        ExportS(children, ri, "Digital inverted output", "On");
+      }
+    }
+
+    private void ExportS(JSC.JSObject children, int ri, string lt, string kt) {
+      var t1 = JSC.JSObject.CreateObject();
+      var t2 = JSC.JSObject.CreateObject();
+      var t3 = JSC.JSObject.CreateObject();
+      t1["default"] = false;
+      t1["manifest"] = t2;
+      t2["MQTT-SN"] = t3;
+      t3["tag"] = kt + _parent._addr.ToString();
+      t1["menu"] = lt;
+      t1["rc"] = "X" + ri.ToString();
+      if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
+        children[kt + _parent._addr.ToString("00")] = t1;
+      } else {
+        t1["info"] = lt + ", " + _parent.titelCur;
+        children[_parent.titelCur + "__" + kt] = t1;
+      }
     }
   }
 

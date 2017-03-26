@@ -1,4 +1,7 @@
-﻿using System;
+﻿///<remarks>This file is part of the <see cref="https://github.com/X13home">X13.Home</see> project.<remarks>
+using JSC = NiL.JS.Core;
+using JSL = NiL.JS.BaseLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -58,7 +61,7 @@ namespace X13 {
       _addr = -2;
     }
 
-    internal Project _owner;
+    public Project _owner;
     public enBase[] entrys;
     public Port port { get; private set; }
     public string name { get; private set; }
@@ -67,7 +70,7 @@ namespace X13 {
     public int mapping { get { return _addr; } }
 
     public PinCfg config;
-    private int _addr;
+    public int _addr;
 
     public void ViewChanged() {
       PropertyChangedReise("systemVis");
@@ -278,6 +281,11 @@ namespace X13 {
       }
       if(rez != null) {
         parent.Add(rez);
+      }
+    }
+    internal void ExportX04(JSC.JSObject children) {
+      for(int i = 0; i < entrys.Length; i++) {
+        entrys[i].ExportX04(children);
       }
     }
     public string ExportPinOut() {

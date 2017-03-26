@@ -1,4 +1,7 @@
-﻿using System;
+﻿///<remarks>This file is part of the <see cref="https://github.com/X13home">X13.Home</see> project.<remarks>
+using JSC = NiL.JS.Core;
+using JSL = NiL.JS.BaseLibrary;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -228,7 +231,11 @@ namespace X13 {
       }
       #endregion UART mapping
 
-      #region export .xst
+      Pin twi_sda = null;
+      Pin twi_scl = null;
+      enAin cAin;
+
+      #region export .xst v0.3
       XDocument doc = new XDocument(new XElement("root", new XAttribute("head", "/etc/declarers/dev")));
       var dev = CreateXItem(name, "pack://application:,,/CC;component/Images/" + (_phy2 == null ? "ty_unode.png" : "ty_ugate.png"));
       dev.Add(new XAttribute("ver", (new Version(3, now.Year % 100, now.Month * 100 + now.Day))));
@@ -253,9 +260,6 @@ namespace X13 {
       } else {
         ain = null;
       }
-      Pin twi_sda = null;
-      Pin twi_scl = null;
-      enAin cAin;
       foreach(var p in pins) {
         p.ExportX(Section.IP, IP);
         p.ExportX(Section.OP, OP);
@@ -301,10 +305,94 @@ namespace X13 {
       add.Add(CreateXItem("Byte array", "yB"));
       dev.Add(add);
       dev.Add(CreateXItem("remove", "zD"));
-      using(StreamWriter writer = File.CreateText(ePath+name+".xst")) {
+      using(StreamWriter writer = File.CreateText(ePath+name+"_v03.xst")) {
         doc.Save(writer);
       }
       #endregion export .xst
+
+      #region export .xst v0.4
+      doc = new XDocument(new XElement("xst", new XAttribute("path", "/$YS/TYPES/MQTT-SN")));
+      doc.Declaration = new XDeclaration("1.0", "utf-8", "yes");
+      JSC.JSObject val = JSC.JSObject.CreateObject();
+      val["editor"] = "Enum";
+      val["enum"] = "MsStatus";
+      JSC.JSObject children = JSC.JSObject.CreateObject(), t1 = JSC.JSObject.CreateObject(), t2 = JSC.JSObject.CreateObject(), mqi = JSC.JSObject.CreateObject();
+      val["Children"] = children;
+      val["mi"] = t1;
+      t1["MQTT-SN"] = t2;
+      t2["mi"] = mqi;
+      if(ainRef != 0) {
+        t1 = JSC.JSObject.CreateObject();
+        t1["default"] = 0;
+        t1["editor"] = "Integer";
+        mqi["ADCintegrate"] = t1;
+      }
+      if(_phy1 != null) {
+        t1 = JSC.JSObject.CreateObject();
+        t1["attr"] = 3;
+        mqi["phy1_addr"] = t1;
+      }
+      if(_phy2 != null) {
+        t1 = JSC.JSObject.CreateObject();
+        t1["attr"] = 3;
+        mqi["phy2_addr"] = t1;
+      }
+      foreach(var p in pins) {
+        p.ExportX04(children);
+        //p.ExportX(Section.IP, IP);
+        //p.ExportX(Section.OP, OP);
+        //p.ExportX(Section.IN, IN);
+        //p.ExportX(Section.ON, ON);
+        //p.ExportX(Section.PP, PP);
+        //p.ExportX(Section.PN, PN);
+        //cAin = p.ainCur as enAin;
+        //if(cAin != null) {
+        //  if((cAin.ainRef & 1) == 1) {
+        //    p.ExportX(Section.Ae, ain);
+        //  }
+        //  if((cAin.ainRef & 2) == 2) {
+        //    p.ExportX(Section.Av, ain);
+        //  }
+        //  if((cAin.ainRef & 4) == 4) {
+        //    p.ExportX(Section.Ai, ain);
+        //  }
+        //  if((cAin.ainRef & 8) == 8) {
+        //    p.ExportX(Section.AI, ain);
+        //  }
+        //}
+        //p.ExportX(Section.Serial, dev);
+        if(p.twiCur.signal == Signal.TWI_SDA) {
+          twi_sda = p;
+        } else if(p.twiCur.signal == Signal.TWI_SCL) {
+          twi_scl = p;
+        }
+      }
+      /*
+      if(twi_sda != null && twi_scl != null) {
+        var twi1 = new XElement("item", new XAttribute("name", "TWI"));
+        int r1 = ExIndex(twi_sda.name + "_used");
+        int r2 = ExIndex(twi_scl.name + "_used");
+        var twi2 = CreateXItem("Ta0", "ZbX" + r1.ToString() + ", X" + r2.ToString());
+        twi2.Add(CreateXItem("_description", "TWI devices"));
+        twi1.Add(twi2);
+        dev.Add(twi1);
+      }
+      */
+      dev = new XElement("i");
+      dev.Add(new XAttribute("n", name));
+      dev.Add(new XAttribute("s", JSL.JSON.stringify(val, null, null)));
+      dev.Add(new XAttribute("m", "{\"attr\":4}"));
+      dev.Add(new XAttribute("ver", ( new Version(3, now.Year % 100, now.Month * 100 + now.Day) )));
+      doc.Root.Add(dev);
+
+      using(System.Xml.XmlTextWriter writer = new System.Xml.XmlTextWriter(ePath + name + "_v04.xst", Encoding.UTF8)) {
+        writer.Formatting = System.Xml.Formatting.Indented;
+        writer.QuoteChar = '\'';
+        doc.WriteTo(writer);
+        writer.Flush();
+      }
+
+      #endregion export .xst V0.4
 
       #region export .h
       var h_sb = new StringBuilder();
