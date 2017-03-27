@@ -1,4 +1,7 @@
-﻿using System;
+﻿///<remarks>This file is part of the <see cref="https://github.com/X13home">X13.Home</see> project.<remarks>
+using JSC = NiL.JS.Core;
+using JSL = NiL.JS.BaseLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +21,24 @@ namespace X13 {
         p.signature = doc.Root.Attribute("signature").Value;
         p.name = name;
         p._pins = doc.Root.Elements("pin").Select(z => new phyPin(z)).ToArray();
+
         var ex=new List<Tuple<string, string[], bool>>();
         foreach(var a in doc.Root.Elements("append")) {
           var op = a.Attribute("optional");
           ex.Add(new Tuple<string, string[], bool>(a.Attribute("fmt").Value, a.Elements("var").Select(z=>z.Attribute("name").Value).ToArray(), op!=null && op.Value=="true"));
         }
         p._exportH = ex.ToArray();
+
+        var ex4 = new List<Tuple<string, JSC.JSValue>>();
+        foreach(var a in doc.Root.Elements("x04")) {
+          try {
+            ex4.Add(new Tuple<string, JSC.JSValue>(a.Attribute("name").Value, JSL.JSON.parse(a.Attribute("json").Value)));
+          }
+          catch(Exception) {
+          }
+        }
+        p._exportX04 = ex4.ToArray();
+
         var xa = doc.Root.Attribute("color");
         int tmp;
         if(xa != null && !string.IsNullOrEmpty(xa.Value) && xa.Value.StartsWith("#") && int.TryParse(xa.Value.Substring(1), System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out tmp)) {
@@ -43,6 +58,7 @@ namespace X13 {
     private int _nr;
     private phyPin[] _pins;
     private Tuple<string, string[], bool>[] _exportH;
+    private Tuple<string, JSC.JSValue>[] _exportX04;
 
     public string signature { get; private set; }
     public string name { get; private set; }
@@ -194,6 +210,12 @@ namespace X13 {
 
       return sb.ToString();
     }
+    public virtual void ExportX04(JSC.JSObject mqi) {
+      foreach(var c in _exportX04) {
+        mqi[c.Item1] = c.Item2;
+      }
+    }
+
     private class phyPin {
       public phyPin(XElement info) {
         var xn = info.Attribute("signal");

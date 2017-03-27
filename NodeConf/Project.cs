@@ -331,11 +331,13 @@ namespace X13 {
         t1 = JSC.JSObject.CreateObject();
         t1["attr"] = 3;
         mqi["phy1_addr"] = t1;
+        _phy1.ExportX04(mqi);
       }
       if(_phy2 != null) {
         t1 = JSC.JSObject.CreateObject();
         t1["attr"] = 3;
         mqi["phy2_addr"] = t1;
+        _phy2.ExportX04(mqi);
       }
       var lc = new Dictionary<string, JSC.JSObject>();
       foreach(var p in pins) {

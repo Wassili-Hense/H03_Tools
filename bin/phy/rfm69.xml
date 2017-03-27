@@ -17,7 +17,7 @@
   <append fmt="#define RFM69_RELEASE()             {0}">
     <var name="NCS.pinset"/>
   </append>
-  <append fmt="#define RFM69_IRQ_PIN()             {0}">
+  <append fmt="#define RFM69_IRQ_PIN               {0}">
     <var name="IRQ.pinnr"/>
   </append>
   <append fmt="#define RFM69_IRQ_STATE()           (({0}) != 0)">
@@ -28,4 +28,10 @@
   </append>
   <append fmt="#define RFM69_DEFAULT_FREQ          868300000UL"/>
   <append fmt="#include &quot;PHY/RFM69/rfm69_phy.h&quot;"/>
+
+  <x04 name="Channel" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="Power" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="DeviceAddr" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="GroupID" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="Key" json="{&quot;default&quot;:&quot;¤BA&quot;}" />
 </phy>

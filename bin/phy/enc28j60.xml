@@ -21,4 +21,9 @@
   </append>
   <append fmt="#define OD_DEF_DEV_MAC              {{0x00,0x04,0xA3,0x00,0x00,0x05}}   // MAC MSB->LSB"/>
   <append fmt="#include &quot;PHY/ENC28J60/enc28j60_phy.h&quot;"/>
+
+  <x04 name="MACAddr"  json="{&quot;default&quot;:&quot;¤BA&quot;}" />
+  <x04 name="IPAddr"   json="{&quot;default&quot;:&quot;¤BA&quot;}" />
+  <x04 name="IPMask"   json="{&quot;default&quot;:&quot;¤BA&quot;}" />
+  <x04 name="IPRouter" json="{&quot;default&quot;:&quot;¤BA&quot;}" />
 </phy>

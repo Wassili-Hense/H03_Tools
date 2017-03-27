@@ -22,10 +22,10 @@
     <var name="NCS.pinset"/>
   </append>
   <!--IRQ -->
-  <append fmt="#define CC11_IRQ_PIN                {0}">
+  <append fmt="#define CC11_IRQ_PIN                {0}" optional="true" >
       <var name="GPIO0.pinnr"/>
   </append>
-  <append fmt="#define CC11_IRQ_STATE()            (({0}) != 0)">
+  <append fmt="#define CC11_IRQ_STATE()            (({0}) != 0)" optional="true" >
     <var name="GPIO0.pinget"/>
   </append>
   <!-- Global -->
@@ -34,4 +34,8 @@
   </append>
   <append fmt="#define CC11_DEFAULT_FREQ           868300000UL"/>
   <append fmt="#include &quot;PHY/CC1101/cc11_phy.h&quot;"/>
+
+  <x04 name="DeviceAddr" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="GroupID" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
+  <x04 name="Channel" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
 </phy>

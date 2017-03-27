@@ -87,6 +87,7 @@
     </pin>
     <pin idx="2" fpin="32">
       <dio />
+      <serial name="DE" channel="0" config="0" />
     </pin>
     <pin idx="3" fpin="01">
       <dio />

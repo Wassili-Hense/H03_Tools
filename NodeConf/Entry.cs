@@ -166,7 +166,7 @@ namespace X13 {
     }
     public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
       if(_parent.config == PinCfg.IO && selected) {
-        var rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ", X" + _parent._owner.ExIndex(name).ToString();
+        var rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString();
         if((ainRef & 1) == 1) {
           ExportS(children, rc, "Analog input external reference", "Ae", 0);
         }
