@@ -46,7 +46,27 @@ namespace X13 {
       }
     }
 
-    public virtual void ExportX04(JSC.JSObject children) {
+    public virtual void ExportX04(Dictionary<string, JSC.JSObject> children) {
+    }
+    protected void ExportS(Dictionary<string, JSC.JSObject> children, string rc, string lt, string kt, JSC.JSValue defVal) {
+      var t1 = JSC.JSObject.CreateObject();
+      var t2 = JSC.JSObject.CreateObject();
+      var t3 = JSC.JSObject.CreateObject();
+      t1["default"] = defVal;
+      t1["manifest"] = t2;
+      t2["MQTT-SN"] = t3;
+      if(defVal.IsNumber) {
+        t2["editor"] = "Integer";
+      }
+      t3["tag"] = kt + _parent._addr.ToString();
+      t1["menu"] = lt;
+      t1["rc"] = rc;
+      if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
+        children[kt + _parent._addr.ToString("00")] = t1;
+      } else {
+        t1["info"] = lt + ", " + _parent.titelCur;
+        children[_parent.titelCur + "_" + kt] = t1;
+      }
     }
 
     public Pin parent { get { return _parent; } }
@@ -89,31 +109,13 @@ namespace X13 {
       resouces[parent.name + "_used"] = RcUse.Shared;
       base.name = parent.name;
     }
-    public override void ExportX04(JSC.JSObject children) {
+    public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
       if(_parent.config == PinCfg.IO && selected) {
-        int ri = _parent._owner.ExIndex(name + "_used");
-        ExportS(children, ri, "Digital Input", "Ip");
-        ExportS(children, ri, "Digital inverted input", "In");
-        ExportS(children, ri, "Digital output", "Op");
-        ExportS(children, ri, "Digital inverted output", "On");
-      }
-    }
-
-    private void ExportS(JSC.JSObject children, int ri, string lt, string kt) {
-      var t1 = JSC.JSObject.CreateObject();
-      var t2 = JSC.JSObject.CreateObject();
-      var t3 = JSC.JSObject.CreateObject();
-      t1["default"] = false;
-      t1["manifest"] = t2;
-      t2["MQTT-SN"] = t3;
-      t3["tag"] = kt + _parent._addr.ToString();
-      t1["menu"] = lt;
-      t1["rc"] = "X" + ri.ToString();
-      if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
-        children[kt + _parent._addr.ToString("00")] = t1;
-      } else {
-        t1["info"] = lt + ", " + _parent.titelCur;
-        children[_parent.titelCur + "__" + kt] = t1;
+        string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString();
+        ExportS(children, rc, "Digital Input", "Ip", false);
+        ExportS(children, rc, "Digital inverted input", "In", false);
+        ExportS(children, rc, "Digital output", "Op", false);
+        ExportS(children, rc, "Digital inverted output", "On", false);
       }
     }
   }
@@ -135,7 +137,8 @@ namespace X13 {
     public string src { get; private set; }
   }
   internal class enSysLed : enSystem {
-    public enSysLed(enDIO dio, bool pnp) : base(dio.parent, Signal.SYS_LED) {
+    public enSysLed(enDIO dio, bool pnp)
+      : base(dio.parent, Signal.SYS_LED) {
       this.pnp = pnp;
       resouces[parent.name + "_used"] = (RcUse)(0x100);
       resouces["SYSTEM_LED"] = RcUse.Exclusive;
@@ -161,6 +164,23 @@ namespace X13 {
     public int GetConfig() {
       return _channel;
     }
+    public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
+      if(_parent.config == PinCfg.IO && selected) {
+        var rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ", X" + _parent._owner.ExIndex(name).ToString();
+        if((ainRef & 1) == 1) {
+          ExportS(children, rc, "Analog input external reference", "Ae", 0);
+        }
+        if((ainRef & 2) == 2) {
+          ExportS(children, rc, "Analog input AVcc reference", "Av", 0);
+        }
+        if((ainRef & 4) == 4) {
+          ExportS(children, rc, "Analog input internal reference", "Ai", 0);
+        }
+        if((ainRef & 8) == 8) {
+          ExportS(children, rc, "Analog input internal2 reference", "AI", 0);
+        }
+      }
+    }
   }
   internal class enPwm : enBase {
     private int _channel;
@@ -184,6 +204,13 @@ namespace X13 {
     public int GetConfig() {
       return (_af << 8) | (_timer << 3) | (_channel);
     }
+    public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
+      if(_parent.config == PinCfg.IO && selected) {
+        string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString();
+        ExportS(children, rc, "PWM output", "Pp", 0);
+        ExportS(children, rc, "PWM inverted output", "Pn", 0);
+      }
+    }
   }
   internal class enSerial : enBase {
     public readonly byte config;
@@ -198,6 +225,48 @@ namespace X13 {
       this.name = info.Attribute("name").Value + " " + channel.ToString() + "." + config.ToString();
       resouces["UART" + channel.ToString() + "_CFG"] = (RcUse)(0x100 + config);
     }
+    public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
+      if(_parent.config == PinCfg.IO && selected) {
+        string uName = "Serial " + mapping.ToString();
+        int r_pin = parent._owner.ExIndex(parent.name + "_used");
+        int r_s0 = parent._owner.ExIndex("UART" + channel.ToString() + "_s0");
+        int r_s1 = parent._owner.ExIndex("UART" + channel.ToString() + "_s1");
+        int r_s2 = parent._owner.ExIndex("UART" + channel.ToString() + "_s2");
+        int r_s3 = parent._owner.ExIndex("UART" + channel.ToString() + "_s3");
+        int r_s4 = parent._owner.ExIndex("UART" + channel.ToString() + "_s4");
+        if(signal == Signal.UART_RX) {
+          ExportS(children, string.Format("X{0},S{1},B{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "RxD 2400", "Sr" + mapping.ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},S{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "RxD 4800", "Sr" + (mapping + 16).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},S{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "RxD 9600", "Sr" + (mapping + 32).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},S{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "RxD 19200", "Sr" + (mapping + 48).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},S{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "RxD 38400", "Sr" + (mapping + 64).ToString(), "¤BA", uName);
+        } else if(signal == Signal.UART_TX) {
+          ExportS(children, string.Format("X{0},S{1},B{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "TxD 2400", "St" + mapping.ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},S{2},B{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "TxD 4800", "St" + (mapping + 16).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},S{3},B{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "TxD 9600", "St" + (mapping + 32).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},S{4},B{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "TxD 19200", "St" + (mapping + 48).ToString(), "¤BA", uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},S{5}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4), "TxD 38400", "St" + (mapping + 64).ToString(), "¤BA", uName);
+        }
+      }
+    }
+    protected void ExportS(Dictionary<string, JSC.JSObject> children, string rc, string lt, string kt, JSC.JSValue defVal, string me) {
+      var t1 = JSC.JSObject.CreateObject();
+      var t2 = JSC.JSObject.CreateObject();
+      var t3 = JSC.JSObject.CreateObject();
+      t1["default"] = defVal;
+      t1["manifest"] = t2;
+      t2["MQTT-SN"] = t3;
+      t3["tag"] = kt;
+      t1["menu"] = me;
+      t1["rc"] = rc;
+      if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
+        children[kt] = t1;
+      } else {
+        t1["info"] = lt + ", " + _parent.titelCur;
+        children[_parent.titelCur + "_" + kt] = t1;
+      }
+    }
+
   }
   internal class enSpi : enBase {
     public readonly byte config;

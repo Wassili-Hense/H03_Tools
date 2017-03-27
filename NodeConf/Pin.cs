@@ -131,9 +131,9 @@ namespace X13 {
       el.Add(new XAttribute("cfg", config.ToString()));
       if(config == PinCfg.IO && _addr >= 0) {
         el.Add(new XAttribute("addr", _addr.ToString()));
-        if(titelCur != null) {
-          el.Add(new XAttribute("titel", titelCur));
-        }
+      }
+      if(titelCur != null) {
+        el.Add(new XAttribute("titel", titelCur));
       }
 
       foreach(var en in entrys.Where(z => z.selected)) {
@@ -283,7 +283,7 @@ namespace X13 {
         parent.Add(rez);
       }
     }
-    internal void ExportX04(JSC.JSObject children) {
+    internal void ExportX04(Dictionary<string, JSC.JSObject> children) {
       for(int i = 0; i < entrys.Length; i++) {
         entrys[i].ExportX04(children);
       }
@@ -630,7 +630,7 @@ namespace X13 {
     }
     public List<enBase> twiLst { get { return GetLst(EntryType.twi); } }
 
-    public System.Windows.Visibility titelVis { get { return config == PinCfg.IO ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility titelVis { get { return /*config == PinCfg.IO ?*/ System.Windows.Visibility.Visible/* : System.Windows.Visibility.Collapsed*/; } }
     public string titelCur { get; set; }
     #endregion view
 

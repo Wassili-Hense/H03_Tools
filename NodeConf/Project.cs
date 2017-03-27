@@ -337,29 +337,9 @@ namespace X13 {
         t1["attr"] = 3;
         mqi["phy2_addr"] = t1;
       }
+      var lc = new Dictionary<string, JSC.JSObject>();
       foreach(var p in pins) {
-        p.ExportX04(children);
-        //p.ExportX(Section.IP, IP);
-        //p.ExportX(Section.OP, OP);
-        //p.ExportX(Section.IN, IN);
-        //p.ExportX(Section.ON, ON);
-        //p.ExportX(Section.PP, PP);
-        //p.ExportX(Section.PN, PN);
-        //cAin = p.ainCur as enAin;
-        //if(cAin != null) {
-        //  if((cAin.ainRef & 1) == 1) {
-        //    p.ExportX(Section.Ae, ain);
-        //  }
-        //  if((cAin.ainRef & 2) == 2) {
-        //    p.ExportX(Section.Av, ain);
-        //  }
-        //  if((cAin.ainRef & 4) == 4) {
-        //    p.ExportX(Section.Ai, ain);
-        //  }
-        //  if((cAin.ainRef & 8) == 8) {
-        //    p.ExportX(Section.AI, ain);
-        //  }
-        //}
+        p.ExportX04(lc);
         //p.ExportX(Section.Serial, dev);
         if(p.twiCur.signal == Signal.TWI_SDA) {
           twi_sda = p;
@@ -378,6 +358,9 @@ namespace X13 {
         dev.Add(twi1);
       }
       */
+      foreach(var c in lc.OrderBy(z => z.Key).ThenBy(z => z.Value["menu"].Value as string ?? string.Empty)) {
+        children[c.Key] = c.Value;
+      }
       dev = new XElement("i");
       dev.Add(new XAttribute("n", name));
       dev.Add(new XAttribute("s", JSL.JSON.stringify(val, null, null)));
