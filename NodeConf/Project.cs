@@ -354,7 +354,7 @@ namespace X13 {
         mqi["SleepTime"] = t1;
       }
       foreach(var c in lc.OrderBy(z => z.Key).ThenBy(z => z.Value["menu"].Value as string ?? string.Empty)) {
-        children[c.Key] = c.Value;
+        children[c.Key.Replace('.', '-')] = c.Value;
       }
       dev = new XElement("i");
       dev.Add(new XAttribute("n", name));
