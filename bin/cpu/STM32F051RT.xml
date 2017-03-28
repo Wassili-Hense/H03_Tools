@@ -250,11 +250,13 @@
   </port>
   <port name="GPIOF" titel="PF" offset="80" nr="5" pinset="GPIOF-&gt;BSRR = (1 &lt;&lt; {0})" pinrst="GPIOF-&gt;BRR = (1 &lt;&lt; {0})" pinget="GPIOF-&gt;IDR &amp; (1 &lt;&lt; {0})">
     <pin idx="0" fpin="05">
-        <system name="HSE_IN"/>
-        <system name="EXT_CLOCK" src="#define HSE_CRYSTAL_BYPASS          1" />
+      <dio />
+      <system name="HSE_IN"/>
+      <system name="EXT_CLOCK" src="#define HSE_CRYSTAL_BYPASS          1" />
     </pin>
     <pin idx="1" fpin="06">
-        <system name="HSE_OUT"/>
+      <dio />
+      <system name="HSE_OUT"/>
     </pin>
     <pin idx="4" fpin="18">
       <dio />
