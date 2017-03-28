@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phy name="RS485" signature="M">
+<phy name="RS485" signature="M" color="#0000FF">
   <pin name="RX" signal="UART_RX"/>
   <pin name="TX" signal="UART_TX"/>
   <pin name="DE" signal="UART_DE"/>

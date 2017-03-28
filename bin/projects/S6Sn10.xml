@@ -8,15 +8,11 @@
     <item name="GPIOA.01" />
     <item name="PWM 02.1" />
   </pin>
-  <pin name="GPIOA.02" cfg="IO" addr="6">
-    <item name="GPIOA.02" />
-    <item name="PWM 02.2" />
-    <item name="TX 2.0" />
+  <pin name="GPIOA.02" cfg="Phy1">
+    <item name="TX 2.0" func="TX" />
   </pin>
-  <pin name="GPIOA.03" cfg="IO" addr="7">
-    <item name="GPIOA.03" />
-    <item name="PWM 02.3" />
-    <item name="RX 2.0" />
+  <pin name="GPIOA.03" cfg="Phy1">
+    <item name="RX 2.0" func="RX" />
   </pin>
   <pin name="GPIOA.04" cfg="IO" addr="8">
     <item name="GPIOA.04" />
@@ -32,9 +28,11 @@
   </pin>
   <pin name="GPIOA.09" cfg="IO" addr="22">
     <item name="GPIOA.09" />
+    <item name="TX 1.0" />
   </pin>
   <pin name="GPIOA.10" cfg="IO" addr="23">
     <item name="GPIOA.10" />
+    <item name="RX 1.0" />
   </pin>
   <pin name="GPIOA.11" cfg="IO" addr="24">
     <item name="GPIOA.11" />
@@ -69,12 +67,8 @@
     <item name="GPIOB.05" />
     <item name="PWM 03.1" />
   </pin>
-  <pin name="GPIOB.06" cfg="Phy1">
-    <item name="TX 1.1" func="TX" />
-  </pin>
-  <pin name="GPIOB.07" cfg="Phy1">
-    <item name="RX 1.1" func="RX" />
-  </pin>
+  <pin name="GPIOB.06" cfg="None" />
+  <pin name="GPIOB.07" cfg="None" />
   <pin name="GPIOB.08" cfg="IO" addr="38">
     <item name="GPIOB.08" />
     <item name="PWM 04.2" />

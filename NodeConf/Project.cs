@@ -340,26 +340,19 @@ namespace X13 {
         _phy2.ExportX04(mqi);
       }
       var lc = new Dictionary<string, JSC.JSObject>();
+      bool asleep = false;
       foreach(var p in pins) {
         p.ExportX04(lc);
-        //p.ExportX(Section.Serial, dev);
-        if(p.twiCur.signal == Signal.TWI_SDA) {
-          twi_sda = p;
-        } else if(p.twiCur.signal == Signal.TWI_SCL) {
-          twi_scl = p;
+        if(p.config == PinCfg.System && p.name == "ASLEEP") {
+          asleep = true;
         }
       }
-      /*
-      if(twi_sda != null && twi_scl != null) {
-        var twi1 = new XElement("item", new XAttribute("name", "TWI"));
-        int r1 = ExIndex(twi_sda.name + "_used");
-        int r2 = ExIndex(twi_scl.name + "_used");
-        var twi2 = CreateXItem("Ta0", "ZbX" + r1.ToString() + ", X" + r2.ToString());
-        twi2.Add(CreateXItem("_description", "TWI devices"));
-        twi1.Add(twi2);
-        dev.Add(twi1);
+      if(asleep) {
+        t1 = JSC.JSObject.CreateObject();
+        t1["default"] = 0;
+        t1["editor"] = "Integer";
+        mqi["SleepTime"] = t1;
       }
-      */
       foreach(var c in lc.OrderBy(z => z.Key).ThenBy(z => z.Value["menu"].Value as string ?? string.Empty)) {
         children[c.Key] = c.Value;
       }
@@ -367,7 +360,7 @@ namespace X13 {
       dev.Add(new XAttribute("n", name));
       dev.Add(new XAttribute("s", JSL.JSON.stringify(val, null, null)));
       dev.Add(new XAttribute("m", "{\"attr\":4}"));
-      dev.Add(new XAttribute("ver", ( new Version(3, now.Year % 100, now.Month * 100 + now.Day) )));
+      dev.Add(new XAttribute("ver", ( new Version(3, 4, (now.Year % 100)*100 + now.Month, (int)((now.Day + now.TimeOfDay.TotalDays)*1000)))));
       doc.Root.Add(dev);
 
       using(System.Xml.XmlTextWriter writer = new System.Xml.XmlTextWriter(ePath + name + "_v04.xst", Encoding.UTF8)) {

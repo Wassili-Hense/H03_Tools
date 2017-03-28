@@ -33,5 +33,5 @@
   <x04 name="Power" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
   <x04 name="DeviceAddr" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
   <x04 name="GroupID" json="{&quot;default&quot;:0,&quot;editor&quot;:&quot;Integer&quot;} " />
-  <x04 name="Key" json="{&quot;default&quot;:&quot;¤BA&quot;}" />
+  <x04 name="Key" json="{&quot;default&quot;:&quot;&#0164;BA&quot;}" />
 </phy>
