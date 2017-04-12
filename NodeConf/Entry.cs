@@ -64,7 +64,7 @@ namespace X13 {
       if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
         children[kt + _parent._addr.ToString("00")] = t1;
       } else {
-        t1["info"] = lt + ", " + _parent.titelCur;
+        t1["hint"] = lt + ", " + _parent.titelCur;
         children[_parent.titelCur + "_" + kt] = t1;
       }
     }
@@ -262,7 +262,7 @@ namespace X13 {
       if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
         children[kt] = t1;
       } else {
-        t1["info"] = lt + ", " + _parent.titelCur;
+        t1["hint"] = lt + ", " + _parent.titelCur;
         children[_parent.titelCur + "_" + kt] = t1;
       }
     }
