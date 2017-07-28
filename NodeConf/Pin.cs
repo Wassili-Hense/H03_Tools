@@ -180,7 +180,7 @@ namespace X13 {
         if(config == PinCfg.IO && pwmCur.type == EntryType.pwm) {
           int ri = _owner.ExIndex(name + "_used");
           int ti = _owner.ExIndex(pwmCur.name);
-          rez = Project.CreateXItem("Pp" + _addr.ToString(), (_addr < 10 ? "I" : "J") + "zX" + ri.ToString() + ", X" + ti.ToString());
+          rez = Project.CreateXItem("Pp" + _addr.ToString(), (_addr < 10 ? "I" : "J") + "iX" + ri.ToString() + ", X" + ti.ToString());
           rez.Add(Project.CreateXItem("_description", "PWM output, " + (titelCur ?? name)));
         }
         break;
@@ -188,7 +188,7 @@ namespace X13 {
         if(config == PinCfg.IO && pwmCur.type == EntryType.pwm) {
           int ri = _owner.ExIndex(name + "_used");
           int ti = _owner.ExIndex(pwmCur.name);
-          rez = Project.CreateXItem("Pn" + _addr.ToString(), (_addr < 10 ? "K" : "L") + "zX" + ri.ToString() + ", X" + ti.ToString());
+          rez = Project.CreateXItem("Pn" + _addr.ToString(), (_addr < 10 ? "K" : "L") + "iX" + ri.ToString() + ", X" + ti.ToString());
           rez.Add(Project.CreateXItem("_description", "PWM inverted output, " + (titelCur ?? name)));
         }
         break;
