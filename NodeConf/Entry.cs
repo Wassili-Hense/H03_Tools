@@ -56,7 +56,7 @@ namespace X13 {
       t1["manifest"] = t2;
       t2["MQTT-SN"] = t3;
       if(defVal.IsNumber) {
-        t2["editor"] = "Integer";
+        t2["type"] = "Integer";
       }
       t3["tag"] = kt + _parent._addr.ToString();
       t1["menu"] = lt;

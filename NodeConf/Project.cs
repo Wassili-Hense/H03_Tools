@@ -316,6 +316,12 @@ namespace X13 {
       JSC.JSObject val = JSC.JSObject.CreateObject();
       val["editor"] = "Enum";
       val["enum"] = "MsStatus";
+      var akt_d = JSC.JSObject.CreateObject();
+      var akt = new JSL.Array(1);
+      akt_d["name"] = "MQTT_SN.SendDisconnect";
+      akt_d["text"] = "Send Disconnect";
+      akt[0] = akt_d;
+      val["Action"] = akt;
       JSC.JSObject children = JSC.JSObject.CreateObject(), t1 = JSC.JSObject.CreateObject(), t2 = JSC.JSObject.CreateObject(), mqi = JSC.JSObject.CreateObject();
       val["Children"] = children;
       val["mi"] = t1;
@@ -324,7 +330,7 @@ namespace X13 {
       if(ainRef != 0) {
         t1 = JSC.JSObject.CreateObject();
         t1["default"] = 0;
-        t1["editor"] = "Integer";
+        t1["type"] = "Integer";
         mqi["ADCintegrate"] = t1;
       }
       if(_phy1 != null) {
@@ -350,7 +356,7 @@ namespace X13 {
       if(asleep) {
         t1 = JSC.JSObject.CreateObject();
         t1["default"] = 0;
-        t1["editor"] = "Integer";
+        t1["type"] = "Integer";
         mqi["SleepTime"] = t1;
       }
       foreach(var c in lc.OrderBy(z => z.Key).ThenBy(z => z.Value["menu"].Value as string ?? string.Empty)) {
