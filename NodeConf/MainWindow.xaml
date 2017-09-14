@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:util="clr-namespace:Wpf.Util"
         TextOptions.TextRenderingMode="ClearType" TextOptions.TextFormattingMode="Display" FontFamily="Consolas" FontSize="12"
-        Title="Node Configurator" Width="1200">
+        Title="Node Configurator" Width="1400">
   <Grid>
     <Grid.Resources>
       <LinearGradientBrush x:Key="BusyBrush" StartPoint="0,0.1" EndPoint="1,0.9">
@@ -34,6 +34,8 @@
       <ComboBox Name="cbCPU"  Height="22" Width="140" Margin="7,1" SelectionChanged="cbCPU_SelectionChanged" BorderThickness="0,0,0,2" />
       <ComboBox Name="cbPhy1" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy1_SelectionChanged" BorderThickness="0,0,0,2" />
       <ComboBox Name="cbPhy2" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy2_SelectionChanged" BorderThickness="0,0,0,2" />
+      <ComboBox Name="cbPhy3" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy3_SelectionChanged" BorderThickness="0,0,0,2" />
+      <ComboBox Name="cbPhy4" Height="22" MinWidth="113" Margin="7,1" IsEnabled="False" SelectionChanged="cbPhy4_SelectionChanged" BorderThickness="0,0,0,2" />
       <Separator />
       <Button Content="Save" Width="70" Click="buSaveProject_Click" />
       <Separator />
@@ -65,6 +67,20 @@
             <GridViewColumn.CellTemplate>
               <DataTemplate>
                 <ComboBox MinWidth="115" Visibility="{Binding phy2Vis}" ItemsSource="{Binding phy2Lst}" SelectedItem="{Binding phy2Cur}"  BorderBrush="{Binding phy2Border}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="PHY3" Width="130" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox MinWidth="115" Visibility="{Binding phy3Vis}" ItemsSource="{Binding phy3Lst}" SelectedItem="{Binding phy3Cur}"  BorderBrush="{Binding phy3Border}" />
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
+          <GridViewColumn Header="PHY4" Width="130" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox MinWidth="115" Visibility="{Binding phy4Vis}" ItemsSource="{Binding phy4Lst}" SelectedItem="{Binding phy4Cur}"  BorderBrush="{Binding phy4Border}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>

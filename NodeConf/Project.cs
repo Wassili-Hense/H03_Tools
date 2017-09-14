@@ -48,10 +48,18 @@ namespace X13 {
       var xn = doc.Root.Attribute("phy1");
       if(xn != null) {
         prj.phy1 = phyBase.Create(xn.Value, 1);
-      }
-      xn = doc.Root.Attribute("phy2");
-      if(xn != null) {
-        prj.phy2 = phyBase.Create(xn.Value, 2);
+        xn = doc.Root.Attribute("phy2");
+        if(xn != null) {
+          prj.phy2 = phyBase.Create(xn.Value, 2);
+          xn = doc.Root.Attribute("phy3");
+          if(xn != null) {
+            prj.phy3 = phyBase.Create(xn.Value, 3);
+            xn = doc.Root.Attribute("phy4");
+            if(xn != null) {
+              prj.phy4 = phyBase.Create(xn.Value, 4);
+            }
+          }
+        }
       }
       prj._prjPath = path;
       foreach(var it in doc.Root.Elements("pin")) {
@@ -69,16 +77,18 @@ namespace X13 {
     private string _cpuSignature;
     private phyBase _phy1;
     private phyBase _phy2;
+    private phyBase _phy3;
+    private phyBase _phy4;
     private List<string> _exResouces;
 
     public Pin[] pins { get; private set; }
     public string cpu { get { return _cpuPath; } }
-    public phyBase phy1 { 
-      get { 
-        return _phy1; 
-      } 
-      set { 
-        _phy1 = value; 
+    public phyBase phy1 {
+      get {
+        return _phy1;
+      }
+      set {
+        _phy1 = value;
         _prjPath = null;
         foreach(var p in pins) {
           if(p.config == PinCfg.Phy1) {
@@ -86,14 +96,14 @@ namespace X13 {
             p.ViewChanged();
           }
         }
-      } 
+      }
     }
-    public phyBase phy2 { 
-      get { 
-        return _phy2; 
-      } 
-      set { 
-        _phy2 = value; 
+    public phyBase phy2 {
+      get {
+        return _phy2;
+      }
+      set {
+        _phy2 = value;
         _prjPath = null;
         foreach(var p in pins) {
           if(p.config == PinCfg.Phy2) {
@@ -101,14 +111,47 @@ namespace X13 {
             p.ViewChanged();
           }
         }
-      } 
+      }
+    }
+    public phyBase phy3 {
+      get {
+        return _phy3;
+      }
+      set {
+        _phy3 = value;
+        _prjPath = null;
+        foreach(var p in pins) {
+          if(p.config == PinCfg.Phy3) {
+            p.config = PinCfg.None;
+            p.ViewChanged();
+          }
+        }
+      }
+    }
+    public phyBase phy4 {
+      get {
+        return _phy4;
+      }
+      set {
+        _phy4 = value;
+        _prjPath = null;
+        foreach(var p in pins) {
+          if(p.config == PinCfg.Phy4) {
+            p.config = PinCfg.None;
+            p.ViewChanged();
+          }
+        }
+      }
     }
     public int ainRef { get; private set; }
 
     public string Path {
       get {
         if(_prjPath == null) {
-          string p = _cpuSignature + (_phy1 == null ? "n" : _phy1.signature) + (_phy2 == null ? "n" : _phy2.signature);
+          string p = _cpuSignature + (_phy1 == null ? "n" : _phy1.signature
+            + (_phy2 == null ? string.Empty : _phy2.signature
+            + (_phy3 == null ? string.Empty : _phy3.signature
+            + (_phy4 == null ? string.Empty : _phy4.signature))));
           int i;
           for(i = 10; i < 99; i++) {
             _prjPath = @"projects\" + p + i.ToString("00") + ".xml";
@@ -169,9 +212,15 @@ namespace X13 {
       doc.Root.Add(new XAttribute("cpu", _cpuPath));
       if(_phy1 != null) {
         doc.Root.Add(new XAttribute("phy1", _phy1.name));
-      }
-      if(_phy2 != null) {
-        doc.Root.Add(new XAttribute("phy2", _phy2.name));
+        if(_phy2 != null) {
+          doc.Root.Add(new XAttribute("phy2", _phy2.name));
+          if(_phy3 != null) {
+            doc.Root.Add(new XAttribute("phy3", _phy3.name));
+            if(_phy4 != null) {
+              doc.Root.Add(new XAttribute("phy4", _phy4.name));
+            }
+          }
+        }
       }
       foreach(var p in pins) {
         doc.Root.Add(p.Save());
@@ -190,9 +239,9 @@ namespace X13 {
       var now = DateTime.Now;
 
       _exResouces = new List<string>();
-      if(name.Length > 6) {
-        name = name.Substring(0, 6);
-      }
+      //if(name.Length > 6) {
+      //  name = name.Substring(0, 6);
+      //}
 
       #region UART mapping
       var uMap = new List<int>();
@@ -305,7 +354,7 @@ namespace X13 {
       add.Add(CreateXItem("Byte array", "yB"));
       dev.Add(add);
       dev.Add(CreateXItem("remove", "zD"));
-      using(StreamWriter writer = File.CreateText(ePath+name+"_v03.xst")) {
+      using(StreamWriter writer = File.CreateText(ePath + name + "_v03.xst")) {
         doc.Save(writer);
       }
       #endregion export .xst
@@ -338,12 +387,24 @@ namespace X13 {
         t1["attr"] = 3;
         mqi["phy1_addr"] = t1;
         _phy1.ExportX04(mqi);
-      }
-      if(_phy2 != null) {
-        t1 = JSC.JSObject.CreateObject();
-        t1["attr"] = 3;
-        mqi["phy2_addr"] = t1;
-        _phy2.ExportX04(mqi);
+        if(_phy2 != null) {
+          t1 = JSC.JSObject.CreateObject();
+          t1["attr"] = 3;
+          mqi["phy2_addr"] = t1;
+          _phy2.ExportX04(mqi);
+          if(_phy3 != null) {
+            t1 = JSC.JSObject.CreateObject();
+            t1["attr"] = 3;
+            mqi["phy3_addr"] = t1;
+            _phy3.ExportX04(mqi);
+            if(_phy4 != null) {
+              t1 = JSC.JSObject.CreateObject();
+              t1["attr"] = 3;
+              mqi["phy4_addr"] = t1;
+              _phy4.ExportX04(mqi);
+            }
+          }
+        }
       }
       var lc = new Dictionary<string, JSC.JSObject>();
       bool asleep = false;
@@ -366,7 +427,7 @@ namespace X13 {
       dev.Add(new XAttribute("n", name));
       dev.Add(new XAttribute("s", JSL.JSON.stringify(val, null, null)));
       dev.Add(new XAttribute("m", "{\"attr\":4}"));
-      dev.Add(new XAttribute("ver", ( new Version(3, 4, (now.Year % 100)*100 + now.Month, (int)((now.Day + now.TimeOfDay.TotalDays)*1000)))));
+      dev.Add(new XAttribute("ver", (new Version(3, 4, (now.Year % 100) * 100 + now.Month, (int)((now.Day + now.TimeOfDay.TotalDays) * 1000)))));
       doc.Root.Add(dev);
 
       using(System.Xml.XmlTextWriter writer = new System.Xml.XmlTextWriter(ePath + name + "_v04.xst", Encoding.UTF8)) {
@@ -387,9 +448,15 @@ namespace X13 {
       h_sb.AppendFormat("// uC: {0}\r\n", System.IO.Path.GetFileNameWithoutExtension(_cpuPath));
       if(_phy1 != null) {
         h_sb.AppendFormat("// PHY1: {0}\r\n", _phy1.name);
-      }
-      if(_phy2 != null) {
-        h_sb.AppendFormat("// PHY2: {0}\r\n", _phy2.name);
+        if(_phy2 != null) {
+          h_sb.AppendFormat("// PHY2: {0}\r\n", _phy2.name);
+          if(_phy3 != null) {
+            h_sb.AppendFormat("// PHY3: {0}\r\n", _phy3.name);
+            if(_phy4 != null) {
+              h_sb.AppendFormat("// PHY4: {0}\r\n", _phy4.name);
+            }
+          }
+        }
       }
       h_sb.AppendLine();
       string tmp;
@@ -537,7 +604,7 @@ namespace X13 {
         var p = pins.FirstOrDefault(z => z.systemCur.signal == Signal.SYS_LED);
         if(p != null) {
           var l = p.systemCur as enSysLed;
-          if(l != null && p.port!=null) {
+          if(l != null && p.port != null) {
             h_sb.AppendLine();
             h_sb.AppendFormat("#define LED_Init()                  hal_dio_configure({0}, DIO_MODE_OUT_PP)\r\n", p.port.offset + p.idx);
             if(l.pnp) {
@@ -552,29 +619,44 @@ namespace X13 {
       }
       if(_phy1 != null) {
         h_sb.Append(_phy1.ExportH());
-      }
-      if(_phy2 != null) {
-        h_sb.Append(_phy2.ExportH());
+        if(_phy2 != null) {
+          h_sb.Append(_phy2.ExportH());
+          if(_phy3 != null) {
+            h_sb.Append(_phy3.ExportH());
+            if(_phy4 != null) {
+              h_sb.Append(_phy4.ExportH());
+            }
+          }
+        }
       }
       { // Object's Dictionary Section
         h_sb.AppendLine("\r\n// Object's Dictionary Section");
         int od_cnt = pins.Where(z => z.mapping >= 0 || z.twiCur.signal == Signal.TWI_SDA).Count();
         {
-          var plc_p = pins.FirstOrDefault(z=>z.config==PinCfg.System && z.name.ToUpper()=="PLC");
+          var plc_p = pins.FirstOrDefault(z => z.config == PinCfg.System && z.name.ToUpper() == "PLC");
           enSystem plc_e;
           int plc_val;
-          if(plc_p != null && (plc_e=plc_p.systemCur as enSystem)!=null && int.TryParse(plc_e.name, out plc_val)) {
+          if(plc_p != null && (plc_e = plc_p.systemCur as enSystem) != null && int.TryParse(plc_e.name, out plc_val)) {
             od_cnt += plc_val;
           }
         }
         h_sb.AppendFormat("#define OD_MAX_INDEX_LIST           {0}\r\n", od_cnt);
         string pn = System.IO.Path.GetFileNameWithoutExtension(_prjPath);
-        h_sb.AppendFormat("#define OD_DEV_UC_TYPE              '{0}'\r\n", pn.Length > 0 ? pn[0] : _cpuSignature[0]);
-        h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE           '{0}'\r\n", pn.Length > 1 ? pn[1] : _cpuSignature[1]);
-        h_sb.AppendFormat("#define OD_DEV_PHY1                 '{0}'\r\n", pn.Length > 2 ? pn[2] : ' ');
-        h_sb.AppendFormat("#define OD_DEV_PHY2                 '{0}'\r\n", pn.Length > 3 ? pn[3] : ' ');
-        h_sb.AppendFormat("#define OD_DEV_HW_TYP_H             '{0}'\r\n", pn.Length > 4 ? pn[4] : '-');
-        h_sb.AppendFormat("#define OD_DEV_HW_TYP_L             '{0}'\r\n", pn.Length > 5 ? pn[5] : '-');
+        int i = 0;
+        h_sb.AppendFormat("#define OD_DEV_UC_TYPE              '{0}'\r\n", pn.Length > i ? pn[i++] : _cpuSignature[0]);
+        h_sb.AppendFormat("#define OD_DEV_UC_SUBTYPE           '{0}'\r\n", pn.Length > i ? pn[i++] : _cpuSignature[1]);
+        h_sb.AppendFormat("#define OD_DEV_PHY1                 '{0}'\r\n", pn.Length > i ? pn[i++] : ' ');
+        if(pn.Length > i && !char.IsDigit(pn[i])){
+        h_sb.AppendFormat("#define OD_DEV_PHY2                 '{0}'\r\n", pn.Length > i ? pn[i++] : ' ');
+        if(pn.Length > i && !char.IsDigit(pn[i])) {
+          h_sb.AppendFormat("#define OD_DEV_PHY3                 '{0}'\r\n", pn.Length > i ? pn[i++] : ' ');
+          if(pn.Length > i && !char.IsDigit(pn[i])) {
+            h_sb.AppendFormat("#define OD_DEV_PHY4                 '{0}'\r\n", pn.Length > i ? pn[i++] : ' ');
+          }
+        }
+        }
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_H             '{0}'\r\n", pn.Length > i ? pn[i++] : '-');
+        h_sb.AppendFormat("#define OD_DEV_HW_TYP_L             '{0}'\r\n", pn.Length > i ? pn[i++] : '-');
         h_sb.AppendLine("// End Object's Dictionary Section");
       }
       //================================================= 

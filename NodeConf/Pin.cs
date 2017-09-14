@@ -119,6 +119,10 @@ namespace X13 {
             _owner.phy1.SetCur(this, en, xn != null ? xn.Value : null);
           } else if(config == PinCfg.Phy2 && _owner.phy2 != null) {
             _owner.phy2.SetCur(this, en, xn != null ? xn.Value : null);
+          } else if(config == PinCfg.Phy3 && _owner.phy3 != null) {
+            _owner.phy3.SetCur(this, en, xn != null ? xn.Value : null);
+          } else if(config == PinCfg.Phy4 && _owner.phy4 != null) {
+            _owner.phy4.SetCur(this, en, xn != null ? xn.Value : null);
           } else {
             en.selected = true;
           }
@@ -304,6 +308,10 @@ namespace X13 {
         sb.Append("| phy1_"+(phy1Cur.func ?? phy1Cur.name));
       } else if(config == PinCfg.Phy2) {
         sb.Append("| phy2_" + (phy2Cur.func ?? phy2Cur.name));
+      } else if(config == PinCfg.Phy3) {
+        sb.Append("| phy3_" + (phy3Cur.func ?? phy3Cur.name));
+      } else if(config == PinCfg.Phy4) {
+        sb.Append("| phy4_" + (phy4Cur.func ?? phy4Cur.name));
       } else {
         if(ainCur.type != EntryType.none) {
           sb.Append("| "+ainCur.name + "\t");
@@ -519,6 +527,146 @@ namespace X13 {
     }
     public List<enBase> phy2Lst { get; private set; }
     public System.Windows.Media.Brush phy2Border { get; private set; }
+
+    public System.Windows.Visibility phy3Vis {
+      get {
+        List<enBase> lst;
+        if(_owner.phy3 != null && (config == PinCfg.None || config == PinCfg.Phy3)) {
+          lst = _owner.phy3.GetLst(this);
+        } else {
+          lst = null;
+        }
+        if((lst != null || phy3Lst != null) && (lst == null || phy3Lst == null || !lst.SequenceEqual(phy3Lst))) {
+          phy3Lst = lst;
+          PropertyChangedReise("phy3Lst");
+          int fl = 0;
+          if(lst != null) {
+            fl |= lst.Any(z => z.type == EntryType.spi) ? 1 : 0;
+            fl |= lst.Any(z => z.type == EntryType.serial) ? 2 : 0;
+            fl |= lst.Any(z => z.type == EntryType.dio) ? 4 : 0;
+          }
+          switch(fl) {
+          case 1:
+            phy3Border = Brushes.Red;
+            break;
+          case 2:
+            phy3Border = Brushes.Blue;
+            break;
+          case 3:
+            phy3Border = Brushes.Violet;
+            break;
+          case 4:
+            phy3Border = Brushes.LightSlateGray;
+            break;
+          case 5:
+            phy3Border = Brushes.Orange;
+            break;
+          case 6:
+            phy3Border = Brushes.Cyan;
+            break;
+          case 7:
+            phy3Border = Brushes.Black;
+            break;
+          default:
+            phy3Border = null;
+            break;
+          }
+          PropertyChangedReise("phy3Border");
+        }
+        return phy3Lst != null ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+      }
+    }
+    public enBase phy3Cur {
+      get {
+        return _owner.phy3 != null ? _owner.phy3.GetCur(this) : enBase.none;
+      }
+      set {
+
+        if(_owner.phy3 != null) {
+          bool refresh = _owner.phy3.SetCur(this, value, null);
+          if(value != null && value.type != EntryType.none) {
+            config = PinCfg.Phy3;
+          } else if(config == PinCfg.Phy3) {
+            config = PinCfg.None;
+          }
+          if(refresh) {
+            _owner.RefreshView();
+          }
+        }
+      }
+    }
+    public List<enBase> phy3Lst { get; private set; }
+    public System.Windows.Media.Brush phy3Border { get; private set; }
+
+    public System.Windows.Visibility phy4Vis {
+      get {
+        List<enBase> lst;
+        if(_owner.phy4 != null && (config == PinCfg.None || config == PinCfg.Phy4)) {
+          lst = _owner.phy4.GetLst(this);
+        } else {
+          lst = null;
+        }
+        if((lst != null || phy4Lst != null) && (lst == null || phy4Lst == null || !lst.SequenceEqual(phy4Lst))) {
+          phy4Lst = lst;
+          PropertyChangedReise("phy4Lst");
+          int fl = 0;
+          if(lst != null) {
+            fl |= lst.Any(z => z.type == EntryType.spi) ? 1 : 0;
+            fl |= lst.Any(z => z.type == EntryType.serial) ? 2 : 0;
+            fl |= lst.Any(z => z.type == EntryType.dio) ? 4 : 0;
+          }
+          switch(fl) {
+          case 1:
+            phy4Border = Brushes.Red;
+            break;
+          case 2:
+            phy4Border = Brushes.Blue;
+            break;
+          case 3:
+            phy4Border = Brushes.Violet;
+            break;
+          case 4:
+            phy4Border = Brushes.LightSlateGray;
+            break;
+          case 5:
+            phy4Border = Brushes.Orange;
+            break;
+          case 6:
+            phy4Border = Brushes.Cyan;
+            break;
+          case 7:
+            phy4Border = Brushes.Black;
+            break;
+          default:
+            phy4Border = null;
+            break;
+          }
+          PropertyChangedReise("phy4Border");
+        }
+        return phy4Lst != null ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+      }
+    }
+    public enBase phy4Cur {
+      get {
+        return _owner.phy4 != null ? _owner.phy4.GetCur(this) : enBase.none;
+      }
+      set {
+
+        if(_owner.phy4 != null) {
+          bool refresh = _owner.phy4.SetCur(this, value, null);
+          if(value != null && value.type != EntryType.none) {
+            config = PinCfg.Phy4;
+          } else if(config == PinCfg.Phy4) {
+            config = PinCfg.None;
+          }
+          if(refresh) {
+            _owner.RefreshView();
+          }
+        }
+      }
+    }
+    public List<enBase> phy4Lst { get; private set; }
+    public System.Windows.Media.Brush phy4Border { get; private set; }
 
     public System.Windows.Visibility dioVis { get { return ((config == PinCfg.None || config == PinCfg.IO) && (GetVis(EntryType.dio) || GetVis(EntryType.ain))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public string dioCur {
