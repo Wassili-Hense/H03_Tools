@@ -363,8 +363,7 @@ namespace X13 {
       doc = new XDocument(new XElement("xst", new XAttribute("path", "/$YS/TYPES/MQTT-SN")));
       doc.Declaration = new XDeclaration("1.0", "utf-8", "yes");
       JSC.JSObject val = JSC.JSObject.CreateObject();
-      val["editor"] = "Enum";
-      val["enum"] = "MsStatus";
+      val["editor"] = "MsStatus";
       var akt_d = JSC.JSObject.CreateObject();
       var akt = new JSL.Array(1);
       akt_d["name"] = "MQTT_SN.SendDisconnect";
