@@ -61,12 +61,10 @@ namespace X13 {
       t3["tag"] = kt + _parent._addr.ToString();
       t1["menu"] = lt;
       t1["rc"] = rc;
-      if(string.IsNullOrWhiteSpace(_parent.titelCur)) {
-        children[kt + _parent._addr.ToString("00")] = t1;
-      } else {
+      if(!string.IsNullOrWhiteSpace(_parent.titelCur)) {
         t1["hint"] = lt + ", " + _parent.titelCur;
-        children[_parent.titelCur + "_" + kt] = t1;
       }
+      children[kt + _parent._addr.ToString("00")] = t1;
     }
 
     public Pin parent { get { return _parent; } }
