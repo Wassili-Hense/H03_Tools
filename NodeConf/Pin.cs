@@ -80,6 +80,10 @@ namespace X13 {
       PropertyChangedReise("phy1Cur");
       PropertyChangedReise("phy2Vis");
       PropertyChangedReise("phy2Cur");
+      PropertyChangedReise("phy3Vis");
+      PropertyChangedReise("phy3Cur");
+      PropertyChangedReise("phy4Vis");
+      PropertyChangedReise("phy4Cur");
       PropertyChangedReise("dioVis");
       PropertyChangedReise("dioCur");
       PropertyChangedReise("dioLst");
