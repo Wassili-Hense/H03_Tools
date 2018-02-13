@@ -107,13 +107,14 @@ namespace X13 {
       var xn = it.Attribute("addr");
       if(xn != null && config == PinCfg.IO) {
         _addr = int.Parse(xn.Value);
-        xn = it.Attribute("titel");
-        if(xn != null && !string.IsNullOrEmpty(xn.Value)) {
-          titelCur = xn.Value;
-        }
       } else {
         _addr = -1;
       }
+      xn = it.Attribute("titel");
+      if(xn != null && !string.IsNullOrEmpty(xn.Value)) {
+        titelCur = xn.Value;
+      }
+
       foreach(var i2 in it.Elements("item")) {
         string name = i2.Attribute("name").Value;
         xn = i2.Attribute("func");
@@ -783,7 +784,7 @@ namespace X13 {
     public List<enBase> twiLst { get { return GetLst(EntryType.twi); } }
 
     public System.Windows.Visibility titelVis { get { return /*config == PinCfg.IO ?*/ System.Windows.Visibility.Visible/* : System.Windows.Visibility.Collapsed*/; } }
-    public string titelCur { get; set; }
+    public string titelCur { get; set;  }
     #endregion view
 
     #region INotifyPropertyChanged Members

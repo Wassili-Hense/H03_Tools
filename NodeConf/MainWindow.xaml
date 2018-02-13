@@ -141,7 +141,7 @@
           <GridViewColumn Header="Titel" Width="120" util:GridViewSort.PropertyName="titelCur">
             <GridViewColumn.CellTemplate>
               <DataTemplate>
-                <TextBox MinWidth="110" Visibility="{Binding titelVis}" Text="{Binding titelCur}" BorderThickness="0" Background="{StaticResource TitelBrush}" />
+                <TextBox MinWidth="110" Visibility="{Binding titelVis}" Text="{Binding titelCur, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="{StaticResource TitelBrush}" />
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
