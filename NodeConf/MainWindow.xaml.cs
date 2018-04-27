@@ -112,7 +112,7 @@ namespace X13 {
       lvPins.ItemsSource = null;
       lvPins.ItemsSource = _prj.pins;
       if(_prj.phy3 != null) {
-        cbPhy3.BorderBrush = new SolidColorBrush(_prj.phy2.color);
+        cbPhy3.BorderBrush = new SolidColorBrush(_prj.phy3.color);
         cbPhy4.IsEnabled = true;
       } else {
         cbPhy3.BorderBrush = null;
