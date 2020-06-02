@@ -64,7 +64,7 @@ namespace X13 {
       if(!string.IsNullOrWhiteSpace(_parent.titelCur)) {
         t1["hint"] = lt + ", " + _parent.titelCur;
       }
-      children[kt + _parent._addr.ToString("00")] = t1;
+      children[kt + _parent._addr.ToString()] = t1;
     }
 
     public Pin parent { get { return _parent; } }
@@ -77,6 +77,7 @@ namespace X13 {
     dio,
     ain,
     pwm,
+    extCnt,
     serial,
     twi,
     spi,
@@ -87,6 +88,7 @@ namespace X13 {
     DIO = ((int)EntryType.dio << 2) | 0,
     AIN = ((int)EntryType.ain << 2) | 0,
     PWM = ((int)EntryType.pwm << 2) | 0,
+    EXT_CNT = ((int)EntryType.extCnt << 2) | 0,
     UART_RX = ((int)EntryType.serial << 2) | 1,
     UART_TX = ((int)EntryType.serial << 2) | 2,
     UART_DE = ((int)EntryType.serial << 2) | 3,
@@ -204,12 +206,41 @@ namespace X13 {
     }
     public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
       if(_parent.config == PinCfg.IO && selected) {
-        string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString();
+        string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString() + ",S" + _parent._owner.ExIndex("TIM"+_timer.ToString("00")).ToString();
         ExportS(children, rc, "PWM output", "Pp", 0);
         ExportS(children, rc, "PWM inverted output", "Pn", 0);
       }
     }
   }
+  internal class enExtCnt : enBase {
+    private int _timer;
+    private int _af;
+
+    public enExtCnt(XElement info, Pin parent)
+      : base(info, parent, Signal.EXT_CNT) {
+      resouces[parent.name + "_used"] = RcUse.Shared;
+      this._timer = int.Parse(info.Attribute("timer").Value);
+      var xn = info.Attribute("af");
+      if(xn != null) {
+        this._af = int.Parse(xn.Value);
+      } else {
+        this._af = 0;
+      }
+      this.name = "CNT " + _timer.ToString("00");
+      resouces[this.name] = RcUse.Exclusive;
+    }
+    public int GetConfig() {
+      return (_af << 8) | (_timer << 3);
+    }
+    public override void ExportX04(Dictionary<string, JSC.JSObject> children) {
+      if(_parent.config == PinCfg.IO && selected) {
+        string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString() + ",X" + _parent._owner.ExIndex("TIM"+_timer.ToString("00")).ToString();
+        ExportS(children, rc, "Counter input", "Cp", 0);
+        ExportS(children, rc, "Counter inverted input", "Cn", 0);
+      }
+    }
+  }
+
   internal class enSerial : enBase {
     public readonly byte config;
     public readonly int channel;

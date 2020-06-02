@@ -124,6 +124,32 @@
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
+          <GridViewColumn Header="Counter" Width="100" >
+            <GridViewColumn.CellTemplate>
+              <DataTemplate>
+                <ComboBox MinWidth="85" Visibility="{Binding cntVis}" ItemsSource="{Binding cntLst}" SelectedItem="{Binding cntCur}">
+                  <ComboBox.Style>
+                    <Style BasedOn="{StaticResource {x:Type ComboBox}}" TargetType="ComboBox">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding cntIsAvaliable}" Value="False">
+                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </ComboBox.Style>
+                  <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding isAvailable}" Value="False">
+                          <Setter Property="Background" Value="{StaticResource BusyBrush}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </ComboBox.ItemContainerStyle>
+                </ComboBox>
+              </DataTemplate>
+            </GridViewColumn.CellTemplate>
+          </GridViewColumn>
           <GridViewColumn Header="Serial" Width="100" >
             <GridViewColumn.CellTemplate>
               <DataTemplate>

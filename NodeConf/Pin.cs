@@ -43,6 +43,9 @@ namespace X13 {
         case "pwm":
           c = new enPwm(el, this);
           break;
+        case "cnt":
+          c = new enExtCnt(el, this);
+          break;
         case "serial":
           c = new enSerial(el, this);
           break;
@@ -94,6 +97,10 @@ namespace X13 {
       PropertyChangedReise("pwmCur");
       PropertyChangedReise("pwmLst");
       PropertyChangedReise("pwmIsAvaliable");
+      PropertyChangedReise("cntVis");
+      PropertyChangedReise("cntCur");
+      PropertyChangedReise("cntLst");
+      PropertyChangedReise("cntIsAvaliable");
       PropertyChangedReise("serialVis");
       PropertyChangedReise("serialCur");
       PropertyChangedReise("serialLst");
@@ -199,6 +206,22 @@ namespace X13 {
           int ti = _owner.ExIndex(pwmCur.name);
           rez = Project.CreateXItem("Pn" + _addr.ToString(), (_addr < 10 ? "K" : "L") + "iX" + ri.ToString() + ", X" + ti.ToString());
           rez.Add(Project.CreateXItem("_description", "PWM inverted output, " + (titelCur ?? name)));
+        }
+        break;
+      case Section.CP:
+        if(config == PinCfg.IO && pwmCur.type == EntryType.extCnt) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(cntCur.name);
+          rez = Project.CreateXItem("Cp" + _addr.ToString(), (_addr < 10 ? "I" : "J") + "iX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Counter Input, " + (titelCur ?? name)));
+        }
+        break;
+      case Section.CN:
+        if(config == PinCfg.IO && pwmCur.type == EntryType.extCnt) {
+          int ri = _owner.ExIndex(name + "_used");
+          int ti = _owner.ExIndex(cntCur.name);
+          rez = Project.CreateXItem("Cn" + _addr.ToString(), (_addr < 10 ? "K" : "L") + "iX" + ri.ToString() + ", X" + ti.ToString());
+          rez.Add(Project.CreateXItem("_description", "Counter inverted input, " + (titelCur ?? name)));
         }
         break;
       case Section.Ae:
@@ -323,6 +346,9 @@ namespace X13 {
         }
         if(pwmCur.type != EntryType.none) {
           sb.Append("| " + pwmCur.name + "\t");
+        }
+        if(cntCur.type != EntryType.none) {
+          sb.Append("| " + cntCur.name + "\t");
         }
         if(twiCur.type != EntryType.none) {
           sb.Append("| " + twiCur.signal.ToString() + "\t");
@@ -761,6 +787,39 @@ namespace X13 {
         return lst;
       }
     }
+
+    public System.Windows.Visibility cntVis { get { return ((config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.extCnt)) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public enBase cntCur {
+      get {
+        enBase cur = entrys.FirstOrDefault(z => z.type == EntryType.extCnt && z.selected);
+        return cur ?? enBase.none;
+      }
+      set {
+        if(value != cntCur) {
+          foreach(var e in entrys.Where(z => z.type == EntryType.extCnt && z.selected && z != value)) {
+            e.selected = false;
+          }
+          if(value != null && value.type == EntryType.extCnt) {
+            value.selected = true;
+          }
+          _owner.RefreshView();
+        }
+      }
+    }
+    public bool cntIsAvaliable {
+      get {
+        return cntCur.isAvailable;
+      }
+    }
+    public List<enBase> cntLst {
+      get {
+        List<enBase> lst = new List<enBase>();
+        lst.Add(enBase.none);
+        lst.AddRange(entrys.Where(z => z.type == EntryType.extCnt));
+        return lst;
+      }
+    }
+
 
     public System.Windows.Visibility serialVis { get { return ((config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.serial && z.signal != Signal.UART_DE && _owner.EntryIsEnabled(z))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public enBase serialCur {

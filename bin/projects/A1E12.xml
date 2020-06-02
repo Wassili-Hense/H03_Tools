@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<prj cpu="ATMEGA328P" phy1="CC1101">
+<prj cpu="ATMEGA328P" phy1="ENC28J60">
   <pin name="PORTB.00" cfg="System">
     <item name="LED_N" />
   </pin>
-  <pin name="PORTB.01" cfg="Phy1">
-    <item name="PORTB.01" func="GPIO0" />
-  </pin>
+  <pin name="PORTB.01" cfg="None" />
   <pin name="PORTB.02" cfg="Phy1">
     <item name="NSS 1.1" func="NCS" />
   </pin>
@@ -21,9 +19,7 @@
   <pin name="PORTB.06" cfg="System">
     <item name="HSE_IN" />
   </pin>
-  <pin name="PORTB.07" cfg="System">
-    <item name="HSE_OUT" />
-  </pin>
+  <pin name="PORTB.07" cfg="None" />
   <pin name="PORTC.00" cfg="IO" addr="2" titel="CN18">
     <item name="PORTC.00" />
     <item name="AIN 00" />
@@ -88,9 +84,7 @@
     <item name="AIN 14" />
   </pin>
   <pin name="Osc" cfg="System">
-    <item name="8.0MHz" />
+    <item name="12.5MHz" />
   </pin>
-  <pin name="ASLEEP" cfg="System">
-    <item name="Off" />
-  </pin>
+  <pin name="ASLEEP" cfg="System" />
 </prj>

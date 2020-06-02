@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<prj cpu="ATMEGA328P" phy1="CC1101">
-  <pin name="PORTB.00" cfg="System">
-    <item name="LED_N" />
+<prj cpu="ATMEGA328P" phy1="RFM12">
+  <pin name="PORTB.00" cfg="Phy1">
+    <item name="PORTB.00" func="IRQ" />
   </pin>
-  <pin name="PORTB.01" cfg="Phy1">
-    <item name="PORTB.01" func="GPIO0" />
+  <pin name="PORTB.01" cfg="System">
+    <item name="LED_N" />
   </pin>
   <pin name="PORTB.02" cfg="Phy1">
     <item name="NSS 1.1" func="NCS" />

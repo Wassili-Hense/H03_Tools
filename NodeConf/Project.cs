@@ -302,6 +302,10 @@ namespace X13 {
       dev.Add(PP);
       var PN = new XElement("item", new XAttribute("name", "PWM inverted"));
       dev.Add(PN);
+      var CP = new XElement("item", new XAttribute("name", "Counter"));
+      dev.Add(CP);
+      var CN = new XElement("item", new XAttribute("name", "Counter inverted"));
+      dev.Add(CN);
       XElement ain;
       if(ainRef != 0) {
         ain = new XElement("item", new XAttribute("name", "Analog inputs"));
@@ -316,6 +320,8 @@ namespace X13 {
         p.ExportX(Section.ON, ON);
         p.ExportX(Section.PP, PP);
         p.ExportX(Section.PN, PN);
+        p.ExportX(Section.CP, CP);
+        p.ExportX(Section.CN, CN);
         cAin = p.ainCur as enAin;
         if(cAin != null) {
           if((cAin.ainRef & 1) == 1) {
@@ -542,6 +548,37 @@ namespace X13 {
           h_sb.AppendLine("// End PWM Section");
         }
       }
+      {  //External Counter
+        int cnt_min = 255;
+        var cnt_sb = new StringBuilder();
+        int cur_m = 0;
+        cnt_sb.Append("#define HAL_CNT_PORT2CFG            {");
+
+        var lst = pins.Where(z => z.mapping >= 0 && z.cntCur.type == EntryType.extCnt).OrderBy(z => z.mapping).Select(z => new Tuple<int, int>(z.mapping, (z.cntCur as enExtCnt).GetConfig())).ToArray();
+        if(lst.Length > 0) {
+          cnt_min = lst.Min(z => z.Item1);
+          cur_m = cnt_min;
+          foreach(var p in lst) {
+            while(p.Item1 > cur_m) {
+              cnt_sb.Append("0xFF, ");
+              cur_m++;
+            }
+            cnt_sb.AppendFormat("0x{0:X2}, ", p.Item2);
+            cur_m++;
+          }
+
+          h_sb.Append("\r\n// Counter Section\r\n#define EXTCNT_USED                 1\r\n");
+          if(cnt_min > 0) {
+            h_sb.AppendFormat("#define HAL_CNT_BASE_OFFSET         {0}\r\n", cnt_min);
+          }
+          h_sb.AppendFormat("#define EXTCNT_MAXPORT_NR           {0}\r\n", lst.Max(z => z.Item1) + 1);
+          cnt_sb.Remove(cnt_sb.Length - 2, 2);
+          cnt_sb.Append("}");
+          h_sb.AppendLine(cnt_sb.ToString());
+          h_sb.AppendLine("// End Counter Section");
+        }
+      }
+
       {  // AIN
         int ain_max;
         var ain_sb = new StringBuilder();
@@ -685,6 +722,8 @@ namespace X13 {
     ON,
     PP,
     PN,
+    CP,
+    CN,
     Ae,
     Av,
     Ai,
