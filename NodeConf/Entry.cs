@@ -209,6 +209,7 @@ namespace X13 {
         string rc = "X" + _parent._owner.ExIndex(parent.name + "_used").ToString() + ",X" + _parent._owner.ExIndex(name).ToString() + ",S" + _parent._owner.ExIndex("TIM"+_timer.ToString("00")).ToString();
         ExportS(children, rc, "PWM output", "Pp", 0);
         ExportS(children, rc, "PWM inverted output", "Pn", 0);
+        ExportS(children, rc, "Square wave generator", "Pg", 0);
       }
     }
   }

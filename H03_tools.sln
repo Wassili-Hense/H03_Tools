@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeConf", "NodeConf\NodeConf.csproj", "{99BF8B6E-607F-40A6-BD66-703479EC1F26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RS485Sniff", "RS485Sniff\RS485Sniff.csproj", "{986E45D4-8412-4A08-8832-F087916CBB89}"
@@ -18,15 +20,16 @@ Global
 		{99BF8B6E-607F-40A6-BD66-703479EC1F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99BF8B6E-607F-40A6-BD66-703479EC1F26}.Release|Any CPU.Build.0 = Release|Any CPU
 		{986E45D4-8412-4A08-8832-F087916CBB89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{986E45D4-8412-4A08-8832-F087916CBB89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{986E45D4-8412-4A08-8832-F087916CBB89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{986E45D4-8412-4A08-8832-F087916CBB89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3BD9BDB7-6D37-4F6D-A726-45AFE197C992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BD9BDB7-6D37-4F6D-A726-45AFE197C992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BD9BDB7-6D37-4F6D-A726-45AFE197C992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD9BDB7-6D37-4F6D-A726-45AFE197C992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08A8D0B8-D26C-4C6A-8F2E-82F3260DA18F}
 	EndGlobalSection
 EndGlobal
