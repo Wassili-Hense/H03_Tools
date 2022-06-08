@@ -430,7 +430,7 @@ namespace X13 {
       }
       dev = new XElement("i");
       dev.Add(new XAttribute("n", name));
-      dev.Add(new XAttribute("s", JSL.JSON.stringify(val, null, null)));
+      dev.Add(new XAttribute("s", JSL.JSON.stringify(val)));
       dev.Add(new XAttribute("m", "{\"attr\":4}"));
       dev.Add(new XAttribute("ver", (new Version(3, 4, (now.Year % 100) * 100 + now.Month, (int)((now.Day + now.TimeOfDay.TotalDays) * 1000)))));
       doc.Root.Add(dev);
