@@ -266,7 +266,7 @@ namespace X13 {
         int r_s4 = parent._owner.ExIndex("UART" + channel.ToString() + "_s4");
         int r_s5 = parent._owner.ExIndex("UART" + channel.ToString() + "_s5");
         int r_s6 = parent._owner.ExIndex("UART" + channel.ToString() + "_s6");
-        if(signal == Signal.UART_RX) {
+        if (signal == Signal.UART_RX) {
           ExportS(children, string.Format("X{0},S{1},B{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 2400", "Sr" + mapping.ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},S{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 4800", "Sr" + (mapping + 0x10).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},S{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 9600", "Sr" + (mapping + 0x20).ToString(), "¤BA", uName);
@@ -274,7 +274,7 @@ namespace X13 {
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},S{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 38400", "Sr" + (mapping + 0x40).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},S{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 57600", "Sr" + (mapping + 0x50).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},B{6},S{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "RxD 115200", "Sr" + (mapping + 0x60).ToString(), "¤BA", uName);
-        } else if(signal == Signal.UART_TX) {
+        } else if (signal == Signal.UART_TX) {
           ExportS(children, string.Format("X{0},S{1},B{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 2400", "St" + mapping.ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},S{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 4800", "St" + (mapping + 0x10).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},S{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 9600", "St" + (mapping + 0x20).ToString(), "¤BA", uName);
@@ -282,6 +282,14 @@ namespace X13 {
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},S{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 38400", "St" + (mapping + 0x40).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},S{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 57600", "St" + (mapping + 0x50).ToString(), "¤BA", uName);
           ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},B{6},S{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "TxD 115200", "St" + (mapping + 0x60).ToString(), "¤BA", uName);
+        } else if (signal == Signal.UART_DE) {
+          ExportS(children, string.Format("X{0},S{1},B{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 2400", "Sm" + mapping.ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},S{2},B{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 4800", "Sm" + (mapping + 0x10).ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},S{3},B{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 9600", "Sm" + (mapping + 0x20).ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},S{4},B{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 19200", "Sm" + (mapping + 0x30).ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},S{5},B{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 38400", "Sm" + (mapping + 0x40).ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},S{6},B{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 57600", "Sm" + (mapping + 0x50).ToString(), false, uName);
+          ExportS(children, string.Format("X{0},B{1},B{2},B{3},B{4},B{5},B{6},S{7}", r_pin, r_s0, r_s1, r_s2, r_s3, r_s4, r_s5, r_s6), "DE 115200", "Sm" + (mapping + 0x60).ToString(), false, uName);
         }
       }
     }

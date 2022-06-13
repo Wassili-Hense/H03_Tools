@@ -714,7 +714,7 @@ namespace X13 {
           _addr = tmp;
           if(_addr >= 0) {
             config = PinCfg.IO;
-            foreach(var i2 in entrys.Where(z => z.type != EntryType.system && z.type != EntryType.spi && z.type != EntryType.twi && z.signal != Signal.UART_DE && _owner.EntryIsEnabled(z))) {
+            foreach(var i2 in entrys.Where(z => z.type != EntryType.system && z.type != EntryType.spi && z.type != EntryType.twi && _owner.EntryIsEnabled(z))) {
               if(i2.type != EntryType.pwm || !entrys.Any(z => z.type == i2.type && z.selected && z != i2)) {
                 i2.selected = true;
               }
@@ -821,7 +821,7 @@ namespace X13 {
     }
 
 
-    public System.Windows.Visibility serialVis { get { return ((config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.serial && z.signal != Signal.UART_DE && _owner.EntryIsEnabled(z))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
+    public System.Windows.Visibility serialVis { get { return ((config == PinCfg.IO) && entrys.Any(z => z.type == EntryType.serial && _owner.EntryIsEnabled(z))) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; } }
     public enBase serialCur {
       get { return config == PinCfg.IO ? GetCur(EntryType.serial) : enBase.none; }
       set { SetCur(EntryType.serial, value); }
@@ -830,7 +830,7 @@ namespace X13 {
       get {
         List<enBase> lst = new List<enBase>();
         lst.Add(enBase.none);
-        lst.AddRange(entrys.Where(z => z.type == EntryType.serial && z.signal != Signal.UART_DE && _owner.EntryIsEnabled(z)));
+        lst.AddRange(entrys.Where(z => z.type == EntryType.serial && _owner.EntryIsEnabled(z)));
         return lst;
       }
     }
